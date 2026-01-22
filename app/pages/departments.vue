@@ -119,8 +119,8 @@
                   <!-- Other members (limit to 3 for neatness) -->
                   <template v-for="(member, idx) in dept.members.filter(m => m.role !== 'Leader').slice(0, 3)" :key="member.id">
                     <UBadge 
-                      color="gray" 
-                      variant="soft"
+                      color="neutral" 
+                      variant="subtle"
                       size="xs"
                     >
                       {{ member.name }}
