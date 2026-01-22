@@ -1,80 +1,253 @@
 <template>
-  <div class="max-w-7xl mx-auto">
+  <div class="max-w-7xl mx-auto space-y-6 md:space-y-8">
     <!-- Page Header -->
-    <div class="mb-8 md:mb-10">
+    <div>
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-        Tổng quan
+        Thống kê
       </h1>
       <p class="text-gray-500 dark:text-gray-400 mt-2 text-lg">
-        Chào mừng trở lại, đây là báo cáo hoạt động của bạn.
+        Tổng hợp tình hình công việc và hiệu suất toàn thời gian.
       </p>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-      <UCard 
-        v-for="item in 4" 
-        :key="item" 
-        class="group ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm hover:shadow-md transition-shadow duration-300"
-      >
-        <div class="p-2 sm:p-2">
+    <!-- 1. Stats Grid (4 Blocks) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
+        <div class="p-6">
           <div class="flex items-start justify-between">
             <div class="space-y-1">
-              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Doanh thu</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">12.5M ₫</p>
+              <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Tổng công việc</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">128</p>
             </div>
-            <div class="p-2.5 bg-primary-50 dark:bg-primary-900/20 rounded-xl group-hover:scale-110 transition-transform duration-300">
-              <UIcon name="i-heroicons-currency-dollar" class="w-6 h-6 text-primary-600 dark:text-primary-400" />
+            <div class="p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+              <UIcon name="i-heroicons-clipboard-document-list" class="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
-          <div class="mt-4 flex items-center text-sm">
-            <span class="text-emerald-600 font-semibold flex items-center gap-1 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">
-              <UIcon name="i-heroicons-arrow-trending-up" class="w-4 h-4" />
-              12.5%
-            </span>
-            <span class="text-gray-500 ml-2">so với tháng trước</span>
+        </div>
+      </UCard>
+
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <p class="text-sm font-medium text-yellow-600 dark:text-yellow-400 uppercase">Đang làm</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">42</p>
+            </div>
+            <div class="p-2.5 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
+              <UIcon name="i-heroicons-clock" class="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+            </div>
+          </div>
+        </div>
+      </UCard>
+
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <p class="text-sm font-medium text-green-600 dark:text-green-400 uppercase">Đã hoàn thành</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">76</p>
+            </div>
+            <div class="p-2.5 bg-green-50 dark:bg-green-900/20 rounded-xl">
+              <UIcon name="i-heroicons-check-badge" class="w-6 h-6 text-green-600 dark:text-green-400" />
+            </div>
+          </div>
+        </div>
+      </UCard>
+
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
+        <div class="p-6">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <p class="text-sm font-medium text-red-600 dark:text-red-400 uppercase">Quá hạn</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">10</p>
+            </div>
+            <div class="p-2.5 bg-red-50 dark:bg-red-900/20 rounded-xl">
+              <UIcon name="i-heroicons-exclamation-triangle" class="w-6 h-6 text-red-600 dark:text-red-400" />
+            </div>
           </div>
         </div>
       </UCard>
     </div>
 
-    <!-- Recent Activity -->
-    <UCard>
-      <template #header>
-        <div class="flex items-center justify-between p-2">
-          <div class="space-y-1">
-            <h3 class="font-bold text-xl text-gray-900 dark:text-white">Hoạt động gần đây</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">5 giao dịch mới nhất trong ngày</p>
-          </div>
-          <UButton variant="soft" color="neutral" size="sm">Xem tất cả</UButton>
-        </div>
-      </template>
+    <!-- 2. Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       
-      <div class="divide-y divide-gray-100 dark:divide-gray-800 p-2">
-        <div v-for="i in 5" :key="i" class="flex items-center gap-4 py-4 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 -mx-4 px-4 transition-colors rounded-lg">
-          <UAvatar :alt="`User ${i}`" size="md" class="bg-gray-100 ring-2 ring-white dark:ring-gray-900" />
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">
-              Nguyễn Văn A đã thanh toán hóa đơn
-            </p>
-            <p class="text-xs text-gray-500 mt-0.5">Vừa xong • Qua chuyển khoản</p>
+      <!-- Chart Column (Takes 2/3 width on large screens) -->
+      <UCard class="lg:col-span-2 ring-1 ring-gray-200 dark:ring-gray-800">
+        <template #header>
+          <div class="px-6 py-4">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Công việc hoàn thành (7 ngày qua)</h3>
           </div>
-          <span class="text-sm font-bold text-gray-900 dark:text-white font-mono bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded">
-            -250.000 ₫
-          </span>
+        </template>
+        <div class="h-80 w-full relative p-6">
+          <ClientOnly>
+             <Bar :data="chartData" :options="chartOptions" />
+             <template #fallback>
+                <div class="flex items-center justify-center h-full text-gray-400">Đang tải biểu đồ...</div>
+             </template>
+          </ClientOnly>
         </div>
-      </div>
-    </UCard>
+      </UCard>
+
+      <!-- Overdue Tasks List (Takes 1/3 width) -->
+      <UCard class="lg:col-span-1 ring-1 ring-gray-200 dark:ring-gray-800 h-full">
+        <template #header>
+          <div class="flex items-center justify-between px-6 py-4">
+             <h3 class="text-lg font-bold text-red-600 dark:text-red-400 flex items-center gap-2">
+                <UIcon name="i-heroicons-fire" class="w-5 h-5"/>
+                Cần xử lý gấp
+             </h3>
+             <UBadge color="error" variant="soft" size="sm">10</UBadge>
+          </div>
+        </template>
+        <div class="space-y-4 p-6">
+          <div v-for="task in overdueTasks" :key="task.id" class="p-3 rounded-lg border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10">
+            <div class="flex justify-between items-start mb-1">
+               <h4 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-1">{{ task.name }}</h4>
+               <span class="text-xs font-bold text-red-600 dark:text-red-400 whitespace-nowrap">{{ task.daysOverdue }} ngày</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
+               <UAvatar :src="task.assignee.avatar" size="2xs" />
+               <span class="font-medium">{{ task.assignee.name }}</span>
+               <span class="text-gray-300 dark:text-gray-600">•</span>
+               <span>{{ task.department }}</span>
+            </div>
+          </div>
+        </div>
+      </UCard>
+    </div>
+
+    <!-- 3. Rankings Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+       <!-- Top Departments -->
+       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+         <template #header>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Top Bộ Phận Hiệu Quả</h3>
+         </template>
+         <div class="space-y-4">
+            <div v-for="(dept, index) in topDepartments" :key="dept.name" class="flex items-center gap-4">
+               <div class="flex-none w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 font-bold text-sm" :class="index === 0 ? 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20' : 'text-gray-500'">
+                  {{ index + 1 }}
+               </div>
+               <div class="flex-1">
+                  <div class="flex justify-between mb-1">
+                     <span class="text-sm font-medium text-gray-900 dark:text-white">{{ dept.name }}</span>
+                     <span class="text-sm font-bold text-primary-600">{{ dept.completed }} xong</span>
+                  </div>
+                  <UProgress :value="dept.score" color="primary" size="sm" />
+               </div>
+            </div>
+         </div>
+       </UCard>
+
+       <!-- Top Employees -->
+       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+         <template #header>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Nhân Viên Xuất Sắc</h3>
+         </template>
+         <div class="space-y-4">
+            <div v-for="(emp, index) in topEmployees" :key="emp.id" class="flex items-center gap-4">
+               <UAvatar :src="emp.avatar" :alt="emp.name" />
+               <div class="flex-1">
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ emp.name }}</p>
+                  <p class="text-xs text-gray-500">{{ emp.department }}</p>
+               </div>
+               <div class="text-right">
+                  <p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">{{ emp.tasks }}</p>
+                  <p class="text-xs text-gray-400">công việc</p>
+               </div>
+            </div>
+         </div>
+       </UCard>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  type ChartData,
+  type ChartOptions
+} from 'chart.js'
+import { Bar } from 'vue-chartjs'
+
+// Register ChartJS components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
 definePageMeta({
   layout: 'app'
 })
 
-// Optional: Dynamic Title
 useHead({
-  title: 'Dashboard - SheetVN'
+  title: 'Thống kê - SheetVN'
 })
+
+// --- Mock Data ---
+
+// 1. Chart Data
+const chartData = computed<ChartData<'bar'>>(() => ({
+  labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+  datasets: [
+    {
+      label: 'Hoàn thành',
+      backgroundColor: '#10b981', // emerald-500
+      borderRadius: 4,
+      data: [12, 19, 15, 25, 22, 10, 8]
+    }
+  ]
+}))
+
+const chartOptions = computed<ChartOptions<'bar'>>(() => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+       display: false
+    }
+  },
+  scales: {
+    y: {
+       beginAtZero: true,
+       grid: {
+          color: 'rgba(200, 200, 200, 0.1)'
+       }
+    },
+    x: {
+       grid: {
+          display: false
+       }
+    }
+  }
+}))
+
+// 2. Overdue Tasks
+const overdueTasks = [
+   { id: 1, name: 'Báo cáo tài chính Q4', daysOverdue: 3, department: 'Kế toán', assignee: { name: 'Phạm Hương', avatar: 'https://i.pravatar.cc/150?u=1' } },
+   { id: 2, name: 'Thiết kế banner tết', daysOverdue: 1, department: 'Marketing', assignee: { name: 'Trần Minh', avatar: 'https://i.pravatar.cc/150?u=2' } },
+   { id: 3, name: 'Tuyển dụng nhân sự IT', daysOverdue: 5, department: 'Nhân sự', assignee: { name: 'Lê Na', avatar: 'https://i.pravatar.cc/150?u=3' } },
+   { id: 4, name: 'Kiểm kê kho hàng', daysOverdue: 2, department: 'Kho vận', assignee: { name: 'Nguyễn Tùng', avatar: 'https://i.pravatar.cc/150?u=4' } },
+]
+
+// 3. Top Departments
+const topDepartments = [
+   { name: 'Kinh doanh', completed: 45, score: 90 },
+   { name: 'Marketing', completed: 32, score: 75 },
+   { name: 'Kỹ thuật', completed: 28, score: 60 },
+   { name: 'CSKH', completed: 21, score: 45 },
+]
+
+// 4. Top Employees
+const topEmployees = [
+   { id: 101, name: 'Nguyễn Văn A', department: 'Kinh doanh', tasks: 15, avatar: 'https://i.pravatar.cc/150?u=10' },
+   { id: 102, name: 'Trần Thị B', department: 'CSKH', tasks: 12, avatar: 'https://i.pravatar.cc/150?u=11' },
+   { id: 103, name: 'Lê Văn C', department: 'Kỹ thuật', tasks: 10, avatar: 'https://i.pravatar.cc/150?u=12' },
+   { id: 104, name: 'Phạm Thị D', department: 'Marketing', tasks: 9, avatar: 'https://i.pravatar.cc/150?u=13' },
+   { id: 105, name: 'Hoàng Văn E', department: 'Kho vận', tasks: 8, avatar: 'https://i.pravatar.cc/150?u=14' },
+]
 </script>
