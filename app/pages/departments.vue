@@ -101,18 +101,37 @@
                 </div>
               </td>
               <td class="px-6 py-4">
-                <div class="flex items-center -space-x-2 overflow-hidden">
-                  <UAvatar 
-                    v-for="member in dept.members.slice(0, 5)" 
-                    :key="member.id"
-                    :src="member.avatar"
-                    :alt="member.name"
-                    size="sm"
-                    class="ring-2 ring-white dark:ring-gray-900" 
-                  />
-                  <div v-if="dept.members.length > 5" class="flex items-center justify-center w-8 h-8 text-xs font-medium text-white bg-gray-400 border-2 border-white rounded-full hover:bg-gray-500 dark:border-gray-900">
-                    +{{ dept.members.length - 5 }}
-                  </div>
+                <div class="flex flex-wrap gap-1.5">
+                  <!-- Leader first -->
+                  <template v-for="member in dept.members" :key="'leader-' + member.id">
+                    <UBadge 
+                      v-if="member.role === 'Leader'"
+                      color="primary" 
+                      variant="solid"
+                      size="xs"
+                      class="pr-1.5"
+                    >
+                      {{ member.name }}
+                      <UIcon name="i-heroicons-star" class="w-3 h-3 ml-1" />
+                    </UBadge>
+                  </template>
+
+                  <!-- Other members (limit to 3 for neatness) -->
+                  <template v-for="(member, idx) in dept.members.filter(m => m.role !== 'Leader').slice(0, 3)" :key="member.id">
+                    <UBadge 
+                      color="gray" 
+                      variant="soft"
+                      size="xs"
+                    >
+                      {{ member.name }}
+                    </UBadge>
+                  </template>
+
+                  <!-- Remaining count -->
+                  <span v-if="dept.members.filter(m => m.role !== 'Leader').length > 3" class="text-xs text-gray-500 flex items-center px-1">
+                    +{{ dept.members.filter(m => m.role !== 'Leader').length - 3 }}
+                  </span>
+
                   <div v-if="dept.members.length === 0" class="text-gray-400 italic text-xs">
                     Chưa có thành viên
                   </div>
@@ -213,6 +232,7 @@ interface Member {
   id: number
   name: string
   avatar: string
+  role?: 'Leader' | 'Member'
 }
 
 interface Department {
@@ -228,12 +248,12 @@ const departments = ref<Department[]>([
     name: 'Phòng Kinh Doanh',
     description: 'Chịu trách nhiệm doanh số và phát triển thị trường',
     members: [
-      { id: 1, name: 'Nguyễn Văn A', avatar: 'https://i.pravatar.cc/150?u=1' },
-      { id: 2, name: 'Trần Thị B', avatar: 'https://i.pravatar.cc/150?u=2' },
-      { id: 3, name: 'Lê Văn C', avatar: 'https://i.pravatar.cc/150?u=3' },
-      { id: 4, name: 'Phạm Thị D', avatar: 'https://i.pravatar.cc/150?u=4' },
-      { id: 5, name: 'Hoàng Văn E', avatar: 'https://i.pravatar.cc/150?u=5' },
-      { id: 6, name: 'Đỗ Thị F', avatar: 'https://i.pravatar.cc/150?u=6' },
+      { id: 1, name: 'Nguyễn Văn A', avatar: 'https://i.pravatar.cc/150?u=1', role: 'Leader' },
+      { id: 2, name: 'Trần Thị B', avatar: 'https://i.pravatar.cc/150?u=2', role: 'Member' },
+      { id: 3, name: 'Lê Văn C', avatar: 'https://i.pravatar.cc/150?u=3', role: 'Member' },
+      { id: 4, name: 'Phạm Thị D', avatar: 'https://i.pravatar.cc/150?u=4', role: 'Member' },
+      { id: 5, name: 'Hoàng Văn E', avatar: 'https://i.pravatar.cc/150?u=5', role: 'Member' },
+      { id: 6, name: 'Đỗ Thị F', avatar: 'https://i.pravatar.cc/150?u=6', role: 'Member' },
     ]
   },
   {
@@ -241,8 +261,8 @@ const departments = ref<Department[]>([
     name: 'Marketing',
     description: 'Quảng bá thương hiệu và truyền thông',
     members: [
-      { id: 7, name: 'Ngô Văn G', avatar: 'https://i.pravatar.cc/150?u=7' },
-      { id: 8, name: 'Bùi Thị H', avatar: 'https://i.pravatar.cc/150?u=8' },
+      { id: 7, name: 'Ngô Văn G', avatar: 'https://i.pravatar.cc/150?u=7', role: 'Leader' },
+      { id: 8, name: 'Bùi Thị H', avatar: 'https://i.pravatar.cc/150?u=8', role: 'Member' },
     ]
   },
   {
@@ -250,9 +270,9 @@ const departments = ref<Department[]>([
     name: 'Kỹ Thuật & IT',
     description: 'Phát triển và bảo trì hệ thống phần mềm',
     members: [
-      { id: 9, name: 'Lý Văn I', avatar: 'https://i.pravatar.cc/150?u=9' },
-      { id: 10, name: 'Vũ Thị K', avatar: 'https://i.pravatar.cc/150?u=10' },
-      { id: 11, name: 'Trịnh Văn L', avatar: 'https://i.pravatar.cc/150?u=11' },
+      { id: 9, name: 'Lý Văn I', avatar: 'https://i.pravatar.cc/150?u=9', role: 'Leader' },
+      { id: 10, name: 'Vũ Thị K', avatar: 'https://i.pravatar.cc/150?u=10', role: 'Member' },
+      { id: 11, name: 'Trịnh Văn L', avatar: 'https://i.pravatar.cc/150?u=11', role: 'Member' },
     ]
   },
   {
@@ -307,10 +327,10 @@ const openEditModal = (dept: Department) => {
 }
 
 const updateDepartment = () => {
-  const index = departments.value.findIndex(d => d.id === editingDepartment.id)
-  if (index !== -1) {
-    departments.value[index].name = editingDepartment.name
-    departments.value[index].description = editingDepartment.description
+  const dept = departments.value.find(d => d.id === editingDepartment.id)
+  if (dept) {
+    dept.name = editingDepartment.name
+    dept.description = editingDepartment.description
   }
   isEditModalOpen.value = false
 }
