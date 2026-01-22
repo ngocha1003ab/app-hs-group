@@ -1,0 +1,317 @@
+<template>
+  <div class="max-w-7xl mx-auto space-y-6 md:space-y-8">
+    <!-- Page Header -->
+    <div>
+      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+        Quản lý Phòng Ban
+      </h1>
+      <p class="text-gray-500 dark:text-gray-400 mt-2 text-lg">
+        Tổ chức cơ cấu nhân sự theo phòng ban, bộ phận hoặc nhóm làm việc.
+      </p>
+    </div>
+
+    <!-- 1. Create Department Section -->
+    <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
+      <template #header>
+        <div class="px-6 py-4">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <UIcon name="i-heroicons-plus-circle" class="w-5 h-5 text-primary-500" />
+            Tạo Phòng Ban / Nhóm Mới
+          </h3>
+        </div>
+      </template>
+      
+      <div class="p-6">
+        <form @submit.prevent="createDepartment" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+          <div class="md:col-span-5">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tên phòng ban <span class="text-red-500">*</span></label>
+            <UInput 
+              v-model="newDepartment.name"
+              placeholder="Ví dụ: Phòng Kinh doanh, Team Marketing..."
+              icon="i-heroicons-building-office-2"
+              class="w-full"
+              size="lg"
+            />
+          </div>
+          <div class="md:col-span-5">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mô tả (Tùy chọn)</label>
+            <UInput 
+              v-model="newDepartment.description"
+              placeholder="Mô tả chức năng, nhiệm vụ..."
+              icon="i-heroicons-information-circle"
+              class="w-full"
+              size="lg"
+            />
+          </div>
+          <div class="md:col-span-2">
+            <UButton 
+              type="submit" 
+              color="primary" 
+              size="lg"
+              block
+              :loading="isCreating"
+              :disabled="!newDepartment.name"
+            >
+              Thêm mới
+            </UButton>
+          </div>
+        </form>
+      </div>
+    </UCard>
+
+    <!-- 2. Departments List -->
+    <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm overflow-hidden">
+      <template #header>
+        <div class="px-6 py-4 flex justify-between items-center">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white">Danh sách Phòng Ban ({{ departments.length }})</h3>
+          
+          <!-- Search/Filter could go here -->
+          <UInput 
+            v-model="searchQuery"
+            icon="i-heroicons-magnifying-glass"
+            placeholder="Tìm kiếm..."
+            size="sm"
+            color="white"
+            class="w-64"
+          />
+        </div>
+      </template>
+
+      <!-- Custom Table View -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
+            <tr>
+              <th scope="col" class="px-6 py-3 font-medium">Tên Phòng Ban</th>
+              <th scope="col" class="px-6 py-3 font-medium">Thành viên</th>
+              <th scope="col" class="px-6 py-3 font-medium text-right">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tr v-for="dept in filteredDepartments" :key="dept.id" class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+              <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                <div class="flex items-center gap-3">
+                  <div class="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/10 text-primary-600 dark:text-primary-400">
+                    <UIcon name="i-heroicons-user-group" class="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div class="text-base font-semibold">{{ dept.name }}</div>
+                    <div class="text-xs text-gray-500 font-normal">{{ dept.description || 'Chưa có mô tả' }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center -space-x-2 overflow-hidden">
+                  <UAvatar 
+                    v-for="member in dept.members.slice(0, 5)" 
+                    :key="member.id"
+                    :src="member.avatar"
+                    :alt="member.name"
+                    size="sm"
+                    class="ring-2 ring-white dark:ring-gray-900" 
+                  />
+                  <div v-if="dept.members.length > 5" class="flex items-center justify-center w-8 h-8 text-xs font-medium text-white bg-gray-400 border-2 border-white rounded-full hover:bg-gray-500 dark:border-gray-900">
+                    +{{ dept.members.length - 5 }}
+                  </div>
+                  <div v-if="dept.members.length === 0" class="text-gray-400 italic text-xs">
+                    Chưa có thành viên
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <UButton icon="i-heroicons-pencil-square" size="sm" color="neutral" variant="ghost" @click="openEditModal(dept)" />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Empty State -->
+      <div v-if="filteredDepartments.length === 0" class="p-12 text-center text-gray-500">
+         <UIcon name="i-heroicons-folder-open" class="w-12 h-12 mx-auto mb-4 text-gray-300" />
+         <p>Không tìm thấy phòng ban nào.</p>
+      </div>
+
+    </UCard>
+
+    <!-- Custom Edit Department Modal -->
+    <Transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0 scale-95"
+      enter-to-class="opacity-100 scale-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100 scale-100"
+      leave-to-class="opacity-0 scale-95"
+    >
+      <div v-if="isEditModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" style="background-color: rgba(0,0,0,0.5);">
+        <!-- Backdrop click to close -->
+        <div class="absolute inset-0" @click="isEditModalOpen = false"></div>
+
+        <!-- Modal Content -->
+        <div class="relative bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col ring-1 ring-gray-200 dark:ring-gray-800">
+          
+          <!-- Header -->
+          <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+              Chỉnh sửa Phòng Ban
+            </h3>
+            <button @click="isEditModalOpen = false" class="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none">
+              <UIcon name="i-heroicons-x-mark" class="w-5 h-5" />
+            </button>
+          </div>
+
+          <!-- Body -->
+          <div class="p-6 space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tên phòng ban <span class="text-red-500">*</span></label>
+              <UInput v-model="editingDepartment.name" size="lg" autofocus class="w-full"/>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mô tả</label>
+              <UInput v-model="editingDepartment.description" size="lg" class="w-full"/>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800">
+             <UButton color="neutral" variant="ghost" @click="isEditModalOpen = false">Hủy bỏ</UButton>
+             <UButton color="primary" @click="updateDepartment">Lưu thay đổi</UButton>
+          </div>
+        </div>
+      </div>
+    </Transition>
+  </div>
+</template>
+
+<script setup lang="ts">
+definePageMeta({
+  layout: 'app'
+})
+
+useHead({
+  title: 'Quản lý Phòng Ban - SheetVN'
+})
+
+// --- State ---
+const searchQuery = ref('')
+const isCreating = ref(false)
+const isEditModalOpen = ref(false)
+const newDepartment = reactive({
+  name: '',
+  description: ''
+})
+const editingDepartment = reactive({
+  id: 0,
+  name: '',
+  description: ''
+})
+
+// --- Mock Data ---
+interface Member {
+  id: number
+  name: string
+  avatar: string
+}
+
+interface Department {
+  id: number
+  name: string
+  description: string
+  members: Member[]
+}
+
+const departments = ref<Department[]>([
+  {
+    id: 1,
+    name: 'Phòng Kinh Doanh',
+    description: 'Chịu trách nhiệm doanh số và phát triển thị trường',
+    members: [
+      { id: 1, name: 'Nguyễn Văn A', avatar: 'https://i.pravatar.cc/150?u=1' },
+      { id: 2, name: 'Trần Thị B', avatar: 'https://i.pravatar.cc/150?u=2' },
+      { id: 3, name: 'Lê Văn C', avatar: 'https://i.pravatar.cc/150?u=3' },
+      { id: 4, name: 'Phạm Thị D', avatar: 'https://i.pravatar.cc/150?u=4' },
+      { id: 5, name: 'Hoàng Văn E', avatar: 'https://i.pravatar.cc/150?u=5' },
+      { id: 6, name: 'Đỗ Thị F', avatar: 'https://i.pravatar.cc/150?u=6' },
+    ]
+  },
+  {
+    id: 2,
+    name: 'Marketing',
+    description: 'Quảng bá thương hiệu và truyền thông',
+    members: [
+      { id: 7, name: 'Ngô Văn G', avatar: 'https://i.pravatar.cc/150?u=7' },
+      { id: 8, name: 'Bùi Thị H', avatar: 'https://i.pravatar.cc/150?u=8' },
+    ]
+  },
+  {
+    id: 3,
+    name: 'Kỹ Thuật & IT',
+    description: 'Phát triển và bảo trì hệ thống phần mềm',
+    members: [
+      { id: 9, name: 'Lý Văn I', avatar: 'https://i.pravatar.cc/150?u=9' },
+      { id: 10, name: 'Vũ Thị K', avatar: 'https://i.pravatar.cc/150?u=10' },
+      { id: 11, name: 'Trịnh Văn L', avatar: 'https://i.pravatar.cc/150?u=11' },
+    ]
+  },
+  {
+    id: 4,
+    name: 'Nhân Sự (HR)',
+    description: 'Tuyển dụng và đào tạo nhân sự',
+    members: [] // Empty state test
+  }
+])
+
+// --- Computed ---
+const filteredDepartments = computed(() => {
+  if (!searchQuery.value) return departments.value
+  const query = searchQuery.value.toLowerCase()
+  return departments.value.filter(d => 
+    d.name.toLowerCase().includes(query) || 
+    d.description.toLowerCase().includes(query)
+  )
+})
+
+// --- Actions ---
+const createDepartment = async () => {
+  if (!newDepartment.name) return
+  
+  isCreating.value = true
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800))
+  
+  departments.value.unshift({
+    id: Date.now(),
+    name: newDepartment.name,
+    description: newDepartment.description,
+    members: []
+  })
+  
+  // Reset form
+  newDepartment.name = ''
+  newDepartment.description = ''
+  isCreating.value = false
+  
+  // Toast notification (if available, mostly standard in Nuxt UI)
+  // const toast = useToast()
+  // toast.add({ title: 'Thành công', description: 'Đã tạo phòng ban mới' })
+}
+
+const openEditModal = (dept: Department) => {
+  editingDepartment.id = dept.id
+  editingDepartment.name = dept.name
+  editingDepartment.description = dept.description
+  isEditModalOpen.value = true
+}
+
+const updateDepartment = () => {
+  const index = departments.value.findIndex(d => d.id === editingDepartment.id)
+  if (index !== -1) {
+    departments.value[index].name = editingDepartment.name
+    departments.value[index].description = editingDepartment.description
+  }
+  isEditModalOpen.value = false
+}
+</script>
