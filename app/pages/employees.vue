@@ -180,7 +180,7 @@
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
             <tr>
               <th scope="col" class="px-6 py-3 font-medium">Nhân viên</th>
-              <th scope="col" class="px-6 py-3 font-medium">Thông tin liên hệ</th>
+              <th scope="col" class="px-6 py-3 font-medium">Tài khoản & Liên hệ</th>
               <th scope="col" class="px-6 py-3 font-medium">Phòng ban</th>
               <th scope="col" class="px-6 py-3 font-medium text-right">Thao tác</th>
             </tr>
@@ -199,22 +199,42 @@
                        {{ member.name }}
                        <UIcon v-if="member.role === 'Leader'" name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
                     </div>
-                    <div class="text-xs text-gray-400" v-if="member.username">@{{ member.username }}</div>
+                    <!-- Username with Copy -->
+                    <div class="text-xs text-gray-500 flex items-center gap-1 mt-0.5 group cursor-pointer" @click="copyToClipboard(member.username || '', 'Đã sao chép tên đăng nhập')">
+                       <UIcon name="i-heroicons-at-symbol" class="w-3 h-3" />
+                       <span class="font-mono group-hover:text-primary-500 transition-colors">{{ member.username }}</span>
+                       <UIcon name="i-heroicons-document-duplicate" class="w-3 h-3 opacity-0 group-hover:opacity-100 text-gray-400 group-hover:text-primary-500 transition-opacity" />
+                    </div>
                   </div>
                 </div>
               </td>
               <td class="px-6 py-4">
-                <div class="space-y-1">
+                <div class="space-y-2">
+                   <!-- Password Reveal/Copy -->
+                   <div class="flex items-center gap-2 p-1.5 -ml-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/50 group w-fit transition-colors">
+                      <div class="flex items-center gap-2 text-gray-600 dark:text-gray-300 text-xs">
+                         <UIcon name="i-heroicons-key" class="w-4 h-4 text-gray-400" />
+                         <span class="font-mono bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-gray-500">••••••</span>
+                      </div>
+                      <UButton 
+                        size="xs" 
+                        color="neutral" 
+                        variant="ghost" 
+                        icon="i-heroicons-document-duplicate" 
+                        class="opacity-0 group-hover:opacity-100 transition-opacity"
+                        @click="copyToClipboard(member.password || '', 'Đã sao chép mật khẩu')"
+                      />
+                   </div>
+
+                  <hr class="border-gray-100 dark:border-gray-800 w-full" v-if="member.email || member.phone" />
+
                   <div v-if="member.email" class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                     <UIcon name="i-heroicons-envelope" class="w-4 h-4 text-gray-400" />
-                    <span>{{ member.email }}</span>
+                    <span class="text-sm select-all">{{ member.email }}</span>
                   </div>
                   <div v-if="member.phone" class="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                     <UIcon name="i-heroicons-phone" class="w-4 h-4 text-gray-400" />
-                    <span>{{ member.phone }}</span>
-                  </div>
-                  <div v-if="!member.email && !member.phone" class="text-gray-400 italic text-xs">
-                    Chưa cập nhật thông tin
+                    <span class="text-sm select-all">{{ member.phone }}</span>
                   </div>
                 </div>
               </td>
@@ -274,35 +294,34 @@
                 <UInput v-model="editingMember.name" size="lg" autofocus class="w-full"/>
               </div>
                <!-- Username Readonly/Editable? Usually username is fixed or editable. User asked to be able to input. Let's make it editable but maybe distinct. -->
-              <div class="grid grid-cols-2 gap-4">
-                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tên đăng nhập</label>
-                    <UInput v-model="editingMember.username" size="lg" class="w-full" icon="i-heroicons-at-symbol"/>
-                 </div>
-                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mật khẩu mới</label>
-                    <UInput
-                      v-model="editingMember.password"
-                      :type="showEditPassword ? 'text' : 'password'"
-                      size="lg"
-                      class="w-full"
-                      icon="i-heroicons-lock-closed"
-                      placeholder="Để trống nếu không đổi"
-                      :ui="{ leading: 'pointer-events-none' }"
-                    >
-                      <template #trailing>
-                        <UButton
-                          color="neutral"
-                          variant="ghost"
-                          icon="i-heroicons-eye"
-                          :padded="false"
-                          :class="{ 'text-gray-400': !showEditPassword, 'text-primary-500': showEditPassword }"
-                          @click="showEditPassword = !showEditPassword"
-                        />
-                      </template>
-                    </UInput>
-                 </div>
-              </div>
+               <!-- Username Readonly/Editable? Usually username is fixed or editable. User asked to be able to input. Let's make it editable but maybe distinct. -->
+                  <div>
+                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tên đăng nhập</label>
+                     <UInput v-model="editingMember.username" size="lg" class="w-full" icon="i-heroicons-at-symbol"/>
+                  </div>
+                  <div>
+                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mật khẩu mới</label>
+                     <UInput
+                       v-model="editingMember.password"
+                       :type="showEditPassword ? 'text' : 'password'"
+                       size="lg"
+                       class="w-full"
+                       icon="i-heroicons-lock-closed"
+                       placeholder="Để trống nếu không đổi"
+                       :ui="{ leading: 'pointer-events-none' }"
+                     >
+                       <template #trailing>
+                         <UButton
+                           color="neutral"
+                           variant="ghost"
+                           icon="i-heroicons-eye"
+                           :padded="false"
+                           :class="{ 'text-gray-400': !showEditPassword, 'text-primary-500': showEditPassword }"
+                           @click="showEditPassword = !showEditPassword"
+                         />
+                       </template>
+                     </UInput>
+                  </div>
 
               <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -401,6 +420,7 @@ interface Member {
   id: string
   name: string
   username?: string // Added loosely for UI
+  password?: string // Added for display/copy (security caveat noted)
   email?: string
   phone?: string
   avatar?: string
@@ -408,6 +428,12 @@ interface Member {
   department_id: string
   license_key: string
   created_at: string
+}
+
+const copyToClipboard = (text: string, successMessage: string) => {
+  if (!text) return
+  navigator.clipboard.writeText(text)
+  toast.add({ title: 'Đã sao chép', description: successMessage, color: 'success' })
 }
 
 // --- Data Fetching ---

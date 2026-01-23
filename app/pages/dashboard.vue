@@ -235,23 +235,34 @@ const periodStats = computed(() => {
 })
 
 // --- Chart Data (Reactive) ---
+// --- Chart Data (Reactive) ---
 const chartData = computed<ChartData<'bar'>>(() => {
   let labels: string[] = []
-  let data: number[] = []
+  let completedData: number[] = []
+  let inProgressData: number[] = []
+  let overdueData: number[] = []
 
   if (selectedPeriod.value === 'today') {
     labels = ['8h', '10h', '12h', '14h', '16h', '18h']
-    data = [2, 5, 3, 6, 8, 4]
+    completedData = [2, 5, 3, 6, 8, 4]
+    inProgressData = [4, 2, 5, 3, 2, 1]
+    overdueData = [0, 1, 0, 0, 0, 0]
   } else if (selectedPeriod.value === 'yesterday') {
     labels = ['8h', '10h', '12h', '14h', '16h', '18h']
-    data = [1, 3, 2, 4, 3, 2]
+    completedData = [1, 3, 2, 4, 3, 2]
+    inProgressData = [3, 4, 2, 1, 2, 2]
+    overdueData = [1, 0, 0, 0, 0, 0]
   } else if (selectedPeriod.value === '1month') {
     labels = ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4']
-    data = [45, 60, 55, 94]
+    completedData = [45, 60, 55, 94]
+    inProgressData = [15, 20, 10, 11]
+    overdueData = [5, 8, 12, 5]
   } else {
     // 7 days default
     labels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
-    data = [12, 19, 15, 25, 22, 10, 8]
+    completedData = [12, 19, 15, 25, 22, 10, 8]
+    inProgressData = [5, 8, 10, 6, 7, 4, 2]
+    overdueData = [1, 2, 0, 1, 3, 2, 1]
   }
 
   return {
@@ -261,7 +272,25 @@ const chartData = computed<ChartData<'bar'>>(() => {
         label: 'Hoàn thành',
         backgroundColor: '#10b981', // emerald-500
         borderRadius: 4,
-        data
+        data: completedData,
+        barPercentage: 0.7,
+        categoryPercentage: 0.8
+      },
+      {
+        label: 'Đang làm',
+        backgroundColor: '#eab308', // yellow-500
+        borderRadius: 4,
+        data: inProgressData,
+        barPercentage: 0.7,
+        categoryPercentage: 0.8
+      },
+      {
+        label: 'Quá hạn',
+        backgroundColor: '#ef4444', // red-500
+        borderRadius: 4,
+        data: overdueData,
+        barPercentage: 0.7,
+        categoryPercentage: 0.8
       }
     ]
   }
@@ -272,7 +301,12 @@ const chartOptions = computed<ChartOptions<'bar'>>(() => ({
   maintainAspectRatio: false,
   plugins: {
     legend: {
-       display: false
+       display: true,
+       position: 'bottom',
+       labels: {
+          usePointStyle: true,
+          padding: 20
+       }
     }
   },
   scales: {

@@ -43,5 +43,32 @@
       "created_at": "2026-01-23T13:57:10.021Z"
     }
   ],
-  "members": []
+  "members": [
+    {
+      "id": "mkqz4ypau0f0ua9igj",
+      "name": "Nguyễn Văng Long",
+      "username": "nguyenvanglong",
+      "password": "nghichti1Aa@",
+      "email": "",
+      "phone": "",
+      "department_id": "mkqy2jzjrzpbo75z3n",
+      "role": "Leader",
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T14:26:35.568Z",
+      "avatar": "https://ui-avatars.com/api/?name=Nguy%E1%BB%85n%20V%C4%83ng%20Long&background=random"
+    },
+    {
+      "id": "mkqz5lp7nwpnh73xt4",
+      "name": "Tam Long Ma",
+      "username": "tamlongma",
+      "password": "nghichti1Aa@",
+      "email": "tamlongma@gmail.com",
+      "phone": "0987876372",
+      "department_id": "mkqy2jzjrzpbo75z3n",
+      "role": "Member",
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T14:27:05.371Z",
+      "avatar": "https://ui-avatars.com/api/?name=Tam%20Long%20Ma&background=random"
+    }
+  ]
 }
