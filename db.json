@@ -1,0 +1,23 @@
+{
+  "licenses": [
+    {
+      "id": 9,
+      "key_license": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "expired_at": null,
+      "product_id": 626,
+      "email": "phamhang@gmail.com",
+      "status": 1,
+      "added_at": "2026-01-23T13:12:25.836Z"
+    },
+    {
+      "id": 10,
+      "key_license": "b6236ba1fb61aeb957ef54022951b3fd",
+      "expired_at": "2026-03-30T23:00:00.000Z",
+      "product_id": 626,
+      "email": "shenlongkake@gmail.com",
+      "status": 1,
+      "added_at": "2026-01-23T13:16:25.276Z"
+    }
+  ],
+  "settings": {}
+}

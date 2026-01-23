@@ -136,6 +136,9 @@ const handleLicenseSubmit = async () => {
       }
     })
 
+    const { setLicense } = useLicense()
+    setLicense(res.user as any)
+
     toast.add({
       title: 'Đăng nhập thành công',
       description: `Xin chào ${res.user.email}`,
@@ -143,11 +146,11 @@ const handleLicenseSubmit = async () => {
       color: 'success'
     })
     
-    await router.push('/dashboard')
+    await navigateTo('/dashboard')
   } catch (error: any) {
     toast.add({
       title: 'Lỗi xác thực',
-      description: error.data?.message || 'Không thể kiểm tra giấy phép. Vui lòng thử lại.',
+      description: 'Không thể kiểm tra giấy phép. Vui lòng thử lại.',
       icon: 'i-heroicons-exclamation-circle',
       color: 'error'
     })
