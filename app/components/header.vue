@@ -157,13 +157,18 @@
       
       <div class="flex items-center gap-2 cursor-pointer p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
         <UAvatar 
-          src="https://avatars.githubusercontent.com/u/739984?v=4" 
-          alt="User Avatar" 
+          :src="userInfo.avatar" 
+          :alt="userInfo.name" 
           size="sm"
         />
-        <span class="hidden md:block text-sm font-medium text-gray-700 dark:text-gray-200 pr-2">
-          Admin User
-        </span>
+        <div class="hidden md:flex flex-col items-start pr-2">
+           <span class="text-sm font-medium text-gray-700 dark:text-gray-200 leading-tight">
+             {{ userInfo.name }}
+           </span>
+           <span class="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
+             {{ userInfo.role === 'Leader' ? 'Trưởng nhóm' : (userInfo.role === 'Member' ? 'Nhân viên' : 'Admin') }}
+           </span>
+        </div>
       </div>
     </div>
   </header>
@@ -174,6 +179,18 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const isDropdownOpen = ref(false)
 const dropdownContainer = ref<HTMLElement | null>(null)
+
+const userInfo = ref({
+   name: '',
+   role: '',
+   avatar: ''
+})
+
+// Fetch User Info
+const { data: authData } = await useFetch<any>('/api/auth/me')
+if(authData.value && authData.value.success) {
+   userInfo.value = authData.value.user
+}
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value

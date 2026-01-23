@@ -36,10 +36,7 @@ export default defineEventHandler(async (event) => {
         const creator = db.data.members.find(m => m.id === memberId)
         if (creator) {
             if (creator.role === 'Member') {
-                // Members usually don't create tasks for others? 
-                // Allowing it for now based on "Tạo mới và phân công nhiệm vụ" description, 
-                // but usually Leader/Admin does this. 
-                // If strict: throw createError({statusCode: 403, message: 'Chỉ Leader mới được giao việc'})
+                throw createError({ statusCode: 403, message: 'Nhân viên không có quyền tạo nhiệm vụ' })
             }
             if (creator.role === 'Leader' && creator.department_id !== assignee.department_id) {
                 // Leader can only assign to their own department?

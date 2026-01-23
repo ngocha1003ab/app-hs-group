@@ -11,8 +11,8 @@
     </div>
 
     <!-- 1. Create Task Section -->
-    <!-- 1. Create Task Section -->
-    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+    <!-- 1. Create Task Section (Hidden for Members) -->
+    <div v-if="userInfo.role !== 'Member'" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
       <div class="p-6 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
         <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <UIcon name="i-heroicons-plus-circle" class="w-5 h-5 text-primary-500" />
@@ -163,6 +163,7 @@
               <th class="px-6 py-3 font-medium">Nhiệm vụ</th>
               <th class="px-6 py-3 font-medium">Người thực hiện</th>
               <th class="px-6 py-3 font-medium">Hạn chót</th>
+              <th class="px-6 py-3 font-medium">Trạng thái</th>
               <th class="px-6 py-3 font-medium">Ưu tiên</th>
               <th class="px-6 py-3 font-medium text-right">Thao tác</th>
             </tr>
@@ -185,6 +186,11 @@
                  </span>
                  <div v-if="isOverdue(task.dueDate)" class="text-[10px] text-red-500 font-bold uppercase">Quá hạn</div>
               </td>
+              <td class="px-6 py-4">
+                 <UBadge :color="task.status === 'done' ? 'success' : (task.status === 'in-progress' ? 'info' : 'neutral')" variant="subtle" size="xs">
+                    {{ task.status === 'done' ? 'Hoàn thành' : (task.status === 'in-progress' ? 'Đang làm' : 'Cần làm') }}
+                 </UBadge>
+              </td>
                <td class="px-6 py-4">
                  <UBadge :color="priorityBadge(task.priority).color" variant="subtle" size="xs">
                     {{ priorityBadge(task.priority).label }}
@@ -195,7 +201,7 @@
               </td>
             </tr>
             <tr v-if="filteredTasks.length === 0">
-              <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                 Chưa có nhiệm vụ nào.
               </td>
             </tr>
@@ -228,19 +234,42 @@
                </div>
                
                <!-- Body -->
+               <!-- Body -->
                <div class="space-y-4">
+                  <!-- Status (Everyone can edit) -->
+                  <!-- Status (Everyone can edit) -->
+                  <div>
+                      <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Trạng thái</label>
+                      <div class="flex p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
+                        <button
+                          v-for="status in [
+                            { label: 'Cần làm', value: 'todo', activeColor: 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white' },
+                            { label: 'Đang làm', value: 'in-progress', activeColor: 'bg-blue-500 text-white shadow-md' },
+                            { label: 'Hoàn thành', value: 'done', activeColor: 'bg-green-500 text-white shadow-md' }
+                          ]"
+                          :key="status.value"
+                          type="button"
+                          @click="editingTask.status = status.value as any"
+                          class="flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                          :class="editingTask.status === status.value ? status.activeColor : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'"
+                        >
+                          {{ status.label }}
+                        </button>
+                      </div>
+                  </div>
+
                   <div>
                      <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Tên nhiệm vụ</label>
-                     <UInput class="w-full" v-model="editingTask.title" />
+                     <UInput class="w-full" v-model="editingTask.title" :disabled="userInfo.role === 'Member'" />
                   </div>
                   <div>
                      <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Miêu tả</label>
-                     <UTextarea class="w-full" v-model="editingTask.description" :rows="3" />
+                     <UTextarea class="w-full" v-model="editingTask.description" :rows="3" :disabled="userInfo.role === 'Member'" />
                   </div>
                   <!-- Due Date -->
                   <div>
                       <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Hạn chót</label>
-                      <UInput v-model="editingTask.dueDate" type="date" class="w-full" size="lg" />
+                      <UInput v-model="editingTask.dueDate" type="date" class="w-full" size="lg" :disabled="userInfo.role === 'Member'" />
                   </div>
 
                   <!-- Priority -->
@@ -251,11 +280,14 @@
                           type="button" 
                           v-for="p in priorities" 
                           :key="p.value"
-                          @click="editingTask.priority = p.value"
+                          @click="userInfo.role !== 'Member' && (editingTask.priority = p.value)"
                           class="flex flex-col items-center justify-center py-3 px-2 rounded-xl border transition-all duration-200"
-                          :class="editingTask.priority === p.value 
-                            ? 'ring-2 ring-primary-500 border-transparent bg-primary-50 dark:bg-primary-900/20' 
-                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-500 hover:border-primary-200 hover:bg-gray-50 dark:hover:bg-gray-800/80'"
+                          :class="[
+                            editingTask.priority === p.value 
+                              ? 'ring-2 ring-primary-500 border-transparent bg-primary-50 dark:bg-primary-900/20' 
+                              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-500 hover:border-primary-200 hover:bg-gray-50 dark:hover:bg-gray-800/80',
+                            userInfo.role === 'Member' ? 'opacity-50 cursor-not-allowed' : ''
+                          ]"
                         >
                            <div 
                               class="w-3 h-3 rounded-full mb-2"
@@ -348,6 +380,13 @@ const newTask = reactive({
   priority: 'medium' as Priority,
   dueDate: ''
 })
+
+// --- User Role ---
+const userInfo = ref({ role: 'Owner' })
+const { data: authData } = await useFetch<any>('/api/auth/me')
+if(authData.value && authData.value.success) {
+   userInfo.value = authData.value.user
+}
 
 // --- Data Fetching ---
 // Fetch Departments
@@ -490,6 +529,7 @@ const openEditModal = (task: Task) => {
    editingTask.id = task.id
    editingTask.title = task.title
    editingTask.description = task.description
+   editingTask.status = task.status
    editingTask.priority = task.priority
    editingTask.dueDate = task.dueDate
    editingTask.assigneeId = task.assigneeId
@@ -507,7 +547,8 @@ const updateTask = async () => {
            title: editingTask.title,
            description: editingTask.description,
            priority: editingTask.priority,
-           due_date: editingTask.dueDate
+           due_date: editingTask.dueDate,
+           status: editingTask.status
            // user cannot change assignee/status here in this minimal modal yet unless expanded
         }
      })

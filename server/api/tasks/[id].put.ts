@@ -36,10 +36,14 @@ export default defineEventHandler(async (event) => {
             if (currentTask.assignee_id !== memberId) {
                 throw createError({ statusCode: 403, message: 'Bạn không có quyền sửa nhiệm vụ này' })
             }
-            // Member Check: Cannot change Due Date
-            if (due_date && due_date !== currentTask.due_date) {
-                throw createError({ statusCode: 403, message: 'Nhân viên không được sửa hạn hoàn thành' })
-            }
+
+            // Member Check: Can ONLY update status
+            // If any other field is being updated, throw error
+            if (title !== undefined && title !== currentTask.title) throw createError({ statusCode: 403, message: 'Nhân viên không được sửa tên nhiệm vụ' })
+            if (description !== undefined && description !== currentTask.description) throw createError({ statusCode: 403, message: 'Nhân viên không được sửa mô tả' })
+            if (priority !== undefined && priority !== currentTask.priority) throw createError({ statusCode: 403, message: 'Nhân viên không được sửa độ ưu tiên' })
+            if (due_date !== undefined && due_date !== currentTask.due_date) throw createError({ statusCode: 403, message: 'Nhân viên không được sửa hạn hoàn thành' })
+            if (assignee_id !== undefined && assignee_id !== currentTask.assignee_id) throw createError({ statusCode: 403, message: 'Nhân viên không được chuyển giao nhiệm vụ' })
         }
 
         if (user.role === 'Leader') {

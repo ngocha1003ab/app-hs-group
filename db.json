@@ -84,6 +84,19 @@
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T14:40:53.045Z",
       "updated_at": "2026-01-23T14:40:53.045Z"
+    },
+    {
+      "id": "mkr0b41mngr73yj90s",
+      "title": "Làm nhiệm vụ mới đi",
+      "description": "Nhiệm vụ mới nhé",
+      "assignee_id": "mkqz5lp7nwpnh73xt4",
+      "department_id": "mkqy2jzjrzpbo75z3n",
+      "priority": "medium",
+      "status": "todo",
+      "due_date": "2026-01-30",
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T14:59:22.042Z",
+      "updated_at": "2026-01-23T15:03:44.996Z"
     }
   ]
 }
