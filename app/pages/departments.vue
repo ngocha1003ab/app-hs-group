@@ -222,66 +222,30 @@ const newDepartment = reactive({
   description: ''
 })
 const editingDepartment = reactive({
-  id: 0,
+  id: '' as string | number,
   name: '',
   description: ''
 })
 
-// --- Mock Data ---
+// --- Types ---
 interface Member {
-  id: number
+  id: string | number
   name: string
-  avatar: string
+  avatar?: string
   role?: 'Leader' | 'Member'
 }
 
 interface Department {
-  id: number
+  id: string | number
   name: string
   description: string
   members: Member[]
 }
 
-const departments = ref<Department[]>([
-  {
-    id: 1,
-    name: 'Phòng Kinh Doanh',
-    description: 'Chịu trách nhiệm doanh số và phát triển thị trường',
-    members: [
-      { id: 1, name: 'Nguyễn Văn A', avatar: 'https://i.pravatar.cc/150?u=1', role: 'Leader' },
-      { id: 2, name: 'Trần Thị B', avatar: 'https://i.pravatar.cc/150?u=2', role: 'Member' },
-      { id: 3, name: 'Lê Văn C', avatar: 'https://i.pravatar.cc/150?u=3', role: 'Member' },
-      { id: 4, name: 'Phạm Thị D', avatar: 'https://i.pravatar.cc/150?u=4', role: 'Member' },
-      { id: 5, name: 'Hoàng Văn E', avatar: 'https://i.pravatar.cc/150?u=5', role: 'Member' },
-      { id: 6, name: 'Đỗ Thị F', avatar: 'https://i.pravatar.cc/150?u=6', role: 'Member' },
-    ]
-  },
-  {
-    id: 2,
-    name: 'Marketing',
-    description: 'Quảng bá thương hiệu và truyền thông',
-    members: [
-      { id: 7, name: 'Ngô Văn G', avatar: 'https://i.pravatar.cc/150?u=7', role: 'Leader' },
-      { id: 8, name: 'Bùi Thị H', avatar: 'https://i.pravatar.cc/150?u=8', role: 'Member' },
-    ]
-  },
-  {
-    id: 3,
-    name: 'Kỹ Thuật & IT',
-    description: 'Phát triển và bảo trì hệ thống phần mềm',
-    members: [
-      { id: 9, name: 'Lý Văn I', avatar: 'https://i.pravatar.cc/150?u=9', role: 'Leader' },
-      { id: 10, name: 'Vũ Thị K', avatar: 'https://i.pravatar.cc/150?u=10', role: 'Member' },
-      { id: 11, name: 'Trịnh Văn L', avatar: 'https://i.pravatar.cc/150?u=11', role: 'Member' },
-    ]
-  },
-  {
-    id: 4,
-    name: 'Nhân Sự (HR)',
-    description: 'Tuyển dụng và đào tạo nhân sự',
-    members: [] // Empty state test
-  }
-])
+// --- Data Fetching ---
+const { data: departmentsData, refresh } = await useFetch<Department[]>('/api/departments')
+
+const departments = computed(() => departmentsData.value || [])
 
 // --- Computed ---
 const filteredDepartments = computed(() => {
@@ -293,30 +257,38 @@ const filteredDepartments = computed(() => {
   )
 })
 
+const toast = useToast()
+
 // --- Actions ---
 const createDepartment = async () => {
   if (!newDepartment.name) return
   
   isCreating.value = true
-  
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 800))
-  
-  departments.value.unshift({
-    id: Date.now(),
-    name: newDepartment.name,
-    description: newDepartment.description,
-    members: []
-  })
-  
-  // Reset form
-  newDepartment.name = ''
-  newDepartment.description = ''
-  isCreating.value = false
-  
-  // Toast notification (if available, mostly standard in Nuxt UI)
-  // const toast = useToast()
-  // toast.add({ title: 'Thành công', description: 'Đã tạo phòng ban mới' })
+  try {
+    await $fetch('/api/departments', {
+      method: 'POST',
+      body: {
+        name: newDepartment.name,
+        description: newDepartment.description
+      }
+    })
+    
+    toast.add({ title: 'Thành công', description: 'Đã tạo phòng ban mới', color: 'success' })
+    
+    // Reset form & Refresh list
+    newDepartment.name = ''
+    newDepartment.description = ''
+    await refresh()
+    
+  } catch (error: any) {
+    toast.add({ 
+      title: 'Lỗi', 
+      description: error.data?.message || 'Không thể tạo phòng ban', 
+      color: 'error' 
+    })
+  } finally {
+    isCreating.value = false
+  }
 }
 
 const openEditModal = (dept: Department) => {
@@ -326,12 +298,25 @@ const openEditModal = (dept: Department) => {
   isEditModalOpen.value = true
 }
 
-const updateDepartment = () => {
-  const dept = departments.value.find(d => d.id === editingDepartment.id)
-  if (dept) {
-    dept.name = editingDepartment.name
-    dept.description = editingDepartment.description
+const updateDepartment = async () => {
+  try {
+    await $fetch(`/api/departments/${editingDepartment.id}`, {
+      method: 'PUT',
+      body: {
+        name: editingDepartment.name,
+        description: editingDepartment.description
+      }
+    })
+    
+    toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin', color: 'success' })
+    await refresh()
+    isEditModalOpen.value = false
+  } catch (error: any) {
+    toast.add({ 
+       title: 'Lỗi', 
+       description: error.data?.message || 'Không thể cập nhật', 
+       color: 'error' 
+    })
   }
-  isEditModalOpen.value = false
 }
 </script>
