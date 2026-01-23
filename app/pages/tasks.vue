@@ -326,7 +326,7 @@ const employees: Employee[] = [
   { id: 105, name: 'Phạm Thị D', avatar: 'https://i.pravatar.cc/150?u=4', departmentId: 4, departmentName: 'Nhân Sự (HR)' },
 ]
 
-const priorities = [
+const priorities: { value: Priority, label: string, activeClass: string }[] = [
   { value: 'high', label: 'Cao', activeClass: 'border-red-500 bg-red-50 text-red-700 dark:bg-red-900/30' },
   { value: 'medium', label: 'Trung bình', activeClass: 'border-orange-500 bg-orange-50 text-orange-700 dark:bg-orange-900/30' },
   { value: 'low', label: 'Thấp', activeClass: 'border-gray-500 bg-gray-100 text-gray-700 dark:bg-gray-700/50' }
