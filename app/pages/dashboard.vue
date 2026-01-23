@@ -1,13 +1,28 @@
 <template>
   <div class="max-w-7xl mx-auto space-y-6 md:space-y-8">
     <!-- Page Header -->
-    <div>
-      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-        Thống kê
-      </h1>
-      <p class="text-gray-500 dark:text-gray-400 mt-2 text-lg">
-        Tổng hợp tình hình công việc và hiệu suất toàn thời gian.
-      </p>
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          Thống kê
+        </h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-2 text-lg">
+          Tổng hợp tình hình công việc và hiệu suất.
+        </p>
+      </div>
+      
+      <!-- Time Filter -->
+      <div class="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+        <button 
+          v-for="period in periods" 
+          :key="period.value"
+          @click="selectedPeriod = period.value"
+          class="px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200"
+          :class="selectedPeriod === period.value ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'"
+        >
+          {{ period.label }}
+        </button>
+      </div>
     </div>
 
     <!-- 1. Stats Grid (4 Blocks) -->
@@ -17,7 +32,7 @@
           <div class="flex items-start justify-between">
             <div class="space-y-1">
               <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Tổng công việc</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white">128</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ periodStats.total }}</p>
             </div>
             <div class="p-2.5 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
               <UIcon name="i-heroicons-clipboard-document-list" class="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -31,7 +46,7 @@
           <div class="flex items-start justify-between">
             <div class="space-y-1">
               <p class="text-sm font-medium text-yellow-600 dark:text-yellow-400 uppercase">Đang làm</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white">42</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ periodStats.inProgress }}</p>
             </div>
             <div class="p-2.5 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
               <UIcon name="i-heroicons-clock" class="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
@@ -45,7 +60,7 @@
           <div class="flex items-start justify-between">
             <div class="space-y-1">
               <p class="text-sm font-medium text-green-600 dark:text-green-400 uppercase">Đã hoàn thành</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white">76</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ periodStats.completed }}</p>
             </div>
             <div class="p-2.5 bg-green-50 dark:bg-green-900/20 rounded-xl">
               <UIcon name="i-heroicons-check-badge" class="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -59,7 +74,7 @@
           <div class="flex items-start justify-between">
             <div class="space-y-1">
               <p class="text-sm font-medium text-red-600 dark:text-red-400 uppercase">Quá hạn</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white">10</p>
+              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ periodStats.overdue }}</p>
             </div>
             <div class="p-2.5 bg-red-50 dark:bg-red-900/20 rounded-xl">
               <UIcon name="i-heroicons-exclamation-triangle" class="w-6 h-6 text-red-600 dark:text-red-400" />
@@ -76,7 +91,7 @@
       <UCard class="lg:col-span-2 ring-1 ring-gray-200 dark:ring-gray-800">
         <template #header>
           <div class="px-6 py-4">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Công việc hoàn thành (7 ngày qua)</h3>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Công việc hoàn thành ({{ selectedPeriodLabel }})</h3>
           </div>
         </template>
         <div class="h-80 w-full relative p-6">
@@ -188,20 +203,69 @@ useHead({
   title: 'Thống kê - SheetVN'
 })
 
-// --- Mock Data ---
+// --- Filter State ---
+type Period = 'today' | 'yesterday' | '7days' | '1month'
 
-// 1. Chart Data
-const chartData = computed<ChartData<'bar'>>(() => ({
-  labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
-  datasets: [
-    {
-      label: 'Hoàn thành',
-      backgroundColor: '#10b981', // emerald-500
-      borderRadius: 4,
-      data: [12, 19, 15, 25, 22, 10, 8]
-    }
-  ]
-}))
+const selectedPeriod = ref<Period>('7days')
+
+const periods: { label: string; value: Period }[] = [
+  { label: 'Hôm nay', value: 'today' },
+  { label: 'Hôm qua', value: 'yesterday' },
+  { label: '7 ngày qua', value: '7days' },
+  { label: '30 ngày qua', value: '1month' }
+]
+
+const selectedPeriodLabel = computed(() => {
+  return periods.find(p => p.value === selectedPeriod.value)?.label || '7 ngày qua'
+})
+
+// --- Mock Stats Data (Reactive) ---
+const periodStats = computed(() => {
+  switch (selectedPeriod.value) {
+    case 'today':
+      return { total: 12, inProgress: 8, completed: 3, overdue: 1 }
+    case 'yesterday':
+      return { total: 15, inProgress: 4, completed: 10, overdue: 1 }
+    case '1month':
+      return { total: 340, inProgress: 56, completed: 254, overdue: 30 }
+    case '7days':
+    default:
+      return { total: 128, inProgress: 42, completed: 76, overdue: 10 }
+  }
+})
+
+// --- Chart Data (Reactive) ---
+const chartData = computed<ChartData<'bar'>>(() => {
+  let labels: string[] = []
+  let data: number[] = []
+
+  if (selectedPeriod.value === 'today') {
+    labels = ['8h', '10h', '12h', '14h', '16h', '18h']
+    data = [2, 5, 3, 6, 8, 4]
+  } else if (selectedPeriod.value === 'yesterday') {
+    labels = ['8h', '10h', '12h', '14h', '16h', '18h']
+    data = [1, 3, 2, 4, 3, 2]
+  } else if (selectedPeriod.value === '1month') {
+    labels = ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4']
+    data = [45, 60, 55, 94]
+  } else {
+    // 7 days default
+    labels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
+    data = [12, 19, 15, 25, 22, 10, 8]
+  }
+
+  return {
+    labels,
+    datasets: [
+      {
+        label: 'Hoàn thành',
+        backgroundColor: '#10b981', // emerald-500
+        borderRadius: 4,
+        data
+      }
+    ]
+  }
+})
 
 const chartOptions = computed<ChartOptions<'bar'>>(() => ({
   responsive: true,
