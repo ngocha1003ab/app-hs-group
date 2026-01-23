@@ -9,15 +9,18 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 401, message: 'Unauthorized' })
     }
 
-    // Only Owner can update Company Settings
-    if (memberId) {
-        throw createError({ statusCode: 403, message: 'Bạn không có quyền thay đổi thông tin công ty' })
-    }
-
-    const body = await readBody(event)
-    const { companyName, description } = body
+    const { companyName, description } = await readBody(event)
 
     const db = await useDb()
+
+    // Permission Check: Only Owner can update Company Settings
+    if (memberId) {
+        const member = db.data.members.find(m => m.id === memberId && m.license_key === licenseKey)
+        if (!member || member.role !== 'Owner') {
+            throw createError({ statusCode: 403, message: 'Bạn không có quyền thay đổi thông tin công ty' })
+        }
+    }
+
     if (!Array.isArray(db.data.settings)) {
         db.data.settings = []
     }

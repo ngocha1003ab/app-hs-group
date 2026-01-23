@@ -9,7 +9,7 @@
     <!-- Desktop Title / Breadcrumbs (Placeholder) -->
     <div class="hidden md:flex items-center gap-4">
       <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-        Dashboard
+        {{ companyName }}
       </h2>
     </div>
 
@@ -192,10 +192,15 @@ const userInfo = ref({
    avatar: ''
 })
 
+const companyName = ref('Dashboard')
+
 // Fetch User Info
 const { data: authData } = await useFetch<any>('/api/auth/me')
 if(authData.value && authData.value.success) {
    userInfo.value = authData.value.user
+   if (authData.value.companyName) {
+       companyName.value = authData.value.companyName
+   }
 }
 
 const toggleDropdown = () => {

@@ -4,14 +4,21 @@ import { useDb } from '../../utils/db'
 export default defineEventHandler(async (event) => {
     const licenseKey = getCookie(event, 'license_key')
     const memberId = getCookie(event, 'member_id')
-    const memberRole = getCookie(event, 'member_role')
 
     if (!licenseKey) {
         throw createError({ statusCode: 401, message: 'Unauthorized' })
     }
 
-    // Default to Owner info if no member logged in check
-    // Default to Owner info if no member logged in check
+    const db = await useDb()
+
+    // Fetch Global Settings for Company Name
+    if (!Array.isArray(db.data.settings)) {
+        db.data.settings = []
+    }
+    const globalSettings = db.data.settings.find(s => s.license_key === licenseKey && !s.member_id)
+    const companyName = globalSettings?.companyName || 'Dashboard'
+
+    // Default User
     let user: any = {
         name: 'Admin User',
         role: 'Owner',
@@ -21,12 +28,11 @@ export default defineEventHandler(async (event) => {
     }
 
     if (memberId) {
-        const db = await useDb()
         const member = db.data.members.find(m => m.id === memberId)
         if (member) {
             user = {
                 name: member.name,
-                role: member.role, // 'Leader' | 'Member'
+                role: member.role,
                 avatar: member.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`,
                 id: member.id,
                 username: member.username || '',
@@ -35,10 +41,7 @@ export default defineEventHandler(async (event) => {
             }
         }
     } else {
-        // If license key exists but no memberId, it's the main License Owner
-        const db = await useDb()
-
-        // Try to find Owner record in members table first (Preferred)
+        // Owner Check
         const ownerMember = db.data.members.find(m => m.license_key === licenseKey && m.role === 'Owner')
 
         if (ownerMember) {
@@ -52,11 +55,8 @@ export default defineEventHandler(async (event) => {
                 email: ownerMember.email || ''
             }
         } else {
-            // Fallback to settings (Legacy)
-            if (!Array.isArray(db.data.settings)) {
-                db.data.settings = []
-            }
-            const settings = db.data.settings.find(s => s.license_key === licenseKey && !s.member_id) || { license_key: licenseKey } as any
+            // Fallback Profile from Settings
+            const settings = globalSettings || { license_key: licenseKey } as any
 
             user = {
                 name: settings.name || 'Chủ doanh nghiệp',
@@ -72,6 +72,7 @@ export default defineEventHandler(async (event) => {
 
     return {
         success: true,
-        user
+        user,
+        companyName
     }
 })
