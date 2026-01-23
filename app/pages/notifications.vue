@@ -56,6 +56,12 @@
         <p class="text-gray-500 mt-1">Bạn chưa có thông báo nào mới.</p>
       </div>
     </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-6">
+      <AppPagination v-model="page" :limit="limit" :total="totalNotifications" />
+    </div>
+
   </div>
 </template>
 
@@ -97,13 +103,26 @@ const timeAgo = (dateStr: string) => {
     return date.toLocaleDateString('vi-VN')
 }
 
-const { data: rawNotifications, refresh } = await useFetch<Notification[]>('/api/notifications', {
-  key: 'notifications-page'
+// --- Pagination State ---
+const page = ref(1)
+const limit = ref(10) // 10 notifications per page
+
+const queryParams = computed(() => ({
+  page: page.value,
+  limit: limit.value
+}))
+
+const { data: notificationsData, refresh } = await useFetch<any>('/api/notifications', {
+  key: 'notifications-page',
+  params: queryParams,
+  watch: [page]
 })
 
+const totalNotifications = computed(() => notificationsData.value?.total || 0)
+
 const notifications = computed(() => {
-  if (!rawNotifications.value) return []
-  return rawNotifications.value.map((n: any) => ({
+  const raw = notificationsData.value?.data || []
+  return raw.map((n: any) => ({
     ...n,
     time: timeAgo(n.created_at)
   }))
@@ -112,9 +131,9 @@ const notifications = computed(() => {
 const handleClick = async (notif: Notification) => {
     if (!notif.read) {
         // Optimistic
-        if (rawNotifications.value) {
-            const idx = rawNotifications.value.findIndex((n: any) => n.id === notif.id)
-            if (idx !== -1 && rawNotifications.value[idx]) rawNotifications.value[idx].read = true
+        if (notificationsData.value && notificationsData.value.data) {
+            const idx = notificationsData.value.data.findIndex((n: any) => n.id === notif.id)
+            if (idx !== -1 && notificationsData.value.data[idx]) notificationsData.value.data[idx].read = true
         }
         await $fetch('/api/notifications/mark-read', { method: 'POST', body: { id: notif.id } })
     }

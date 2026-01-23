@@ -27,5 +27,21 @@ export default defineEventHandler(async (event) => {
     const notifications = db.data.notifications.filter(n => targetIds.includes(n.user_id) && n.license_key === licenseKey)
 
     // Sort newest first
-    return notifications.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    notifications.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+    // Pagination
+    const query = getQuery(event)
+    const page = Number(query.page) || 1
+    const limit = Number(query.limit) || 20
+    const total = notifications.length
+
+    const start = (page - 1) * limit
+    const paginatedNotifications = notifications.slice(start, start + limit)
+
+    return {
+        data: paginatedNotifications,
+        total,
+        page,
+        limit
+    }
 })

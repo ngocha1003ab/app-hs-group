@@ -91,6 +91,11 @@
       </div>
     </ClientOnly>
 
+    <!-- Pagination -->
+    <div class="mt-4 flex justify-center pb-6">
+       <AppPagination v-model="page" :limit="limit" :total="totalTasks" />
+    </div>
+
     <!-- Custom Task Detail Modal (HTML/CSS) -->
     <Transition
       enter-active-class="transition duration-200 ease-out"
@@ -304,11 +309,23 @@ const getMember = (id: string) => {
 }
 
 // Fetch Tasks
-const { data: tasksData, refresh: refreshTasks } = await useFetch<any[]>('/api/tasks')
+const page = ref(1)
+const limit = ref(20)
 
+const queryParams = computed(() => ({
+  page: page.value,
+  limit: limit.value
+}))
+
+const { data: tasksData, refresh: refreshTasks } = await useFetch<any>('/api/tasks', {
+  params: queryParams,
+  watch: [page]
+})
+
+// Fix for paginated response structure
 const tasks = computed<Task[]>(() => {
-    if (!tasksData.value) return []
-    return tasksData.value.map(t => {
+    const rawData = tasksData.value?.data || [] // Access .data from paginated response
+    return rawData.map((t: any) => {
         const assignee = getMember(t.assignee_id)
         return {
             id: t.id, // is string now
@@ -327,6 +344,8 @@ const tasks = computed<Task[]>(() => {
         }
     })
 })
+
+const totalTasks = computed(() => tasksData.value?.total || 0)
 
 
 // Initialize Drag and Drop Columns

@@ -158,6 +158,7 @@
 
       <div class="overflow-x-auto">
         <table class="w-full text-sm text-left">
+           <!-- ... (table content) ... -->
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
             <tr>
               <th class="px-6 py-3 font-medium">Nhiệm vụ</th>
@@ -202,11 +203,17 @@
             </tr>
             <tr v-if="filteredTasks.length === 0">
               <td colspan="6" class="px-6 py-12 text-center text-gray-500">
-                Chưa có nhiệm vụ nào.
+                <span v-if="fetchStatus === 'pending'">Đang tải...</span>
+                <span v-else>Không tìm thấy nhiệm vụ nào.</span>
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="p-4 border-t border-gray-100 dark:border-gray-800 flex justify-end" v-if="totalTasks > 0">
+        <AppPagination v-model="page" :limit="limit" :total="totalTasks" />
       </div>
     </div>
 
@@ -407,11 +414,29 @@ const employees = computed(() => {
 })
 
 // Fetch Tasks
-const { data: tasksData, refresh: refreshTasks } = await useFetch<any[]>('/api/tasks')
+// Fetch Tasks (Server-side Pagination & Search)
+const page = ref(1)
+const limit = ref(20)
+// taskListSearch is already defined, let's just use it but with debounce ideally, or just bind
+// The user said: "phần table... search cũng phải tìm trên server"
+
+// We use `taskListSearch` as the search term. 
+// We should debounce this in a real app, but for now direct binding in useFetch params works.
+
+const queryParams = computed(() => ({
+    page: page.value,
+    limit: limit.value,
+    search: taskListSearch.value
+}))
+
+const { data: tasksData, refresh: refreshTasks, status: fetchStatus } = await useFetch<any>('/api/tasks', {
+    query: queryParams
+})
+
 // Map API response to UI Task interface (snake_case -> camelCase)
 const tasks = computed<Task[]>(() => {
-   if(!tasksData.value) return []
-   return tasksData.value.map(t => ({
+   if(!tasksData.value || !tasksData.value.data) return []
+   return tasksData.value.data.map((t: any) => ({
       id: t.id,
       title: t.title,
       description: t.description,
@@ -421,6 +446,7 @@ const tasks = computed<Task[]>(() => {
       status: t.status
    }))
 })
+const totalTasks = computed(() => tasksData.value?.total || 0)
 
 
 // --- Computed ---
@@ -439,10 +465,11 @@ const filteredEmployees = computed(() => {
   return list
 })
 
+// filteredTasks is no longer needed for CLIENT SIDE filtering of tasks, 
+// BUT the table uses `filteredTasks`. 
+// Since server returns already filtered results, `filteredTasks` should just return `tasks.value`.
 const filteredTasks = computed(() => {
-   if(!taskListSearch.value) return tasks.value
-   const q = taskListSearch.value.toLowerCase()
-   return tasks.value.filter(t => t.title.toLowerCase().includes(q))
+   return tasks.value
 })
 
 // --- Helpers ---

@@ -44,6 +44,28 @@ export default defineEventHandler(async (event) => {
     }
     // If no memberId, assume Owner/Admin -> View ALL tasks (already filtered by licenseKey)
 
+    // Search
+    const query = getQuery(event)
+    const page = Number(query.page) || 1
+    const limit = Number(query.limit) || 20
+    const search = (query.search as string || '').toLowerCase()
+
+    if (search) {
+        tasks = tasks.filter(t => t.title.toLowerCase().includes(search))
+    }
+
     // Sort by newest first
-    return tasks.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    tasks.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+    // Pagination
+    const total = tasks.length
+    const start = (page - 1) * limit
+    const paginatedTasks = tasks.slice(start, start + limit)
+
+    return {
+        data: paginatedTasks,
+        total,
+        page,
+        limit
+    }
 })

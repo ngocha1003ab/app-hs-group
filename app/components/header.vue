@@ -235,13 +235,13 @@ const timeAgo = (dateStr: string) => {
     return date.toLocaleDateString('vi-VN')
 }
 
-const { data: rawNotifications, refresh: refreshNotifications } = await useFetch<Notification[]>('/api/notifications', {
+const { data: rawNotifications, refresh: refreshNotifications } = await useFetch<any>('/api/notifications?limit=10', {
   key: 'notifications-header'
 })
 
 const notifications = computed(() => {
-  if (!rawNotifications.value) return []
-  return rawNotifications.value.map((n: any) => ({
+  const list = rawNotifications.value?.data || []
+  return list.map((n: any) => ({
     ...n,
     time: timeAgo(n.created_at)
   }))
@@ -252,10 +252,10 @@ const unreadCount = computed(() => notifications.value.filter(n => !n.read).leng
 const handleNotificationClick = async (notif: Notification) => {
   if (!notif.read) {
     // Optimistic update
-    if (rawNotifications.value) {
-      const idx = rawNotifications.value.findIndex((n: any) => n.id === notif.id)
-      if (idx !== -1 && rawNotifications.value[idx]) {
-        rawNotifications.value[idx].read = true
+    if (rawNotifications.value && rawNotifications.value.data) {
+      const idx = rawNotifications.value.data.findIndex((n: any) => n.id === notif.id)
+      if (idx !== -1 && rawNotifications.value.data[idx]) {
+        rawNotifications.value.data[idx].read = true
       }
     }
     
