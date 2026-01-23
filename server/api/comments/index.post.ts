@@ -79,19 +79,34 @@ export default defineEventHandler(async (event) => {
         )
     }
 
-    // Rule 3: If assignee IS the commenter, notify Supervisor (Team Leader or Owner)
+    // Rule 3: If assignee IS the commenter (Member commenting on own task), notify Supervisors (Leader + Owner)
     if (task.assignee_id === userId) {
-        // Notify Owner for now as a catch-all supervisor for simplicity, 
-        // OR find the specific department leader.
-        // Let's notify Owner.
-        await createNotification(
-            licenseKey,
-            'owner',
-            'Bình luận mới',
-            `${commenterName} đã bình luận trong nhiệm vụ: ${task.title}`,
-            'comment_added',
-            '/progress'
-        )
+        // A. Notify Owner
+        if (userId !== 'owner') {
+            await createNotification(
+                licenseKey,
+                'owner',
+                'Bình luận mới',
+                `${commenterName} đã bình luận trong nhiệm vụ: ${task.title}`,
+                'comment_added',
+                '/progress'
+            )
+        }
+
+        // B. Notify Department Leader (if exists and is not the commenter)
+        if (task.department_id) {
+            const leader = db.data.members.find(m => m.department_id === task.department_id && m.role === 'Leader' && m.license_key === licenseKey)
+            if (leader && leader.id !== userId) {
+                await createNotification(
+                    licenseKey,
+                    leader.id,
+                    'Bình luận mới',
+                    `${commenterName} đã bình luận trong nhiệm vụ: ${task.title}`,
+                    'comment_added',
+                    '/progress'
+                )
+            }
+        }
     }
 
     return {

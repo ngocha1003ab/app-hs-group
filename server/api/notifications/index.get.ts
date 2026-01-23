@@ -9,13 +9,22 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 401, message: 'Unauthorized' })
     }
 
-    const userId = memberId || 'owner' // Current user
-
     const db = await useDb()
     db.data.notifications = db.data.notifications || []
 
-    // Fetch notifications for THIS user in THIS license
-    const notifications = db.data.notifications.filter(n => n.user_id === userId && n.license_key === licenseKey)
+    let targetIds = [memberId || 'owner']
+
+    // If we have a memberId, check if they are the Owner
+    if (memberId) {
+        const member = db.data.members.find(m => m.id === memberId && m.license_key === licenseKey)
+        if (member && member.role === 'Owner') {
+            // If they are Owner, they should receive notifications for specific ID AND 'owner' alias
+            targetIds.push('owner')
+        }
+    }
+
+    // Fetch notifications for THIS user (or alias) in THIS license
+    const notifications = db.data.notifications.filter(n => targetIds.includes(n.user_id) && n.license_key === licenseKey)
 
     // Sort newest first
     return notifications.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())

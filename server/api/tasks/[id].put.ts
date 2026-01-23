@@ -83,20 +83,41 @@ export default defineEventHandler(async (event) => {
 
     // --- Notifications ---
     // 1. Status Update: Notify Assignee (if update wasn't by them) or Leader/Owner
+    // 1. Status Update: Notify Assignee (if update wasn't by them) or Supervisors
     if (status !== undefined && status !== currentTask.status) {
-        // If assignee updated it, notify Supervisor (Leader/Owner)
-        if (memberId && memberId === currentTask.assignee_id) {
-            const assignee = db.data.members.find(m => m.id === memberId)
-            // Notify Leader of dept (simplified: just notify owner for now as universal supervisor, or find leader)
-            // For strict correctness based on prompt: "sẽ có thông báo tương ứng đến chủ doanh nghiệp, leader..."
 
-            // Notify Owner
-            await createNotification(licenseKey, 'owner', 'Cập nhật tiến độ', `Nhiệm vụ "${updatedTask.title}" đã chuyển sang trạng thái: ${status}`, 'task_updated', '/tasks')
+        const actorId = memberId || 'owner'
+        const actorName = memberId
+            ? (db.data.members.find(m => m.id === memberId)?.name || 'Nhân viên')
+            : 'Chủ doanh nghiệp'
+
+        const statusMap: Record<string, string> = {
+            'todo': 'Cần làm',
+            'in-progress': 'Đang làm',
+            'done': 'Hoàn thành'
+        }
+        const statusText = statusMap[status] || status
+
+        // If the ACTOR is the assignee, we must notify UP (Leader + Owner)
+        if (currentTask.assignee_id === actorId) {
+
+            // A. Notify Owner (Always)
+            if (actorId !== 'owner') {
+                await createNotification(licenseKey, 'owner', 'Cập nhật tiến độ', `"${actorName}" đã cập nhật trạng thái nhiệm vụ "${updatedTask.title}" sang: ${statusText}`, 'task_updated', '/tasks')
+            }
+
+            // B. Notify Department Leader (If exists and is not the actor)
+            if (currentTask.department_id) {
+                const leader = db.data.members.find(m => m.department_id === currentTask.department_id && m.role === 'Leader' && m.license_key === licenseKey)
+                if (leader && leader.id !== actorId) {
+                    await createNotification(licenseKey, leader.id, 'Cập nhật tiến độ', `"${actorName}" đã cập nhật trạng thái nhiệm vụ "${updatedTask.title}" sang: ${statusText}`, 'task_updated', '/tasks')
+                }
+            }
         }
 
         // If Leader/Owner updated it, notify Assignee
         if (!memberId || (memberId && memberId !== currentTask.assignee_id)) {
-            await createNotification(licenseKey, updatedTask.assignee_id, 'Cập nhật nhiệm vụ', `Nhiệm vụ "${updatedTask.title}" đã được cập nhật trạng thái`, 'task_updated', '/tasks')
+            await createNotification(licenseKey, updatedTask.assignee_id, 'Cập nhật nhiệm vụ', `Nhiệm vụ "${updatedTask.title}" đã được cập nhật trạng thái sang: ${statusText}`, 'task_updated', '/tasks')
         }
     }
 
