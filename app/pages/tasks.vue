@@ -297,23 +297,23 @@ useHead({
 
 // --- Types ---
 interface Employee {
-  id: number
+  id: string
   name: string
   avatar: string
-  departmentId: number
+  departmentId: string
   departmentName: string
 }
 
 interface Department {
-  id: number
+  id: string
   name: string
 }
 
 interface Task {
-  id: number
+  id: string
   title: string
   description: string
-  assigneeId: number | null
+  assigneeId: string | null
   priority: 'low' | 'medium' | 'high'
   dueDate: string
   status: 'todo' | 'in-progress' | 'done'
@@ -321,63 +321,72 @@ interface Task {
 
 type Priority = 'low' | 'medium' | 'high'
 
-// --- Mock Data ---
-const departments: Department[] = [
-  { id: 1, name: 'Phòng Kinh Doanh' },
-  { id: 2, name: 'Marketing' },
-  { id: 3, name: 'Kỹ Thuật & IT' },
-  { id: 4, name: 'Nhân Sự (HR)' }
-]
-
-const employees: Employee[] = [
-  { id: 101, name: 'Nguyễn Văn A', avatar: 'https://i.pravatar.cc/150?u=1', departmentId: 1, departmentName: 'Phòng Kinh Doanh' },
-  { id: 102, name: 'Trần Thị B', avatar: 'https://i.pravatar.cc/150?u=2', departmentId: 1, departmentName: 'Phòng Kinh Doanh' },
-  { id: 103, name: 'Ngô Văn G', avatar: 'https://i.pravatar.cc/150?u=7', departmentId: 2, departmentName: 'Marketing' },
-  { id: 104, name: 'Vũ Thị K', avatar: 'https://i.pravatar.cc/150?u=10', departmentId: 3, departmentName: 'Kỹ Thuật & IT' },
-  { id: 105, name: 'Phạm Thị D', avatar: 'https://i.pravatar.cc/150?u=4', departmentId: 4, departmentName: 'Nhân Sự (HR)' },
-]
-
 const priorities: { value: Priority, label: string, activeClass: string }[] = [
   { value: 'high', label: 'Cao', activeClass: 'border-red-500 bg-red-50 text-red-700 dark:bg-red-900/30' },
   { value: 'medium', label: 'Trung bình', activeClass: 'border-orange-500 bg-orange-50 text-orange-700 dark:bg-orange-900/30' },
   { value: 'low', label: 'Thấp', activeClass: 'border-gray-500 bg-gray-100 text-gray-700 dark:bg-gray-700/50' }
 ]
 
-const priorityOptions = [
-  { label: 'Thấp', value: 'low' },
-  { label: 'Trung bình', value: 'medium' },
-  { label: 'Cao', value: 'high' }
-]
-
-const tasks = ref<Task[]>([
-  { id: 1, title: 'Chuẩn bị tài liệu họp', description: 'Chuẩn bị slide và báo cáo tuần.', assigneeId: 101, priority: 'high', dueDate: '2023-10-30', status: 'todo' },
-  { id: 2, title: 'Thiết kế banner sự kiện', description: '', assigneeId: 103, priority: 'medium', dueDate: '2023-11-05', status: 'done' },
-])
-
+// --- Mock Data ---
 // --- State ---
 const isSubmitting = ref(false)
 const isAssigneeDropdownOpen = ref(false)
 const assigneeDropdownRef = ref<HTMLElement | null>(null)
 const assigneeSearchQuery = ref('')
-const assigneeDeptFilter = ref<number | 'all'>('all')
+const assigneeDeptFilter = ref<string | 'all'>('all')
 const taskListSearch = ref('')
 
 const isEditModalOpen = ref(false)
 const editingTask = reactive<Task>({
-   id: 0, title: '', description: '', assigneeId: null, priority: 'medium', dueDate: '', status: 'todo'
+   id: '', title: '', description: '', assigneeId: null, priority: 'medium', dueDate: '', status: 'todo'
 })
 
 const newTask = reactive({
   title: '',
   description: '',
-  assigneeId: null as number | null,
+  assigneeId: null as string | null,
   priority: 'medium' as Priority,
   dueDate: ''
 })
 
+// --- Data Fetching ---
+// Fetch Departments
+const { data: deptData } = await useFetch<Department[]>('/api/departments')
+const departments = computed(() => deptData.value || [])
+
+// Fetch Employees
+const { data: empData } = await useFetch<any[]>('/api/members')
+const employees = computed(() => {
+   if (!empData.value) return []
+   return empData.value.map(e => ({
+      id: e.id,
+      name: e.name,
+      avatar: e.avatar,
+      departmentId: e.department_id,
+      departmentName: getDepartmentName(e.department_id)
+   }))
+})
+
+// Fetch Tasks
+const { data: tasksData, refresh: refreshTasks } = await useFetch<any[]>('/api/tasks')
+// Map API response to UI Task interface (snake_case -> camelCase)
+const tasks = computed<Task[]>(() => {
+   if(!tasksData.value) return []
+   return tasksData.value.map(t => ({
+      id: t.id,
+      title: t.title,
+      description: t.description,
+      assigneeId: t.assignee_id,
+      priority: t.priority,
+      dueDate: t.due_date,
+      status: t.status
+   }))
+})
+
+
 // --- Computed ---
 const filteredEmployees = computed(() => {
-  let list = employees
+  let list = employees.value // use .value
   
   if (assigneeDeptFilter.value !== 'all') {
     list = list.filter(e => e.departmentId === assigneeDeptFilter.value)
@@ -391,10 +400,6 @@ const filteredEmployees = computed(() => {
   return list
 })
 
-const selectedAssignee = computed(() => {
-  return employees.find(e => e.id === newTask.assigneeId)
-})
-
 const filteredTasks = computed(() => {
    if(!taskListSearch.value) return tasks.value
    const q = taskListSearch.value.toLowerCase()
@@ -402,6 +407,11 @@ const filteredTasks = computed(() => {
 })
 
 // --- Helpers ---
+const getDepartmentName = (id: string) => {
+   const d = departments.value.find(dept => dept.id === id)
+   return d ? d.name : 'Unknown'
+}
+
 const formatDate = (date: string) => {
    if(!date) return ''
    return new Date(date).toLocaleDateString('vi-VN')
@@ -414,7 +424,7 @@ const isOverdue = (date: string) => {
    return d < today
 }
 
-const getEmployee = (id: number | null) => employees.find(e => e.id === id)
+const getEmployee = (id: string | null) => employees.value.find(e => e.id === id)
 
 const priorityBadge = (p: Priority) => {
    switch(p) {
@@ -425,6 +435,8 @@ const priorityBadge = (p: Priority) => {
 }
 
 // --- Actions ---
+const toast = useToast()
+
 const selectAssignee = (emp: Employee) => {
   newTask.assigneeId = emp.id
   assigneeSearchQuery.value = emp.name
@@ -432,9 +444,8 @@ const selectAssignee = (emp: Employee) => {
 }
 
 const handleAssigneeSearchInput = () => {
-  // If user types, we clear the selected ID unless they re-select
   if (newTask.assigneeId) {
-     const selected = employees.find(e => e.id === newTask.assigneeId)
+     const selected = employees.value.find(e => e.id === newTask.assigneeId)
      if (selected && selected.name !== assigneeSearchQuery.value) {
         newTask.assigneeId = null
      }
@@ -443,49 +454,74 @@ const handleAssigneeSearchInput = () => {
 
 const createTask = async () => {
    if(!newTask.title || !newTask.assigneeId || !newTask.dueDate) return
-   console.log("Creating Task", newTask)
    isSubmitting.value = true
    
-   await new Promise(resolve => setTimeout(resolve, 600))
-   
-   tasks.value.unshift({
-      id: Date.now(),
-      title: newTask.title,
-      description: newTask.description,
-      assigneeId: newTask.assigneeId,
-      priority: newTask.priority,
-      dueDate: newTask.dueDate,
-      status: 'todo'
-   })
-   
-   // Reset
-   newTask.title = ''
-   newTask.description = ''
-   newTask.assigneeId = null
-   assigneeSearchQuery.value = ''
-   newTask.priority = 'medium'
-   newTask.dueDate = ''
-   
-   isSubmitting.value = false
+   try {
+     await $fetch('/api/tasks', {
+       method: 'POST',
+       body: {
+         title: newTask.title,
+         description: newTask.description,
+         assignee_id: newTask.assigneeId,
+         priority: newTask.priority,
+         due_date: newTask.dueDate
+       }
+     })
+     
+     toast.add({ title: 'Thành công', description: 'Đã giao nhiệm vụ', color: 'success' })
+     await refreshTasks()
+     
+     // Reset
+     newTask.title = ''
+     newTask.description = ''
+     newTask.assigneeId = null
+     assigneeSearchQuery.value = ''
+     newTask.priority = 'medium'
+     newTask.dueDate = ''
+   } catch (error: any) {
+      toast.add({ title: 'Lỗi', description: error.data?.message || 'Không thể tạo nhiệm vụ', color: 'error' })
+   } finally {
+     isSubmitting.value = false
+   }
 }
 
 const openEditModal = (task: Task) => {
-   Object.assign(editingTask, JSON.parse(JSON.stringify(task)))
+   // Copy logic
+   editingTask.id = task.id
+   editingTask.title = task.title
+   editingTask.description = task.description
+   editingTask.priority = task.priority
+   editingTask.dueDate = task.dueDate
+   editingTask.assigneeId = task.assigneeId
+   editingTask.status = task.status
+   
    isEditModalOpen.value = true
 }
 
 const updateTask = async () => {
-   const index = tasks.value.findIndex(t => t.id === editingTask.id)
-   if(index !== -1) {
-      isSubmitting.value = true
-      await new Promise(resolve => setTimeout(resolve, 500))
-      tasks.value[index] = { ...editingTask }
-      isSubmitting.value = false
-      isEditModalOpen.value = false
+   isSubmitting.value = true
+   try {
+     await $fetch(`/api/tasks/${editingTask.id}`, {
+        method: 'PUT',
+        body: {
+           title: editingTask.title,
+           description: editingTask.description,
+           priority: editingTask.priority,
+           due_date: editingTask.dueDate
+           // user cannot change assignee/status here in this minimal modal yet unless expanded
+        }
+     })
+     toast.add({ title: 'Thành công', description: 'Đã cập nhật nhiệm vụ', color: 'success' })
+     await refreshTasks()
+     isEditModalOpen.value = false
+   } catch (error: any) {
+     toast.add({ title: 'Lỗi', description: error.data?.message || 'Không thể cập nhật', color: 'error' })
+   } finally {
+     isSubmitting.value = false
    }
 }
 
-// Click Outside Logic
+// Click Outside
 const handleClickOutside = (event: MouseEvent) => {
   if (assigneeDropdownRef.value && !assigneeDropdownRef.value.contains(event.target as Node)) {
     isAssigneeDropdownOpen.value = false

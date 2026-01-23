@@ -53,61 +53,45 @@
 </template>
 
 <script setup lang="ts">
-// Desktop menu - all items
-const links = [
-  {
-    label: 'Thống kê',
-    icon: 'i-heroicons-chart-bar',
-    to: '/dashboard'
-  },
-  {
-    label: 'Phòng ban',
-    icon: 'i-heroicons-building-office-2',
-    to: '/departments'
-  },
-  {
-    label: 'Nhân viên',
-    icon: 'i-heroicons-user-group',
-    to: '/employees'
-  },
-  {
-    label: 'Tiến độ',
-    icon: 'i-heroicons-chart-pie',
-    to: '/progress'
-  },
-  {
-    label: 'Nhiệm vụ',
-    icon: 'i-heroicons-clipboard-document-list',
-    to: '/tasks'
-  },
-  {
-    label: 'Cài đặt',
-    icon: 'i-heroicons-cog-6-tooth',
-    to: '/settings'
-  }
+// Menu Configuration
+const allLinks = [
+  { label: 'Thống kê', icon: 'i-heroicons-chart-bar', to: '/dashboard', roles: ['Owner', 'Leader'] },
+  { label: 'Phòng ban', icon: 'i-heroicons-building-office-2', to: '/departments', roles: ['Owner'] },
+  { label: 'Nhân viên', icon: 'i-heroicons-user-group', to: '/employees', roles: ['Owner', 'Leader'] },
+  { label: 'Tiến độ', icon: 'i-heroicons-chart-pie', to: '/progress', roles: ['Owner', 'Leader', 'Member'] }, // Everyone
+  { label: 'Nhiệm vụ', icon: 'i-heroicons-clipboard-document-list', to: '/tasks', roles: ['Owner', 'Leader', 'Member'] }, // Everyone
+  { label: 'Cài đặt', icon: 'i-heroicons-cog-6-tooth', to: '/settings', roles: ['Owner'] }
 ]
 
-// Mobile menu - only 4 items
-const mobileLinks = [
-  {
-    label: 'Thống kê',
-    icon: 'i-heroicons-chart-bar',
-    to: '/dashboard'
-  },
-  {
-    label: 'Nhân viên',
-    icon: 'i-heroicons-user-group',
-    to: '/employees'
-  },
-  {
-    label: 'Phòng ban',
-    icon: 'i-heroicons-building-office-2',
-    to: '/departments'
-  },
-  {
-    label: 'Nhiệm vụ',
-    icon: 'i-heroicons-clipboard-document-list',
-    to: '/tasks'
+// State for filtered links
+const visibleLinks = ref<any[]>([])
+const visibleMobileLinks = ref<any[]>([])
+
+onMounted(() => {
+  // Determine Role
+  // If member_id cookie exists, we are a Member or Leader based on member_role
+  // If NOT exists but we are logged in (license_key check assumed), we are Owner.
+  
+  const memberId = useCookie('member_id').value
+  const memberRole = useCookie('member_role').value
+  
+  let currentRole = 'Owner'
+  if (memberId) {
+     currentRole = memberRole === 'Leader' ? 'Leader' : 'Member'
   }
-]
+  
+  // Filter logic
+  visibleLinks.value = allLinks.filter(link => link.roles.includes(currentRole))
+  
+  // Mobile: usually a subset, or same? 
+  // User said: "sửa cả mobile và desktop menu nhé"
+  // Previous mobile links were: Dashboard, Employees, Depts, Tasks.
+  // We should apply the same role filter.
+  // Let's just use the same filtered list for simplicity, maybe limiting count if needed, but 4-5 items fit on mobile nav.
+  visibleMobileLinks.value = visibleLinks.value
+})
+
+// Bind to template
+const links = computed(() => visibleLinks.value)
+const mobileLinks = computed(() => visibleMobileLinks.value)
 </script>

@@ -20,11 +20,11 @@
       </template>
 
       <form @submit.prevent="handleLogin" class="space-y-6">
-        <UFormField label="ID Người dùng" name="userId" required>
+        <UFormField label="Tên đăng nhập" name="userId" required>
           <UInput 
             v-model="form.userId" 
-            icon="i-heroicons-identification" 
-            placeholder="Nhập ID người dùng..." 
+            icon="i-heroicons-user" 
+            placeholder="Nhập tên đăng nhập..." 
             size="lg"
             class="w-full"
             autofocus
@@ -72,13 +72,26 @@ const form = reactive({
   password: ''
 })
 
+const toast = useToast()
+
 const handleLogin = async () => {
+  if (!form.userId || !form.password) return
+  
   loading.value = true
   try {
-    // TODO: Implement actual login logic
-    await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate delay
-    console.log('Login with:', form)
-    // alert('Chức năng đăng nhập sẽ được tích hợp sau')
+    await $fetch('/api/auth/member-login', {
+      method: 'POST',
+      body: {
+        username: form.userId,
+        password: form.password
+      }
+    })
+    
+    // Redirect on success
+    return navigateTo('/progress')
+  } catch (error: any) {
+    const msg = error.data?.message || 'Đăng nhập thất bại'
+    toast.add({ title: 'Lỗi', description: msg, color: 'error' })
   } finally {
     loading.value = false
   }

@@ -31,10 +31,25 @@ export interface Member {
     created_at: string
 }
 
+export interface Task {
+    id: string
+    title: string
+    description?: string
+    assignee_id: string
+    department_id: string
+    priority: 'low' | 'medium' | 'high'
+    status: 'todo' | 'in-progress' | 'done'
+    due_date: string
+    license_key: string
+    created_at: string
+    updated_at: string
+}
+
 export interface DatabaseSchema {
     licenses: LicenseData[]
     departments: Department[]
     members: Member[]
+    tasks: Task[]
     settings: {
         companyName?: string
         description?: string
@@ -45,6 +60,7 @@ const defaultData: DatabaseSchema = {
     licenses: [],
     departments: [],
     members: [],
+    tasks: [],
     settings: {}
 }
 
