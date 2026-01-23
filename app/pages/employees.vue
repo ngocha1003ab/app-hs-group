@@ -48,12 +48,24 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mật khẩu <span class="text-red-500">*</span></label>
              <UInput 
               v-model="newMember.password"
-              type="password"
+              :type="showCreatePassword ? 'text' : 'password'"
               placeholder="••••••"
               icon="i-heroicons-lock-closed"
               size="lg"
               class="w-full"
-            />
+              :ui="{ leading: 'pointer-events-none' }"
+            >
+              <template #trailing>
+                <UButton
+                  color="neutral"
+                  variant="ghost"
+                  icon="i-heroicons-eye"
+                  :padded="false"
+                  :class="{ 'text-gray-400': !showCreatePassword, 'text-primary-500': showCreatePassword }"
+                  @click="showCreatePassword = !showCreatePassword"
+                />
+              </template>
+            </UInput>
           </div>
           <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email (Tùy chọn)</label>
@@ -185,9 +197,9 @@
                   <div>
                     <div class="text-base font-semibold flex items-center gap-2">
                        {{ member.name }}
-                       <UIcon v-if="member.isManager" name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
+                       <UIcon v-if="member.role === 'Leader'" name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
                     </div>
-                    <div class="text-xs text-gray-400">@{{ member.username }}</div>
+                    <div class="text-xs text-gray-400" v-if="member.username">@{{ member.username }}</div>
                   </div>
                 </div>
               </td>
@@ -209,7 +221,7 @@
               <td class="px-6 py-4">
                 <UBadge color="neutral" variant="soft" size="sm">
                   <UIcon name="i-heroicons-building-office" class="w-4 h-4 mr-1" />
-                  {{ getDepartmentName(member.departmentId) }}
+                  {{ getDepartmentName(member.department_id) }}
                 </UBadge>
               </td>
               <td class="px-6 py-4 text-right">
@@ -269,7 +281,26 @@
                  </div>
                  <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mật khẩu mới</label>
-                    <UInput v-model="editingMember.password" type="password" size="lg" class="w-full" icon="i-heroicons-lock-closed" placeholder="Để trống nếu không đổi"/>
+                    <UInput
+                      v-model="editingMember.password"
+                      :type="showEditPassword ? 'text' : 'password'"
+                      size="lg"
+                      class="w-full"
+                      icon="i-heroicons-lock-closed"
+                      placeholder="Để trống nếu không đổi"
+                      :ui="{ leading: 'pointer-events-none' }"
+                    >
+                      <template #trailing>
+                        <UButton
+                          color="neutral"
+                          variant="ghost"
+                          icon="i-heroicons-eye"
+                          :padded="false"
+                          :class="{ 'text-gray-400': !showEditPassword, 'text-primary-500': showEditPassword }"
+                          @click="showEditPassword = !showEditPassword"
+                        />
+                      </template>
+                    </UInput>
                  </div>
               </div>
 
@@ -314,9 +345,12 @@ useHead({
 })
 
 // --- State ---
+// --- State ---
 const searchQuery = ref('')
 const isCreating = ref(false)
 const isEditModalOpen = ref(false)
+const showCreatePassword = ref(true)
+const showEditPassword = ref(true)
 
 const newMember = reactive({
   name: '',
@@ -324,18 +358,18 @@ const newMember = reactive({
   password: '',
   email: '',
   phone: '',
-  departmentId: null as number | null,
+  departmentId: null as string | null,
   isManager: false
 })
 
 const editingMember = reactive({
-  id: 0,
+  id: '' as string | number,
   name: '',
   username: '',
-  password: '', // plaintext for display/edit sake in this mock
+  password: '', 
   email: '',
   phone: '',
-  departmentId: 0,
+  departmentId: '' as string,
   isManager: false
 })
 
@@ -352,38 +386,38 @@ watch(() => newMember.name, (val) => {
   }
 })
 
-// --- Mock Data ---
+// --- Interfaces (matching DB/API) ---
+// Note: These should ideally be imported from shared types, but defining locally for SFC completeness as requested or typically done in quick Vue setups.
+
 interface Department {
-  id: number
+  id: string
   name: string
-  description: string
+  description?: string
+  license_key: string
+  created_at: string
 }
 
 interface Member {
-  id: number
+  id: string
   name: string
-  username: string
-  email: string
-  phone: string
-  departmentId: number
-  isManager: boolean
+  username?: string // Added loosely for UI
+  email?: string
+  phone?: string
+  avatar?: string
+  role: 'Leader' | 'Member'
+  department_id: string
+  license_key: string
+  created_at: string
 }
 
-// Consistent with Departments page
-const departments = ref<Department[]>([
-  { id: 1, name: 'Phòng Kinh Doanh', description: 'Chịu trách nhiệm doanh số và thị trường' },
-  { id: 2, name: 'Marketing', description: 'Quảng bá thương hiệu và truyền thông' },
-  { id: 3, name: 'Kỹ Thuật & IT', description: 'Phát triển và bảo trì hệ thống cho công ty' },
-  { id: 4, name: 'Nhân Sự (HR)', description: 'Tuyển dụng và đào tạo nhân sự' }
-])
+// --- Data Fetching ---
+// 1. Get Departments for selection
+const { data: deptData } = await useFetch<Department[]>('/api/departments')
+const departments = computed(() => deptData.value || [])
 
-// Some Initial Mock Members
-const members = ref<Member[]>([
-  { id: 101, name: 'Nguyễn Văn A', username: 'nguyenvana', email: 'vana@gmail.com', phone: '0912345678', departmentId: 1, isManager: true },
-  { id: 102, name: 'Trần Thị B', username: 'tranthib', email: 'thib@gmail.com', phone: '0987654321', departmentId: 1, isManager: false },
-  { id: 103, name: 'Ngô Văn G', username: 'ngovang', email: '', phone: '0909090909', departmentId: 2, isManager: true },
-  { id: 104, name: 'Lý Văn I', username: 'lyvani', email: 'lyvani@tech.com', phone: '', departmentId: 3, isManager: false },
-])
+// 2. Get Members
+const { data: membersData, refresh: refreshMembers } = await useFetch<Member[]>('/api/members')
+const members = computed<Member[]>(() => membersData.value || [])
 
 // --- Computed ---
 const filteredMembers = computed(() => {
@@ -391,71 +425,97 @@ const filteredMembers = computed(() => {
   const query = searchQuery.value.toLowerCase()
   return members.value.filter(m => 
     m.name.toLowerCase().includes(query) || 
-    m.username.toLowerCase().includes(query) ||
-    m.email.toLowerCase().includes(query) ||
-    m.phone.includes(query)
+    (m.username && m.username.toLowerCase().includes(query)) ||
+    (m.email && m.email.toLowerCase().includes(query)) ||
+    (m.phone && m.phone.includes(query))
   )
 })
 
 // --- Helpers ---
-const getDepartmentName = (id: number) => {
+const getDepartmentName = (id: string | number) => {
   const dept = departments.value.find(d => d.id === id)
   return dept ? dept.name : 'Không xác định'
 }
 
 // --- Actions ---
+const toast = useToast()
+
 const createMember = async () => {
   if (!newMember.name || !newMember.departmentId || !newMember.username || !newMember.password) return
   
   isCreating.value = true
-  
-  // Simulate API
-  await new Promise(resolve => setTimeout(resolve, 600))
-  
-  members.value.unshift({
-    id: Date.now(),
-    name: newMember.name,
-    username: newMember.username,
-    email: newMember.email,
-    phone: newMember.phone,
-    departmentId: newMember.departmentId,
-    isManager: newMember.isManager
-  })
-  
-  // Reset
-  newMember.name = ''
-  newMember.username = ''
-  newMember.password = ''
-  newMember.email = ''
-  newMember.phone = ''
-  newMember.isManager = false
-  newMember.departmentId = null
-  
-  isCreating.value = false
+  try {
+    await $fetch('/api/members', {
+      method: 'POST',
+      body: {
+        name: newMember.name,
+        username: newMember.username,
+        password: newMember.password,
+        email: newMember.email,
+        phone: newMember.phone,
+        department_id: newMember.departmentId,
+        isManager: newMember.isManager
+      }
+    })
+
+    toast.add({ title: 'Thành công', description: 'Đã thêm nhân viên mới', color: 'success' })
+    
+    // Reset
+    newMember.name = ''
+    newMember.username = ''
+    newMember.password = ''
+    newMember.email = ''
+    newMember.phone = ''
+    newMember.isManager = false
+    newMember.departmentId = null
+    
+    await refreshMembers()
+
+  } catch (error: any) {
+    toast.add({ 
+       title: 'Lỗi', 
+       description: error.data?.message || 'Không thể tạo nhân viên', 
+       color: 'error' 
+    })
+  } finally {
+    isCreating.value = false
+  }
 }
 
 const openEditModal = (member: Member) => {
   editingMember.id = member.id
   editingMember.name = member.name
-  editingMember.username = member.username
-  editingMember.email = member.email
-  editingMember.phone = member.phone
-  editingMember.departmentId = member.departmentId
-  editingMember.isManager = member.isManager
-  editingMember.password = '' // Don't show old password
+  editingMember.username = member.username || ''
+  editingMember.email = member.email || ''
+  editingMember.phone = member.phone || ''
+  editingMember.departmentId = member.department_id
+  editingMember.isManager = member.role === 'Leader'
+  editingMember.password = '' 
   isEditModalOpen.value = true
 }
 
-const updateMember = () => {
-  const member = members.value.find(m => m.id === editingMember.id)
-  if (member) {
-    member.name = editingMember.name
-    member.username = editingMember.username
-    member.email = editingMember.email
-    member.phone = editingMember.phone
-    member.isManager = editingMember.isManager
-    // In real app, only update password if provided
+const updateMember = async () => {
+  try {
+    await $fetch(`/api/members/${editingMember.id}`, {
+      method: 'PUT',
+      body: {
+        name: editingMember.name,
+        email: editingMember.email,
+        phone: editingMember.phone,
+        isManager: editingMember.isManager,
+        password: editingMember.password || undefined // Only send if not empty
+      }
+    })
+
+    toast.add({ title: 'Thành công', description: 'Đã cập nhật hồ sơ', color: 'success' })
+    await refreshMembers()
+    isEditModalOpen.value = false
+  } catch (error: any) {
+    toast.add({ 
+       title: 'Lỗi', 
+       description: error.data?.message || 'Không thể cập nhật', 
+       color: 'error' 
+    })
   }
-  isEditModalOpen.value = false
 }
 </script>

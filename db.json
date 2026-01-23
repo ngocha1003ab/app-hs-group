@@ -27,6 +27,13 @@
       "description": "Hợp tác kinh doanh",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T13:37:18.925Z"
+    },
+    {
+      "id": "mkqy2jzjrzpbo75z3n",
+      "name": "Nhóm làm việc với khách hàng",
+      "description": "Làm việc cùng khách hàng",
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T13:56:43.567Z"
     }
   ],
   "members": []
