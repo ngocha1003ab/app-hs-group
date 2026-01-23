@@ -78,7 +78,7 @@ export default defineEventHandler(async (event) => {
 
         db.data.members[memberIndex] = member
     } else {
-        // Update Owner (Settings)
+        // Update Owner (Settings) - KEEPING FOR SETTINGS METADATA
         if (!Array.isArray(db.data.settings)) {
             db.data.settings = []
         }
@@ -95,6 +95,41 @@ export default defineEventHandler(async (event) => {
         if (phone) db.data.settings[settingsIndex].phone = phone
         if (email) db.data.settings[settingsIndex].email = email
         if (newPassword) db.data.settings[settingsIndex].password = newPassword
+
+        // SYNC TO MEMBERS TABLE (Create/Update Owner Account in Members)
+        let ownerMemberIndex = db.data.members.findIndex(m => m.license_key === licenseKey && m.role === 'Owner')
+
+        const now = new Date().toISOString()
+
+        if (ownerMemberIndex === -1) {
+            // Create new Owner Member
+            // Generate simple ID like 'owner_' + timestamp or just use what we have
+            const newOwner = {
+                id: 'owner_' + Date.now().toString(36),
+                name: name || 'Chủ doanh nghiệp',
+                username: username || '',
+                password: newPassword || '',
+                email: email || '',
+                phone: phone || '',
+                avatar: avatar || '',
+                role: 'Owner' as const,
+                department_id: '', // Owner no dept
+                license_key: licenseKey,
+                created_at: now
+            }
+            db.data.members.push(newOwner)
+        } else {
+            // Update existing Owner Member
+            const owner = db.data.members[ownerMemberIndex]
+            if (name) owner.name = name
+            if (username) owner.username = username
+            if (avatar) owner.avatar = avatar
+            if (phone) owner.phone = phone
+            if (email) owner.email = email
+            if (newPassword) owner.password = newPassword
+
+            db.data.members[ownerMemberIndex] = owner
+        }
     }
 
     await db.write()

@@ -27,7 +27,7 @@ export interface Member {
     email?: string
     phone?: string
     avatar?: string
-    role: 'Leader' | 'Member'
+    role: 'Leader' | 'Member' | 'Owner'
     department_id: string
     license_key: string
     created_at: string

@@ -37,19 +37,36 @@ export default defineEventHandler(async (event) => {
     } else {
         // If license key exists but no memberId, it's the main License Owner
         const db = await useDb()
-        if (!Array.isArray(db.data.settings)) {
-            db.data.settings = []
-        }
-        const settings = db.data.settings.find(s => s.license_key === licenseKey && !s.member_id) || { license_key: licenseKey } as any
 
-        user = {
-            name: settings.name || 'Chủ doanh nghiệp',
-            role: 'Owner',
-            avatar: settings.avatar || 'https://ui-avatars.com/api/?name=Owner&background=random',
-            id: 'owner',
-            username: settings.username || '',
-            phone: settings.phone || '',
-            email: settings.email || ''
+        // Try to find Owner record in members table first (Preferred)
+        const ownerMember = db.data.members.find(m => m.license_key === licenseKey && m.role === 'Owner')
+
+        if (ownerMember) {
+            user = {
+                name: ownerMember.name,
+                role: 'Owner',
+                avatar: ownerMember.avatar || 'https://ui-avatars.com/api/?name=Owner&background=random',
+                id: ownerMember.id,
+                username: ownerMember.username || '',
+                phone: ownerMember.phone || '',
+                email: ownerMember.email || ''
+            }
+        } else {
+            // Fallback to settings (Legacy)
+            if (!Array.isArray(db.data.settings)) {
+                db.data.settings = []
+            }
+            const settings = db.data.settings.find(s => s.license_key === licenseKey && !s.member_id) || { license_key: licenseKey } as any
+
+            user = {
+                name: settings.name || 'Chủ doanh nghiệp',
+                role: 'Owner',
+                avatar: settings.avatar || 'https://ui-avatars.com/api/?name=Owner&background=random',
+                id: 'owner',
+                username: settings.username || '',
+                phone: settings.phone || '',
+                email: settings.email || ''
+            }
         }
     }
 

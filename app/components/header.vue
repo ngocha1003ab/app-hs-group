@@ -172,7 +172,7 @@
              {{ userInfo.name }}
            </span>
            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
-             {{ userInfo.role === 'Leader' ? 'Trưởng nhóm' : (userInfo.role === 'Member' ? 'Nhân viên' : 'Admin') }}
+             {{ userInfo.role === 'Owner' ? 'Chủ doanh nghiệp' : (userInfo.role === 'Leader' ? 'Trưởng nhóm' : (userInfo.role === 'Member' ? 'Nhân viên' : 'Admin')) }}
            </span>
         </div>
       </div>

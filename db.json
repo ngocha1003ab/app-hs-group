@@ -16,10 +16,19 @@
       "product_id": 626,
       "email": "shenlongkake@gmail.com",
       "status": 1,
-      "added_at": "2026-01-23T13:16:25.276Z"
+      "added_at": "2026-01-23T17:16:00.321Z"
     }
   ],
-  "settings": [],
+  "settings": [
+    {
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "name": "Chủ doanh nghiệp",
+      "username": "shenlongkake",
+      "avatar": "https://cdn.24h.com.vn/upload/3-2022/images/2022-07-11/21-1657535366-24-width650height650.jpg",
+      "password": "nghichti1Aa@",
+      "email": "shenlongkake"
+    }
+  ],
   "departments": [
     {
       "id": "mkqxdlcdjxumngljxde",
@@ -69,6 +78,19 @@
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T14:27:05.371Z",
       "avatar": "https://ui-avatars.com/api/?name=Tam%20Long%20Ma&background=random"
+    },
+    {
+      "id": "owner_mkr57lsv",
+      "name": "Chủ doanh nghiệp",
+      "username": "shenlongkake",
+      "password": "nghichti1Aa@",
+      "email": "shenlongkake",
+      "phone": "",
+      "avatar": "https://cdn.24h.com.vn/upload/3-2022/images/2022-07-11/21-1657535366-24-width650height650.jpg",
+      "role": "Owner",
+      "department_id": "",
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T17:16:36.511Z"
     }
   ],
   "tasks": [

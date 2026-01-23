@@ -75,9 +75,14 @@ onMounted(() => {
   const memberId = useCookie('member_id').value
   const memberRole = useCookie('member_role').value
   
+  /* Fix: Check memberRole properly. Do not default to Member if role is Owner */
   let currentRole = 'Owner'
   if (memberId) {
-     currentRole = memberRole === 'Leader' ? 'Leader' : 'Member'
+     if (memberRole && ['Owner', 'Leader', 'Member'].includes(memberRole as string)) {
+        currentRole = memberRole as string
+     } else {
+        currentRole = 'Member'
+     }
   }
   
   // Filter logic
