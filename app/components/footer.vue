@@ -1,6 +1,6 @@
 <template>
   <nav class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 pb-safe shadow-top-lg">
-    <div class="grid grid-cols-4 h-16">
+    <div class="flex h-16 items-center justify-around px-2">
       <NuxtLink
         v-for="link in links"
         :key="link.to"

@@ -11,10 +11,13 @@ export default defineEventHandler(async (event) => {
     }
 
     // Default to Owner info if no member logged in check
-    let user = {
+    // Default to Owner info if no member logged in check
+    let user: any = {
         name: 'Admin User',
         role: 'Owner',
-        avatar: 'https://ui-avatars.com/api/?name=Admin+User&background=random'
+        avatar: 'https://ui-avatars.com/api/?name=Admin+User&background=random',
+        phone: '',
+        email: ''
     }
 
     if (memberId) {
@@ -24,14 +27,30 @@ export default defineEventHandler(async (event) => {
             user = {
                 name: member.name,
                 role: member.role, // 'Leader' | 'Member'
-                avatar: member.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`
+                avatar: member.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=random`,
+                id: member.id,
+                username: member.username || '',
+                phone: member.phone || '',
+                email: member.email || ''
             }
         }
     } else {
         // If license key exists but no memberId, it's the main License Owner
-        // Optionally fetch license name if stored in DB
-        user.name = 'Chủ sở hữu'
-        user.role = 'Owner'
+        const db = await useDb()
+        if (!Array.isArray(db.data.settings)) {
+            db.data.settings = []
+        }
+        const settings = db.data.settings.find(s => s.license_key === licenseKey && !s.member_id) || { license_key: licenseKey } as any
+
+        user = {
+            name: settings.name || 'Chủ doanh nghiệp',
+            role: 'Owner',
+            avatar: settings.avatar || 'https://ui-avatars.com/api/?name=Owner&background=random',
+            id: 'owner',
+            username: settings.username || '',
+            phone: settings.phone || '',
+            email: settings.email || ''
+        }
     }
 
     return {

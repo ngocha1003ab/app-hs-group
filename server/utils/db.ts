@@ -22,6 +22,8 @@ export interface Department {
 export interface Member {
     id: string
     name: string
+    username?: string
+    password?: string
     email?: string
     phone?: string
     avatar?: string
@@ -74,9 +76,21 @@ export interface DatabaseSchema {
     comments: Comment[]
     notifications: Notification[]
     settings: {
+        license_key: string
+        member_id?: string // If set, settings apply to this member. If undefined, applies to company/owner.
+
+        // Company Info
         companyName?: string
         description?: string
-    }
+
+        // Profile Info
+        name?: string
+        username?: string
+        password?: string
+        avatar?: string
+        phone?: string
+        email?: string
+    }[]
 }
 
 const defaultData: DatabaseSchema = {
@@ -86,7 +100,7 @@ const defaultData: DatabaseSchema = {
     tasks: [],
     comments: [],
     notifications: [],
-    settings: {}
+    settings: []
 }
 
 export const useDb = async () => {
