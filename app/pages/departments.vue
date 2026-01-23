@@ -3,7 +3,7 @@
     <!-- Page Header -->
     <div>
       <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-        Quản lý Phòng Ban
+        Quản lý Phòng Ban/Nhóm
       </h1>
       <p class="text-gray-500 dark:text-gray-400 mt-2 text-lg">
         Tổ chức cơ cấu nhân sự theo phòng ban, bộ phận hoặc nhóm làm việc.
