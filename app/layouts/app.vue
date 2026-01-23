@@ -71,11 +71,6 @@ const links = [
     to: '/employees'
   },
   {
-    label: 'Tài khoản',
-    icon: 'i-heroicons-user-circle',
-    to: '/accounts'
-  },
-  {
     label: 'Tiến độ',
     icon: 'i-heroicons-chart-pie',
     to: '/progress'
@@ -110,9 +105,9 @@ const mobileLinks = [
     to: '/departments'
   },
   {
-    label: 'Tài khoản',
-    icon: 'i-heroicons-user-circle',
-    to: '/accounts'
+    label: 'Nhiệm vụ',
+    icon: 'i-heroicons-clipboard-document-list',
+    to: '/tasks'
   }
 ]
 </script>
