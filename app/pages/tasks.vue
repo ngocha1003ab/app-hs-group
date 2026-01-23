@@ -237,26 +237,37 @@
                      <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Miêu tả</label>
                      <UTextarea class="w-full" v-model="editingTask.description" :rows="3" />
                   </div>
-                  <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Độ ưu tiên</label>
-                        <div class="flex gap-2">
-                          <button 
-                            type="button" 
-                            v-for="p in priorities" 
-                            :key="p.value"
-                            @click="editingTask.priority = p.value"
-                            class="flex-1 flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all"
-                            :class="editingTask.priority === p.value ? p.activeClass : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-500 hover:border-gray-200'"
-                          >
-                             <span class="text-xs font-bold">{{ p.label }}</span>
-                          </button>
-                        </div>
-                     </div>
-                     <div>
-                        <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Hạn chót</label>
-                        <UInput v-model="editingTask.dueDate" type="date" />
-                     </div>
+                  <!-- Due Date -->
+                  <div>
+                      <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Hạn chót</label>
+                      <UInput v-model="editingTask.dueDate" type="date" class="w-full" size="lg" />
+                  </div>
+
+                  <!-- Priority -->
+                  <div>
+                      <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Độ ưu tiên</label>
+                      <div class="grid grid-cols-3 gap-3">
+                        <button 
+                          type="button" 
+                          v-for="p in priorities" 
+                          :key="p.value"
+                          @click="editingTask.priority = p.value"
+                          class="flex flex-col items-center justify-center py-3 px-2 rounded-xl border transition-all duration-200"
+                          :class="editingTask.priority === p.value 
+                            ? 'ring-2 ring-primary-500 border-transparent bg-primary-50 dark:bg-primary-900/20' 
+                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-500 hover:border-primary-200 hover:bg-gray-50 dark:hover:bg-gray-800/80'"
+                        >
+                           <div 
+                              class="w-3 h-3 rounded-full mb-2"
+                              :class="{
+                                'bg-red-500': p.value === 'high',
+                                'bg-orange-500': p.value === 'medium',
+                                'bg-green-500': p.value === 'low'
+                              }"
+                           ></div>
+                           <span class="text-sm font-semibold" :class="editingTask.priority === p.value ? 'text-primary-700 dark:text-primary-400' : 'text-gray-700 dark:text-gray-300'">{{ p.label }}</span>
+                        </button>
+                      </div>
                   </div>
                </div>
                

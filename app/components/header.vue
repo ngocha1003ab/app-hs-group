@@ -79,12 +79,79 @@
       </div>
       
       <!-- Notification Button -->
-      <UButton 
-        color="neutral" 
-        variant="ghost" 
-        icon="i-heroicons-bell" 
-        class="text-gray-500 dark:text-gray-400"
-      />
+      <div class="relative" ref="notificationContainer">
+        <UButton 
+          color="neutral" 
+          variant="ghost" 
+          icon="i-heroicons-bell" 
+          class="text-gray-500 dark:text-gray-400 relative"
+          @click="toggleNotifications"
+        >
+          <span v-if="unreadCount > 0" class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-900"></span>
+        </UButton>
+
+        <!-- Notification Dropdown -->
+        <Transition
+          enter-active-class="transition ease-out duration-200"
+          enter-from-class="transform opacity-0 scale-95 translate-y-2"
+          enter-to-class="transform opacity-100 scale-100 translate-y-0"
+          leave-active-class="transition ease-in duration-150"
+          leave-from-class="transform opacity-100 scale-100 translate-y-0"
+          leave-to-class="transform opacity-0 scale-95 translate-y-2"
+        >
+          <div
+            v-if="isNotificationsOpen"
+            class="absolute right-0 mt-3 w-80 md:w-96 rounded-xl shadow-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 z-50 overflow-hidden"
+          >
+            <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
+              <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Thông báo</h3>
+              <span v-if="unreadCount > 0" class="text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-2 py-0.5 rounded-full">
+                {{ unreadCount }} mới
+              </span>
+            </div>
+            
+            <div class="max-h-[70vh] overflow-y-auto custom-scrollbar">
+              <div v-if="notifications.length === 0" class="px-4 py-8 text-center">
+                <p class="text-sm text-gray-500 dark:text-gray-400">Không có thông báo nào</p>
+              </div>
+              
+              <div 
+                v-for="notif in notifications" 
+                :key="notif.id"
+                class="px-4 py-3 border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer transition-colors relative group"
+              >
+                <div class="flex gap-3">
+                  <div class="flex-shrink-0 mt-1">
+                    <div class="w-2 h-2 rounded-full" :class="notif.read ? 'bg-transparent' : 'bg-primary-500'"></div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate pr-4">
+                      {{ notif.title }}
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
+                       {{ notif.description }}
+                    </p>
+                    <p class="text-[10px] text-gray-400 mt-1.5 flex items-center gap-1">
+                      <UIcon name="i-heroicons-clock" class="w-3 h-3" />
+                      {{ notif.time }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="p-2 text-center bg-gray-50/50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
+                <NuxtLink 
+                  to="/notifications"
+                  @click="closeNotifications"
+                  class="text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors block w-full"
+                >
+                  Xem tất cả
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
       
       <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
       
@@ -103,7 +170,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const isDropdownOpen = ref(false)
 const dropdownContainer = ref<HTMLElement | null>(null)
@@ -116,10 +183,33 @@ const closeDropdown = () => {
   isDropdownOpen.value = false
 }
 
+const isNotificationsOpen = ref(false)
+const notificationContainer = ref<HTMLElement | null>(null)
+
+const notifications = ref([
+  { id: 1, title: 'Nhiệm vụ mới', description: 'Bạn được phân công nhiệm vụ "Thiết kế Mobile App"', time: '5 phút trước', read: false },
+  { id: 2, title: 'Cập nhật hệ thống', description: 'Hệ thống đã được cập nhật lên phiên bản 2.0', time: '1 giờ trước', read: true },
+  { id: 3, title: 'Nhắc nhở họp', description: 'Cuộc họp team Marketing bắt đầu lúc 14:00', time: '3 giờ trước', read: true },
+  { id: 4, title: 'Thanh toán thành công', description: 'Gói Premium của bạn đã được gia hạn', time: '1 ngày trước', read: true },
+])
+
+const unreadCount = computed(() => notifications.value.filter(n => !n.read).length)
+
+const toggleNotifications = () => {
+  isNotificationsOpen.value = !isNotificationsOpen.value
+}
+
+const closeNotifications = () => {
+  isNotificationsOpen.value = false
+}
+
 // Close dropdown when clicking outside
 const handleClickOutside = (event: MouseEvent) => {
   if (dropdownContainer.value && !dropdownContainer.value.contains(event.target as Node)) {
     closeDropdown()
+  }
+  if (notificationContainer.value && !notificationContainer.value.contains(event.target as Node)) {
+    closeNotifications()
   }
 }
 
