@@ -19,11 +19,11 @@
 
       <div class="p-4 border-t border-gray-200 dark:border-gray-800">
         <UButton 
-          to="/" 
+          @click="handleLogout"
           variant="ghost" 
           color="neutral" 
           block 
-          class="justify-start text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+          class="justify-start text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
         >
           <template #leading>
             <UIcon name="i-heroicons-arrow-left-on-rectangle" class="w-5 h-5" />
@@ -66,6 +66,33 @@ const allLinks = [
 // State for filtered links
 const visibleLinks = ref<any[]>([])
 const visibleMobileLinks = ref<any[]>([])
+
+const { clearLicense } = useLicense()
+
+const handleLogout = async () => {
+  try {
+    // 1. Call Server Logout to clear HttpOnly cookies (if any)
+    await $fetch('/api/auth/logout', { method: 'POST' })
+    
+    // 2. Clear Client State
+    clearLicense()
+    
+    // 3. Manually clear cookies accessible to JS (just in case)
+    const memberId = useCookie('member_id')
+    const memberRole = useCookie('member_role')
+    const licenseKey = useCookie('license_key')
+    
+    memberId.value = null
+    memberRole.value = null
+    licenseKey.value = null
+
+    // 4. Redirect
+    await navigateTo('/')
+  } catch (error) {
+    console.error('Logout failed', error)
+    await navigateTo('/')
+  }
+}
 
 onMounted(() => {
   // Determine Role

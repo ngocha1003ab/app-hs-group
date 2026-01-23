@@ -119,6 +119,19 @@
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T14:59:22.042Z",
       "updated_at": "2026-01-23T15:37:18.895Z"
+    },
+    {
+      "id": "mkr5i9t9yqnqrrt9t9q",
+      "title": "Làm mới",
+      "description": "Làm mới nhiệm vụ",
+      "assignee_id": "mkqz5lp7nwpnh73xt4",
+      "department_id": "mkqy2jzjrzpbo75z3n",
+      "priority": "medium",
+      "status": "todo",
+      "due_date": "2026-01-28",
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T17:24:54.189Z",
+      "updated_at": "2026-01-23T17:24:54.189Z"
     }
   ],
   "comments": [
@@ -164,6 +177,28 @@
     }
   ],
   "notifications": [
+    {
+      "id": "mkr5i9u2fkie6hkxbju",
+      "user_id": "owner",
+      "title": "Nhiệm vụ mới được tạo",
+      "description": "Một nhiệm vụ mới \"Làm mới\" đã được giao cho Tam Long Ma",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T17:24:54.218Z"
+    },
+    {
+      "id": "mkr5i9u0sgw3rx37dxp",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Làm mới",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T17:24:54.216Z"
+    },
     {
       "id": "mkr1nwvpvbe1g29ptzi",
       "user_id": "owner",

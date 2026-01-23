@@ -26,7 +26,9 @@ export default defineEventHandler(async (event) => {
         const member = db.data.members.find(m => m.id === memberId && m.license_key === licenseKey)
 
         if (member) {
-            if (member.role === 'Leader') {
+            if (member.role === 'Owner') {
+                // Owner: View ALL tasks (No extra filter)
+            } else if (member.role === 'Leader') {
                 // Leader: View all tasks in their department
                 tasks = tasks.filter(t => t.department_id === member.department_id)
             } else {
