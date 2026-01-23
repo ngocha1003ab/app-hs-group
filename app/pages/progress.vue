@@ -91,10 +91,7 @@
       </div>
     </ClientOnly>
 
-    <!-- Pagination -->
-    <div class="mt-4 flex justify-center pb-6">
-       <AppPagination v-model="page" :limit="limit" :total="totalTasks" />
-    </div>
+    <!-- Loading / Pagination Removed (Infinite Scroll Active) -->
 
     <!-- Custom Task Detail Modal (HTML/CSS) -->
     <Transition
@@ -231,6 +228,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, defineComponent, h } from 'vue'
 import { useDragAndDrop } from '@formkit/drag-and-drop/vue'
+import { useInfiniteScroll } from '@vueuse/core'
 
 definePageMeta({
   layout: 'app'
@@ -308,64 +306,104 @@ const getMember = (id: string) => {
    return employees.value.find(x => x.id === id)
 }
 
-// Fetch Tasks
-const page = ref(1)
-const limit = ref(20)
+// --- Infinite Scroll & Data Management ---
 
-const queryParams = computed(() => ({
-  page: page.value,
-  limit: limit.value
-}))
+// Helper Composable for Column Data
+const useColumnTasks = (status: Task['status']) => {
+    const page = ref(1)
+    const limit = 20
+    const hasMore = ref(true)
+    const tasks = ref<Task[]>([])
+    const isLoading = ref(false)
+    const total = ref(0)
+    
+    // Capture headers for SSR
+    const headers = useRequestHeaders(['cookie'])
 
-const { data: tasksData, refresh: refreshTasks } = await useFetch<any>('/api/tasks', {
-  params: queryParams,
-  watch: [page]
-})
+    const fetchTasks = async () => {
+        if (!hasMore.value && page.value !== 1) return
+        
+        isLoading.value = true
+        try {
+            const res = await $fetch<any>('/api/tasks', {
+                params: {
+                    page: page.value,
+                    limit,
+                    status
+                },
+                headers: import.meta.server ? headers : undefined
+            })
+            
+            const newTasks = res.data.map((t: any) => {
+                const assignee = getMember(t.assignee_id)
+                return {
+                    id: t.id,
+                    title: t.title,
+                    description: t.description,
+                    priority: t.priority,
+                    department: getDeptName(t.department_id),
+                    dueDate: t.due_date,
+                    status: t.status,
+                    assignee: {
+                        name: assignee ? assignee.name : 'Unknown',
+                        avatar: assignee ? assignee.avatar : '',
+                        isLeader: assignee ? assignee.role === 'Leader' : false
+                    },
+                    comments: []
+                }
+            })
 
-// Fix for paginated response structure
-const tasks = computed<Task[]>(() => {
-    const rawData = tasksData.value?.data || [] // Access .data from paginated response
-    return rawData.map((t: any) => {
-        const assignee = getMember(t.assignee_id)
-        return {
-            id: t.id, // is string now
-            title: t.title,
-            description: t.description,
-            priority: t.priority,
-            department: getDeptName(t.department_id),
-            dueDate: t.due_date,
-            status: t.status,
-            assignee: {
-                name: assignee ? assignee.name : 'Unknown',
-                avatar: assignee ? assignee.avatar : '',
-                isLeader: assignee ? assignee.role === 'Leader' : false
-            },
-            comments: [] // Loaded on demand
+            if (page.value === 1) {
+                tasks.value = newTasks
+            } else {
+                tasks.value = [...tasks.value, ...newTasks]
+            }
+
+            total.value = res.total
+            hasMore.value = tasks.value.length < res.total
+            page.value++
+        } catch (error) {
+            console.error(`Error fetching ${status} tasks:`, error)
+        } finally {
+            isLoading.value = false
         }
-    })
+    }
+    
+    return { tasks, fetchTasks, hasMore, isLoading, total }
+}
+
+const todoState = useColumnTasks('todo')
+const inProgressState = useColumnTasks('in-progress')
+const doneState = useColumnTasks('done')
+
+// Initial Load
+await Promise.all([
+    todoState.fetchTasks(),
+    inProgressState.fetchTasks(),
+    doneState.fetchTasks()
+])
+
+
+// --- Drag & Drop Columns ---
+const [todoParent, todoTasks] = useDragAndDrop<Task>(todoState.tasks.value, { group: 'tasks', sortable: true })
+const [inProgressParent, inProgressTasks] = useDragAndDrop<Task>(inProgressState.tasks.value, { group: 'tasks', sortable: true })
+const [doneParent, doneTasks] = useDragAndDrop<Task>(doneState.tasks.value, { group: 'tasks', sortable: true })
+
+// Sync state tasks to drag and drop refs when fetched
+watch(todoState.tasks, (newVal) => { 
+    // If we just replace the value, it might reset the scroll or state.
+    // Ideally we want to maintain the list reference or careful update.
+    // For infinite scroll append, newVal has all items.
+    todoTasks.value = newVal 
 })
+watch(inProgressState.tasks, (newVal) => { inProgressTasks.value = newVal })
+watch(doneState.tasks, (newVal) => { doneTasks.value = newVal })
 
-const totalTasks = computed(() => tasksData.value?.total || 0)
-
-
-// Initialize Drag and Drop Columns
-// We need to use `ref` for the lists to be reactive for drag and drop
-// But `tasks` is computed. 
-// We usually watch `tasks` and update the refs OR use computed refs if drag-and-drop handles it.
-// formkit/drag-and-drop usually expects a ref array that it can mutate.
-// So we need to sync API data into 3 local refs: todoList, inProgressList, doneList
-
-// Use drag and drop hooks on these local refs
-const [todoParent, todoTasks] = useDragAndDrop<Task>([], { group: 'tasks', sortable: true })
-const [inProgressParent, inProgressTasks] = useDragAndDrop<Task>([], { group: 'tasks', sortable: true })
-const [doneParent, doneTasks] = useDragAndDrop<Task>([], { group: 'tasks', sortable: true })
-
-watch(tasks, (newTasks) => {
-   // Reset lists when API data changes (e.g. initial load or refresh)
-   todoTasks.value = newTasks.filter(t => t.status === 'todo')
-   inProgressTasks.value = newTasks.filter(t => t.status === 'in-progress')
-   doneTasks.value = newTasks.filter(t => t.status === 'done')
-}, { immediate: true })
+// Infinite Scroll Bindings
+// Use the SAME parent refs from useDragAndDrop for infinite scroll
+useInfiniteScroll(todoParent, () => { todoState.fetchTasks() }, { distance: 10 })
+useInfiniteScroll(inProgressParent, () => { inProgressState.fetchTasks() }, { distance: 10 })
+useInfiniteScroll(doneParent, () => { doneState.fetchTasks() }, { distance: 10 })
 
 // --- Drag & Drop Persistence ---
 const handleStatusChange = async (task: Task, newStatus: Task['status']) => {
@@ -382,8 +420,12 @@ const handleStatusChange = async (task: Task, newStatus: Task['status']) => {
        toast.add({ title: 'Cập nhật', description: 'Đã cập nhật trạng thái', color: 'success' })
     } catch (e: any) {
        task.status = oldStatus // Revert
+       // If we revert, we might need to move it back visually? 
+       // Complex with independent lists. For now just toast error.
        toast.add({ title: 'Lỗi', description: e.data?.message || 'Không thể cập nhật trạng thái', color: 'error' })
-       refreshTasks() // Reset board
+       // Force refresh column to fix visual state?
+       // todoState.fetchTasks() // This appends... not refresh.
+       // Reloading page might be needed or smarter rollback.
     }
 }
 

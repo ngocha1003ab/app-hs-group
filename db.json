@@ -101,11 +101,11 @@
       "assignee_id": "mkqz4ypau0f0ua9igj",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-28",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T14:40:53.045Z",
-      "updated_at": "2026-01-23T14:40:53.045Z"
+      "updated_at": "2026-01-23T18:27:24.638Z"
     },
     {
       "id": "mkr0b41mngr73yj90s",
@@ -114,11 +114,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T14:59:22.042Z",
-      "updated_at": "2026-01-23T17:57:12.270Z"
+      "updated_at": "2026-01-23T18:27:24.134Z"
     },
     {
       "id": "mkr5i9t9yqnqrrt9t9q",
@@ -127,11 +127,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "in-progress",
+      "status": "done",
       "due_date": "2026-01-28",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T17:24:54.189Z",
-      "updated_at": "2026-01-23T17:57:11.754Z"
+      "updated_at": "2026-01-23T18:27:23.646Z"
     },
     {
       "id": "mkr6t07we0f586xhbv8",
@@ -140,11 +140,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-25",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:01:14.588Z",
-      "updated_at": "2026-01-23T18:01:14.588Z"
+      "updated_at": "2026-01-23T18:27:23.126Z"
     },
     {
       "id": "mkr6t8xbfjit5p1979i",
@@ -153,11 +153,11 @@
       "assignee_id": "owner_mkr57lsv",
       "department_id": "",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-26",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:01:25.871Z",
-      "updated_at": "2026-01-23T18:01:25.871Z"
+      "updated_at": "2026-01-23T18:27:22.626Z"
     },
     {
       "id": "mkr6tg5if0bwc6p9axg",
@@ -166,11 +166,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-26",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:01:35.238Z",
-      "updated_at": "2026-01-23T18:01:35.238Z"
+      "updated_at": "2026-01-23T18:27:22.170Z"
     },
     {
       "id": "mkr6tlciiw0x5qbswk",
@@ -179,11 +179,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:01:41.970Z",
-      "updated_at": "2026-01-23T18:01:41.970Z"
+      "updated_at": "2026-01-23T18:27:21.649Z"
     },
     {
       "id": "mkr6tppzha1um6n891q",
@@ -192,11 +192,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "in-progress",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:01:47.639Z",
-      "updated_at": "2026-01-23T18:14:22.333Z"
+      "updated_at": "2026-01-23T18:27:19.362Z"
     },
     {
       "id": "mkr6tv66rhchanzpjs",
@@ -205,11 +205,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:01:54.702Z",
-      "updated_at": "2026-01-23T18:01:54.702Z"
+      "updated_at": "2026-01-23T18:27:18.914Z"
     },
     {
       "id": "mkr6u0rnys0jceed8sa",
@@ -218,11 +218,11 @@
       "assignee_id": "mkqz4ypau0f0ua9igj",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:02:01.955Z",
-      "updated_at": "2026-01-23T18:02:01.955Z"
+      "updated_at": "2026-01-23T18:27:18.428Z"
     },
     {
       "id": "mkr6u6rxcmni8azd48u",
@@ -231,11 +231,11 @@
       "assignee_id": "mkqz4ypau0f0ua9igj",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "low",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:02:09.741Z",
-      "updated_at": "2026-01-23T18:02:09.741Z"
+      "updated_at": "2026-01-23T18:27:17.920Z"
     },
     {
       "id": "mkr6ucb61z9zwjqvaq1j",
@@ -244,11 +244,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:02:16.914Z",
-      "updated_at": "2026-01-23T18:02:16.914Z"
+      "updated_at": "2026-01-23T18:27:17.497Z"
     },
     {
       "id": "mkr6ujzrhc8c01dvbad",
@@ -257,11 +257,11 @@
       "assignee_id": "mkqz4ypau0f0ua9igj",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-29",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:02:26.871Z",
-      "updated_at": "2026-01-23T18:02:26.871Z"
+      "updated_at": "2026-01-23T18:27:16.975Z"
     },
     {
       "id": "mkr72df6r49d9o1gfc",
@@ -270,11 +270,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-29",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:08:31.602Z",
-      "updated_at": "2026-01-23T18:08:31.602Z"
+      "updated_at": "2026-01-23T18:27:16.435Z"
     },
     {
       "id": "mkr72i685z0eqinniu3",
@@ -283,11 +283,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-28",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:08:37.760Z",
-      "updated_at": "2026-01-23T18:08:37.760Z"
+      "updated_at": "2026-01-23T18:27:15.969Z"
     },
     {
       "id": "mkr72mdhctf1ano8598",
@@ -296,11 +296,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:08:43.205Z",
-      "updated_at": "2026-01-23T18:08:43.205Z"
+      "updated_at": "2026-01-23T18:27:15.459Z"
     },
     {
       "id": "mkr72q3ojtxnqer5x6l",
@@ -309,11 +309,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:08:48.036Z",
-      "updated_at": "2026-01-23T18:08:48.036Z"
+      "updated_at": "2026-01-23T18:27:14.943Z"
     },
     {
       "id": "mkr72ubwe8yakck3l9o",
@@ -322,11 +322,11 @@
       "assignee_id": "owner_mkr57lsv",
       "department_id": "",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-29",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:08:53.516Z",
-      "updated_at": "2026-01-23T18:08:53.516Z"
+      "updated_at": "2026-01-23T18:27:14.470Z"
     },
     {
       "id": "mkr72y585ojhbm99897",
@@ -335,11 +335,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-29",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:08:58.460Z",
-      "updated_at": "2026-01-23T18:08:58.460Z"
+      "updated_at": "2026-01-23T18:27:13.951Z"
     },
     {
       "id": "mkr7322erwe6vtfe3ca",
@@ -348,11 +348,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-21",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:09:03.542Z",
-      "updated_at": "2026-01-23T18:09:03.542Z"
+      "updated_at": "2026-01-23T18:27:13.391Z"
     },
     {
       "id": "mkr7389bpo7s1gkktxa",
@@ -361,11 +361,11 @@
       "assignee_id": "mkqz5lp7nwpnh73xt4",
       "department_id": "mkqy2jzjrzpbo75z3n",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-29",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:09:11.567Z",
-      "updated_at": "2026-01-23T18:09:11.567Z"
+      "updated_at": "2026-01-23T18:27:12.751Z"
     }
   ],
   "comments": [
@@ -419,6 +419,512 @@
     }
   ],
   "notifications": [
+    {
+      "id": "mkr7qnolnahhubtjbt",
+      "user_id": "mkqz4ypau0f0ua9igj",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm việc nhóm đi\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:24.645Z"
+    },
+    {
+      "id": "mkr7qnahy29vjyxz1rd",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm nhiệm vụ mới đi\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:24.137Z"
+    },
+    {
+      "id": "mkr7qmwwbp0hx4zo9bo",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm mới\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:23.648Z"
+    },
+    {
+      "id": "mkr7qmijzsnbv2gnbt",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:23.131Z"
+    },
+    {
+      "id": "mkr7qm4l8nqp1ydauw5",
+      "user_id": "owner",
+      "title": "Cập nhật tiến độ",
+      "description": "\"Chủ doanh nghiệp\" đã cập nhật trạng thái nhiệm vụ \"test 1\" sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:22.629Z"
+    },
+    {
+      "id": "mkr7qls2t5pl7e0kke",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:22.178Z"
+    },
+    {
+      "id": "mkr7qldf6qvq5de13jv",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:21.651Z"
+    },
+    {
+      "id": "mkr7qjp1xtf2pxqdpei",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:19.477Z"
+    },
+    {
+      "id": "mkr7qj9i9d9k6ntrwfv",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:18.918Z"
+    },
+    {
+      "id": "mkr7qivyd9fijqd443m",
+      "user_id": "mkqz4ypau0f0ua9igj",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:18.430Z"
+    },
+    {
+      "id": "mkr7qii0w2vpzc42oe9",
+      "user_id": "mkqz4ypau0f0ua9igj",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:17.928Z"
+    },
+    {
+      "id": "mkr7qi97w2eg2l6zzjk",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:17.611Z"
+    },
+    {
+      "id": "mkr7qhrnamphr4g7pxt",
+      "user_id": "mkqz4ypau0f0ua9igj",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:16.979Z"
+    },
+    {
+      "id": "mkr7qhcnxnxt5a1f4",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:16.439Z"
+    },
+    {
+      "id": "mkr7qgzx2ujvysaz7u4",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:15.981Z"
+    },
+    {
+      "id": "mkr7qglivqnc368p9c",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:15.462Z"
+    },
+    {
+      "id": "mkr7qg76q5np3xxa8ek",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:14.946Z"
+    },
+    {
+      "id": "mkr7qfu4djuvborpk2p",
+      "user_id": "owner",
+      "title": "Cập nhật tiến độ",
+      "description": "\"Chủ doanh nghiệp\" đã cập nhật trạng thái nhiệm vụ \"test 1\" sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:14.476Z"
+    },
+    {
+      "id": "mkr7qffnlbzmo3m91of",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:13.955Z"
+    },
+    {
+      "id": "mkr7qf05zemzbug8z7",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:13.397Z"
+    },
+    {
+      "id": "mkr7qei923amwbzap44",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:12.753Z"
+    },
+    {
+      "id": "mkr7q92q6rg2ovrl37k",
+      "user_id": "mkqz4ypau0f0ua9igj",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm việc nhóm đi\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:05.714Z"
+    },
+    {
+      "id": "mkr7q8oc29xzhs3htjf",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:05.196Z"
+    },
+    {
+      "id": "mkr7q89e2gihwbaufir",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:04.658Z"
+    },
+    {
+      "id": "mkr7q7eokbu9c45tzwm",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:03.552Z"
+    },
+    {
+      "id": "mkr7q6x82qixcin2726",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:02.924Z"
+    },
+    {
+      "id": "mkr7q6fsfqe0p893rje",
+      "user_id": "owner",
+      "title": "Cập nhật tiến độ",
+      "description": "\"Chủ doanh nghiệp\" đã cập nhật trạng thái nhiệm vụ \"test 1\" sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:02.296Z"
+    },
+    {
+      "id": "mkr7q5zguqsyuw41zbg",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:01.708Z"
+    },
+    {
+      "id": "mkr7q5hk9b0ncdcp5p5",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:01.064Z"
+    },
+    {
+      "id": "mkr7q50dl1idwrfpzkm",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:27:00.445Z"
+    },
+    {
+      "id": "mkr7q3ylwf2gmavh6hc",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:59.085Z"
+    },
+    {
+      "id": "mkr7q3fydh85d9lq8nh",
+      "user_id": "mkqz4ypau0f0ua9igj",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:58.414Z"
+    },
+    {
+      "id": "mkr7q316td24hsxl85",
+      "user_id": "mkqz4ypau0f0ua9igj",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:57.882Z"
+    },
+    {
+      "id": "mkr7q2i0xrr15qz1g1c",
+      "user_id": "owner",
+      "title": "Cập nhật tiến độ",
+      "description": "\"Chủ doanh nghiệp\" đã cập nhật trạng thái nhiệm vụ \"test 1\" sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:57.192Z"
+    },
+    {
+      "id": "mkr7q19jxit41642sk",
+      "user_id": "mkqz4ypau0f0ua9igj",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:55.591Z"
+    },
+    {
+      "id": "mkr7q0rnbf6dvkot7wu",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:54.947Z"
+    },
+    {
+      "id": "mkr7q0ctq0c0rwoqid",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:54.413Z"
+    },
+    {
+      "id": "mkr7pzsqu0qak4hk5bb",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:53.690Z"
+    },
+    {
+      "id": "mkr7pybiwev872dcdho",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:51.774Z"
+    },
+    {
+      "id": "mkr7pxj96a3w41eemb8",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:50.757Z"
+    },
+    {
+      "id": "mkr7pwjl19txz24v9yi",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm mới\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:49.473Z"
+    },
+    {
+      "id": "mkr7pvwr4nytoqzn9tv",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm nhiệm vụ mới đi\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:48.651Z"
+    },
+    {
+      "id": "mkr7pk6ht20kzv1b8yg",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Cần làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:33.449Z"
+    },
+    {
+      "id": "mkr7pit88jb2o6hv3ia",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm mới\" đã được cập nhật trạng thái sang: Cần làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:31.676Z"
+    },
+    {
+      "id": "mkr7pg5gyv82632ir8",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Cần làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:28.228Z"
+    },
+    {
+      "id": "mkr7pezck9rk1tzglym",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T18:26:26.712Z"
+    },
     {
       "id": "mkr79w1x599s0rcrien",
       "user_id": "mkqz5lp7nwpnh73xt4",
