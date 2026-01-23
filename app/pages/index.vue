@@ -121,18 +121,36 @@
 const loading = ref(false)
 const licenseKey = ref('')
 
+const router = useRouter()
+const toast = useToast()
+
 const handleLicenseSubmit = async () => {
-  if (!licenseKey.value.trim()) {
-    // Basic validation notification could go here
-    return
-  }
+  if (!licenseKey.value.trim()) return
   
   loading.value = true
   try {
-    // TODO: Implement license verification logic
-    await new Promise(resolve => setTimeout(resolve, 1500)) // Simulate network request
-    console.log('Verifying license:', licenseKey.value)
-    // alert('Đang kiểm tra mã giấy phép...')
+    const res = await $fetch<{ user: { email: string } }>('/api/auth/login', {
+      method: 'POST',
+      body: {
+        licenseKey: licenseKey.value
+      }
+    })
+
+    toast.add({
+      title: 'Đăng nhập thành công',
+      description: `Xin chào ${res.user.email}`,
+      icon: 'i-heroicons-check-circle',
+      color: 'success'
+    })
+    
+    await router.push('/dashboard')
+  } catch (error: any) {
+    toast.add({
+      title: 'Lỗi xác thực',
+      description: error.data?.message || 'Không thể kiểm tra giấy phép. Vui lòng thử lại.',
+      icon: 'i-heroicons-exclamation-circle',
+      color: 'error'
+    })
   } finally {
     loading.value = false
   }
