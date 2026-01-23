@@ -96,7 +96,7 @@
       "due_date": "2026-01-30",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T14:59:22.042Z",
-      "updated_at": "2026-01-23T15:22:38.737Z"
+      "updated_at": "2026-01-23T15:37:18.895Z"
     }
   ],
   "comments": [
@@ -139,6 +139,52 @@
       "content": "hrloo",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T15:23:21.728Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "mkr1nwvpvbe1g29ptzi",
+      "user_id": "owner",
+      "title": "Cập nhật tiến độ",
+      "description": "Nhiệm vụ \"Làm nhiệm vụ mới đi\" đã chuyển sang trạng thái: in-progress",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": true,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T15:37:18.901Z"
+    },
+    {
+      "id": "mkr1mn69o9c6mtwvt",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm nhiệm vụ mới đi\" đã được cập nhật trạng thái",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": true,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T15:36:19.665Z"
+    },
+    {
+      "id": "mkr1l4j4yyzaq31tt6",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm nhiệm vụ mới đi\" đã được cập nhật trạng thái",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": true,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T15:35:08.848Z"
+    },
+    {
+      "id": "mkr1kwcw2w3gdlurtvr",
+      "user_id": "mkqz5lp7nwpnh73xt4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Làm nhiệm vụ mới đi\" đã được cập nhật trạng thái",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": true,
+      "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
+      "created_at": "2026-01-23T15:34:58.256Z"
     }
   ]
 }

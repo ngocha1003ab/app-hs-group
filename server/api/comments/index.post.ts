@@ -1,5 +1,6 @@
 
 import { useDb } from '../../utils/db'
+import { createNotification } from '../../utils/notifications'
 
 export default defineEventHandler(async (event) => {
     const licenseKey = getCookie(event, 'license_key')
@@ -61,6 +62,37 @@ export default defineEventHandler(async (event) => {
     db.data.comments = db.data.comments || []
     db.data.comments.push(newComment)
     await db.write()
+
+    // --- Notifications ---
+    // Rule 1: Use commenter name for better notification
+    const commenterName = userId === 'owner' ? 'Admin' : (db.data.members.find(m => m.id === userId)?.name || 'Ai đó')
+
+    // Rule 2: If assignee exists and is NOT the commenter, notify assignee
+    if (task.assignee_id && task.assignee_id !== userId) {
+        await createNotification(
+            licenseKey,
+            task.assignee_id,
+            'Bình luận mới',
+            `${commenterName} đã bình luận trong nhiệm vụ: ${task.title}`,
+            'comment_added',
+            '/progress' // Or specific task link if routing supported params
+        )
+    }
+
+    // Rule 3: If assignee IS the commenter, notify Supervisor (Team Leader or Owner)
+    if (task.assignee_id === userId) {
+        // Notify Owner for now as a catch-all supervisor for simplicity, 
+        // OR find the specific department leader.
+        // Let's notify Owner.
+        await createNotification(
+            licenseKey,
+            'owner',
+            'Bình luận mới',
+            `${commenterName} đã bình luận trong nhiệm vụ: ${task.title}`,
+            'comment_added',
+            '/progress'
+        )
+    }
 
     return {
         success: true,

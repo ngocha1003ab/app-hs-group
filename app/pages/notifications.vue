@@ -16,6 +16,7 @@
         <div 
           v-for="notif in notifications" 
           :key="notif.id"
+          @click="handleClick(notif)"
           class="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer group"
           :class="{'bg-primary-50/30 dark:bg-primary-900/10': !notif.read}"
         >
@@ -69,12 +70,57 @@ useHead({
   title: 'Thông báo - SheetVN'
 })
 
-// Mock Data (Shared with Header for consistent demo)
-const notifications = ref([
-  { id: 1, title: 'Nhiệm vụ mới', description: 'Bạn được phân công nhiệm vụ "Thiết kế Mobile App"', time: '5 phút trước', read: false },
-  { id: 2, title: 'Cập nhật hệ thống', description: 'Hệ thống đã được cập nhật lên phiên bản 2.0. Các tính năng mới bao gồm Dark Mode và cải thiện hiệu suất.', time: '1 giờ trước', read: true },
-  { id: 3, title: 'Nhắc nhở họp', description: 'Cuộc họp team Marketing bắt đầu lúc 14:00 tại phòng họp chính.', time: '3 giờ trước', read: true },
-  { id: 4, title: 'Thanh toán thành công', description: 'Gói Premium của bạn đã được gia hạn thành công. Hóa đơn đã được gửi về email.', time: '1 ngày trước', read: true },
-  { id: 5, title: 'Chào mừng thành viên mới', description: 'Chào mừng Nguyễn Văn A đã gia nhập team Design!', time: '2 ngày trước', read: true },
-])
+
+// Logic
+interface Notification {
+  id: string
+  title: string
+  description: string
+  time: string
+  link?: string
+  read: boolean
+  created_at: string
+}
+
+const timeAgo = (dateStr: string) => {
+    const date = new Date(dateStr)
+    const now = new Date()
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+    
+    if (seconds < 60) return 'Vừa xong'
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `${minutes} phút trước`
+    const hours = Math.floor(minutes / 60)
+    if (hours < 24) return `${hours} giờ trước`
+    const days = Math.floor(hours / 24)
+    if (days < 30) return `${days} ngày trước`
+    return date.toLocaleDateString('vi-VN')
+}
+
+const { data: rawNotifications, refresh } = await useFetch<Notification[]>('/api/notifications', {
+  key: 'notifications-page'
+})
+
+const notifications = computed(() => {
+  if (!rawNotifications.value) return []
+  return rawNotifications.value.map((n: any) => ({
+    ...n,
+    time: timeAgo(n.created_at)
+  }))
+})
+
+const handleClick = async (notif: Notification) => {
+    if (!notif.read) {
+        // Optimistic
+        if (rawNotifications.value) {
+            const idx = rawNotifications.value.findIndex((n: any) => n.id === notif.id)
+            if (idx !== -1 && rawNotifications.value[idx]) rawNotifications.value[idx].read = true
+        }
+        await $fetch('/api/notifications/mark-read', { method: 'POST', body: { id: notif.id } })
+    }
+    if (notif.link) {
+        navigateTo(notif.link)
+    }
+}
+
 </script>

@@ -104,10 +104,15 @@
             class="absolute right-0 mt-3 w-80 md:w-96 rounded-xl shadow-xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 z-50 overflow-hidden"
           >
             <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
-              <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Thông báo</h3>
-              <span v-if="unreadCount > 0" class="text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-2 py-0.5 rounded-full">
-                {{ unreadCount }} mới
-              </span>
+              <div class="flex items-center gap-2">
+                <h3 class="font-semibold text-gray-900 dark:text-white text-sm">Thông báo</h3>
+                <span v-if="unreadCount > 0" class="text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 px-2 py-0.5 rounded-full">
+                  {{ unreadCount }} mới
+                </span>
+              </div>
+              <button v-if="unreadCount > 0" @click="markAllRead" class="text-xs font-medium text-gray-500 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                Đã đọc hết
+              </button>
             </div>
             
             <div class="max-h-[70vh] overflow-y-auto custom-scrollbar">
@@ -118,6 +123,7 @@
               <div 
                 v-for="notif in notifications" 
                 :key="notif.id"
+                @click="handleNotificationClick(notif)"
                 class="px-4 py-3 border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer transition-colors relative group"
               >
                 <div class="flex gap-3">
@@ -203,14 +209,94 @@ const closeDropdown = () => {
 const isNotificationsOpen = ref(false)
 const notificationContainer = ref<HTMLElement | null>(null)
 
-const notifications = ref([
-  { id: 1, title: 'Nhiệm vụ mới', description: 'Bạn được phân công nhiệm vụ "Thiết kế Mobile App"', time: '5 phút trước', read: false },
-  { id: 2, title: 'Cập nhật hệ thống', description: 'Hệ thống đã được cập nhật lên phiên bản 2.0', time: '1 giờ trước', read: true },
-  { id: 3, title: 'Nhắc nhở họp', description: 'Cuộc họp team Marketing bắt đầu lúc 14:00', time: '3 giờ trước', read: true },
-  { id: 4, title: 'Thanh toán thành công', description: 'Gói Premium của bạn đã được gia hạn', time: '1 ngày trước', read: true },
-])
+// Notifications Logic
+interface Notification {
+  id: string
+  title: string
+  description: string
+  time: string
+  read: boolean
+  link?: string
+  created_at: string
+}
+
+const timeAgo = (dateStr: string) => {
+    const date = new Date(dateStr)
+    const now = new Date()
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+    
+    if (seconds < 60) return 'Vừa xong'
+    const minutes = Math.floor(seconds / 60)
+    if (minutes < 60) return `${minutes} phút trước`
+    const hours = Math.floor(minutes / 60)
+    if (hours < 24) return `${hours} giờ trước`
+    const days = Math.floor(hours / 24)
+    if (days < 30) return `${days} ngày trước`
+    return date.toLocaleDateString('vi-VN')
+}
+
+const { data: rawNotifications, refresh: refreshNotifications } = await useFetch<Notification[]>('/api/notifications', {
+  key: 'notifications-header'
+})
+
+const notifications = computed(() => {
+  if (!rawNotifications.value) return []
+  return rawNotifications.value.map((n: any) => ({
+    ...n,
+    time: timeAgo(n.created_at)
+  }))
+})
 
 const unreadCount = computed(() => notifications.value.filter(n => !n.read).length)
+
+const handleNotificationClick = async (notif: Notification) => {
+  if (!notif.read) {
+    // Optimistic update
+    if (rawNotifications.value) {
+      const idx = rawNotifications.value.findIndex((n: any) => n.id === notif.id)
+      if (idx !== -1 && rawNotifications.value[idx]) {
+        rawNotifications.value[idx].read = true
+      }
+    }
+    
+    // API Call
+    try {
+      await $fetch('/api/notifications/mark-read', {
+        method: 'POST',
+        body: { id: notif.id }
+      })
+    } catch (e) {
+      console.error('Failed to mark notification as read', e)
+    }
+  }
+
+  closeNotifications()
+  
+  if (notif.link) {
+    navigateTo(notif.link)
+  }
+}
+
+const markAllRead = async () => {
+    try {
+      await $fetch('/api/notifications/mark-read', { method: 'POST' })
+      refreshNotifications()
+    } catch (e) {
+      console.error(e)
+    }
+}
+
+// Poll for notifications every 60s
+let pollInterval: any
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+  pollInterval = setInterval(refreshNotifications, 60000)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  if (pollInterval) clearInterval(pollInterval)
+})
 
 const toggleNotifications = () => {
   isNotificationsOpen.value = !isNotificationsOpen.value

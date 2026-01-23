@@ -54,12 +54,25 @@ export interface Comment {
     created_at: string
 }
 
+export interface Notification {
+    id: string
+    user_id: string // 'owner' or member ID
+    title: string
+    description: string
+    type: 'task_assigned' | 'task_updated' | 'comment_added' | 'other'
+    link?: string    // Optional link to resource (e.g. /tasks/123)
+    read: boolean
+    license_key: string
+    created_at: string
+}
+
 export interface DatabaseSchema {
     licenses: LicenseData[]
     departments: Department[]
     members: Member[]
     tasks: Task[]
     comments: Comment[]
+    notifications: Notification[]
     settings: {
         companyName?: string
         description?: string
@@ -72,6 +85,7 @@ const defaultData: DatabaseSchema = {
     members: [],
     tasks: [],
     comments: [],
+    notifications: [],
     settings: {}
 }
 

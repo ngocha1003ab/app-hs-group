@@ -1,5 +1,6 @@
 
 import { useDb } from '../../utils/db'
+import { createNotification } from '../../utils/notifications'
 
 export default defineEventHandler(async (event) => {
     const licenseKey = getCookie(event, 'license_key')
@@ -62,6 +63,33 @@ export default defineEventHandler(async (event) => {
 
     db.data.tasks.push(newTask as any)
     await db.write()
+
+    // --- Notifications ---
+    // 1. Notify Assignee
+    await createNotification(
+        licenseKey,
+        assignee_id,
+        'Nhiệm vụ mới',
+        `Bạn đã được phân công nhiệm vụ: ${title}`,
+        'task_assigned',
+        '/tasks'
+    )
+
+    // 2. Notify Owner (if creator is not owner)
+    // We assume Owner ID is 'owner' (derived from license key usually) or we fetch it?
+    // In our simplified logic, 'owner' is the catch-all for the License Admin.
+    if (memberId) { // If a member (Leader) created this, notify Owner
+        // Optional: Notify Owner? Or only if critical?
+        // User request: "sẽ có thông báo tương ứng đến chủ doanh nghiệp" -> Yes.
+        await createNotification(
+            licenseKey,
+            'owner',
+            'Nhiệm vụ mới được tạo',
+            `Một nhiệm vụ mới "${title}" đã được giao cho ${assignee.name}`,
+            'task_assigned',
+            '/tasks'
+        )
+    }
 
     return {
         success: true,
