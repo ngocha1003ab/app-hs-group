@@ -187,7 +187,7 @@
 
                     <!-- Add Comment Input -->
                     <div class="flex gap-3 items-start pt-4 border-t border-gray-100 dark:border-gray-800">
-                       <UAvatar src="https://avatars.githubusercontent.com/u/739984?v=4" alt="Me" size="sm" class="mt-0.5" />
+                       <UAvatar :src="userAvatar" :alt="userName" size="sm" class="mt-0.5" />
                        <div class="flex-1 space-y-2">
                          <UTextarea 
                             v-model="newComment" 
@@ -236,11 +236,12 @@ useHead({
 })
 
 // --- Types ---
+// --- Types ---
 type Priority = 'low' | 'medium' | 'high'
 
 interface Comment {
-  id: number
-  userId: number
+  id: string
+  userId: string
   userName: string
   userAvatar: string
   content: string
@@ -248,7 +249,7 @@ interface Comment {
 }
 
 interface Task {
-  id: number
+  id: string
   title: string
   description: string
   priority: Priority
@@ -268,84 +269,116 @@ const isModalOpen = ref(false)
 const selectedTask = ref<Task | null>(null)
 const newComment = ref('')
 
-// Initial Mock Data
-const initialMockTasks: Task[] = [
-  {
-    id: 1,
-    title: 'Phân tích yêu cầu dự án Mobile App',
-    description: 'Thống nhất các yêu cầu chức năng với khách hàng và viết tài liệu SRS.',
-    priority: 'high',
-    department: 'Kỹ Thuật & IT',
-    dueDate: '2023-11-15',
-    assignee: { name: 'Nguyễn Văn A', avatar: 'https://i.pravatar.cc/150?u=1', isLeader: true },
-    status: 'todo',
-    comments: []
-  },
-  {
-    id: 2,
-    title: 'Thiết kế Logo mới',
-    description: 'Tạo 3 option logo cho chiến dịch mùa hè.',
-    priority: 'medium',
-    department: 'Marketing',
-    dueDate: '2023-10-30', // Overdue mock
-    assignee: { name: 'Ngô Văn G', avatar: 'https://i.pravatar.cc/150?u=7', isLeader: true },
-    status: 'todo',
-    comments: [
-        { id: 101, userId: 2, userName: 'Bùi Thị H', userAvatar: 'https://i.pravatar.cc/150?u=8', content: 'Cần file vector hay chỉ cần png trước?', createdAt: '2023-10-26T09:00:00' }
-    ]
-  },
-  {
-    id: 3,
-    title: 'Cập nhật giao diện trang chủ',
-    description: 'Bổ sung banner mới và slider sản phẩm bán chạy.',
-    priority: 'medium',
-    department: 'Kỹ Thuật & IT',
-    dueDate: '2023-12-01',
-    assignee: { name: 'Vũ Thị K', avatar: 'https://i.pravatar.cc/150?u=10', isLeader: false },
-    status: 'in-progress',
-    comments: []
-  },
-  {
-    id: 4,
-    title: 'Tuyển dụng nhân viên SEO',
-    description: 'Đăng tin tuyển dụng trên LinkedIn và TopCV, lọc hồ sơ vòng 1.',
-    priority: 'high',
-    department: 'Nhân Sự (HR)',
-    dueDate: '2023-11-20',
-    assignee: { name: 'Phạm Thị D', avatar: 'https://i.pravatar.cc/150?u=4', isLeader: false },
-    status: 'in-progress',
-    comments: []
-  },
-  {
-    id: 5,
-    title: 'Báo cáo doanh thu Quý 1',
-    description: 'Tổng hợp số liệu từ các phòng ban và làm slide báo cáo.',
-    priority: 'low',
-    department: 'Phòng Kinh Doanh',
-    dueDate: '2023-10-25',
-    assignee: { name: 'Trần Thị B', avatar: 'https://i.pravatar.cc/150?u=2', isLeader: false },
-    status: 'done',
-    comments: [
-        { id: 201, userId: 1, userName: 'Nguyễn Văn A', userAvatar: 'https://i.pravatar.cc/150?u=1', content: 'Số liệu rất chi tiết, cảm ơn em.', createdAt: '2023-10-25T14:30:00' }
-    ]
-  }
-]
+// --- User Info for Commenting ---
+const userId = ref<string>('') // To check self
+const userAvatar = ref('')
+const userName = ref('')
+
+// Fetch User
+const { data: authData } = await useFetch<any>('/api/auth/me')
+if (authData.value && authData.value.success) {
+   userId.value = authData.value.user.role === 'Owner' ? 'owner' : authData.value.user.id // This might need adjustment if 'id' is mapped
+   // Actually auth/me returns the user object we constructed.
+   // Let's rely on userInfo from auth/me
+   userName.value = authData.value.user.name
+   userAvatar.value = authData.value.user.avatar
+}
+
+// --- Data Fetching ---
+// Need departments to map names? API tasks might return IDs.
+// Let's assume we can get dept names or tasks API includes them?
+// The tasks API returns department_id. We fetch depts mapping.
+const { data: deptData } = await useFetch<any[]>('/api/departments')
+const departments = computed(() => deptData.value || [])
+
+const { data: empData } = await useFetch<any[]>('/api/members')
+const employees = computed(() => empData.value || [])
+
+const getDeptName = (id: string) => {
+   const d = departments.value.find(x => x.id === id)
+   return d ? d.name : 'Unknown'
+}
+
+const getMember = (id: string) => {
+   return employees.value.find(x => x.id === id)
+}
+
+// Fetch Tasks
+const { data: tasksData, refresh: refreshTasks } = await useFetch<any[]>('/api/tasks')
+
+const tasks = computed<Task[]>(() => {
+    if (!tasksData.value) return []
+    return tasksData.value.map(t => {
+        const assignee = getMember(t.assignee_id)
+        return {
+            id: t.id, // is string now
+            title: t.title,
+            description: t.description,
+            priority: t.priority,
+            department: getDeptName(t.department_id),
+            dueDate: t.due_date,
+            status: t.status,
+            assignee: {
+                name: assignee ? assignee.name : 'Unknown',
+                avatar: assignee ? assignee.avatar : '',
+                isLeader: assignee ? assignee.role === 'Leader' : false
+            },
+            comments: [] // Loaded on demand
+        }
+    })
+})
+
 
 // Initialize Drag and Drop Columns
-const [todoParent, todoTasks] = useDragAndDrop(
-  initialMockTasks.filter(t => t.status === 'todo'), 
-  { group: 'tasks', sortable: true }
-)
+// We need to use `ref` for the lists to be reactive for drag and drop
+// But `tasks` is computed. 
+// We usually watch `tasks` and update the refs OR use computed refs if drag-and-drop handles it.
+// formkit/drag-and-drop usually expects a ref array that it can mutate.
+// So we need to sync API data into 3 local refs: todoList, inProgressList, doneList
 
-const [inProgressParent, inProgressTasks] = useDragAndDrop(
-  initialMockTasks.filter(t => t.status === 'in-progress'),
-  { group: 'tasks', sortable: true }
-)
+// Use drag and drop hooks on these local refs
+const [todoParent, todoTasks] = useDragAndDrop<Task>([], { group: 'tasks', sortable: true })
+const [inProgressParent, inProgressTasks] = useDragAndDrop<Task>([], { group: 'tasks', sortable: true })
+const [doneParent, doneTasks] = useDragAndDrop<Task>([], { group: 'tasks', sortable: true })
 
-const [doneParent, doneTasks] = useDragAndDrop(
-    initialMockTasks.filter(t => t.status === 'done'),
-    { group: 'tasks', sortable: true }
-)
+watch(tasks, (newTasks) => {
+   // Reset lists when API data changes (e.g. initial load or refresh)
+   todoTasks.value = newTasks.filter(t => t.status === 'todo')
+   inProgressTasks.value = newTasks.filter(t => t.status === 'in-progress')
+   doneTasks.value = newTasks.filter(t => t.status === 'done')
+}, { immediate: true })
+
+// --- Drag & Drop Persistence ---
+const handleStatusChange = async (task: Task, newStatus: Task['status']) => {
+    if (task.status === newStatus) return
+    
+    const oldStatus = task.status
+    task.status = newStatus // Optimistic update
+    
+    try {
+       await $fetch(`/api/tasks/${task.id}`, {
+          method: 'PUT',
+          body: { status: newStatus }
+       })
+       toast.add({ title: 'Cập nhật', description: 'Đã cập nhật trạng thái', color: 'success' })
+    } catch (e: any) {
+       task.status = oldStatus // Revert
+       toast.add({ title: 'Lỗi', description: e.data?.message || 'Không thể cập nhật trạng thái', color: 'error' })
+       refreshTasks() // Reset board
+    }
+}
+
+watch(todoTasks, (list) => {
+  list.forEach(t => { if(t.status !== 'todo') handleStatusChange(t, 'todo') })
+}, { deep: true })
+
+watch(inProgressTasks, (list) => {
+  list.forEach(t => { if(t.status !== 'in-progress') handleStatusChange(t, 'in-progress') })
+}, { deep: true })
+
+watch(doneTasks, (list) => {
+  list.forEach(t => { if(t.status !== 'done') handleStatusChange(t, 'done') })
+}, { deep: true })
 
 
 // --- Methods ---
@@ -366,27 +399,56 @@ const getPriorityColor = (p: Priority) => {
 }
 
 const formatDate = (dateString: string) => {
+   if(!dateString) return ''
   return new Date(dateString).toLocaleString('vi-VN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-const openTaskModal = (task: Task) => {
+const openTaskModal = async (task: Task) => {
   selectedTask.value = task
   isModalOpen.value = true
+  
+  // Fetch Comments
+  const createdComments = await $fetch<Comment[]>(`/api/comments?taskId=${task.id}`)
+  if(selectedTask.value) {
+      selectedTask.value.comments = createdComments
+  }
 }
 
-const addComment = () => {
+const toast = useToast()
+
+const addComment = async () => {
     if (!selectedTask.value || !newComment.value.trim()) return
 
-    selectedTask.value.comments.push({
-        id: Date.now(),
-        userId: 999,
-        userName: 'Admin User',
-        userAvatar: 'https://avatars.githubusercontent.com/u/739984?v=4', // Mock current user
-        content: newComment.value,
-        createdAt: new Date().toISOString()
-    })
-    
-    newComment.value = ''
+    try {
+        const res = await $fetch<any>('/api/comments', {
+            method: 'POST',
+            body: {
+                taskId: selectedTask.value.id,
+                content: newComment.value
+            }
+        })
+        
+        if(res.success) {
+            // Optimistic update or refresh
+            // Let's refresh view
+            const newCmt = res.data
+             // Enrich with current user info immediately for UI
+            const enrichedCmt = {
+                 id: newCmt.id,
+                 userId: newCmt.user_id,
+                 userName: userName.value || 'Me', 
+                 userAvatar: userAvatar.value,
+                 content: newCmt.content,
+                 createdAt: newCmt.created_at
+            }
+            
+            selectedTask.value.comments.push(enrichedCmt)
+            newComment.value = ''
+            toast.add({ title: 'Thành công', description: 'Đã gửi bình luận', color: 'success' })
+        }
+    } catch (e: any) {
+        toast.add({ title: 'Lỗi', description: e.data?.message || 'Không thể gửi bình luận', color: 'error' })
+    }
 }
 const TaskCardContent = defineComponent({
   props: ['task'],
@@ -447,13 +509,10 @@ const TaskCardContent = defineComponent({
       // Footer: Assignee & Comments count
       h('div', { class: 'flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800' }, [
          h('div', { class: 'flex items-center gap-2' }, [
-            h('img', { src: props.task.assignee.avatar, class: 'w-6 h-6 rounded-full ring-2 ring-white dark:ring-gray-900' }),
+            h('img', { src: props.task.assignee.avatar || 'https://ui-avatars.com/api/?background=random', class: 'w-6 h-6 rounded-full ring-2 ring-white dark:ring-gray-900' }),
             props.task.assignee.isLeader ? h('span', { class: 'i-heroicons-star w-3 h-3 text-yellow-500', title: 'Leader' }) : null
          ]),
-         props.task.comments.length > 0 ? h('div', { class: 'flex items-center gap-1 text-xs text-gray-400' }, [
-             h('span', { class: 'i-heroicons-chat-bubble-left w-3 h-3' }),
-             h('span', {}, props.task.comments.length)
-         ]) : null
+         // Only show if comments exist (optional optimization could be length from API task if included)
       ])
     ])
   }

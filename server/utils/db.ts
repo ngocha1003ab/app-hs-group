@@ -45,11 +45,21 @@ export interface Task {
     updated_at: string
 }
 
+export interface Comment {
+    id: string
+    task_id: string
+    user_id: string
+    content: string
+    license_key: string
+    created_at: string
+}
+
 export interface DatabaseSchema {
     licenses: LicenseData[]
     departments: Department[]
     members: Member[]
     tasks: Task[]
+    comments: Comment[]
     settings: {
         companyName?: string
         description?: string
@@ -61,6 +71,7 @@ const defaultData: DatabaseSchema = {
     departments: [],
     members: [],
     tasks: [],
+    comments: [],
     settings: {}
 }
 
