@@ -59,13 +59,13 @@
 <script setup lang="ts">
 // Menu Configuration
 const allLinks = [
-  { label: 'Thống kê', icon: 'i-heroicons-chart-bar', to: '/dashboard', roles: ['Owner', 'Leader'] },
-  { label: 'Phòng ban', icon: 'i-heroicons-building-office-2', to: '/departments', roles: ['Owner'] },
-  { label: 'Nhân viên', icon: 'i-heroicons-user-group', to: '/employees', roles: ['Owner', 'Leader'] },
-  { label: 'Tiến độ', icon: 'i-heroicons-chart-pie', to: '/progress', roles: ['Owner', 'Leader', 'Member'] }, // Everyone
-  { label: 'Nhiệm vụ', icon: 'i-heroicons-clipboard-document-list', to: '/tasks', roles: ['Owner', 'Leader', 'Member'] }, // Everyone
-  { label: 'Lịch', icon: 'i-heroicons-calendar', to: '/calender', roles: ['Owner', 'Leader', 'Member'] }, // Everyone
-  { label: 'Cài đặt', icon: 'i-heroicons-cog-6-tooth', to: '/settings', roles: ['Owner', 'Leader', 'Member'] }
+  { label: 'Thống kê', icon: 'i-heroicons-chart-bar', to: '/dashboard', roles: ['Owner', 'Leader'], description: 'Xem báo cáo và thống kê' },
+  { label: 'Phòng ban', icon: 'i-heroicons-building-office-2', to: '/departments', roles: ['Owner'], description: 'Quản lý phòng ban' },
+  { label: 'Nhân viên', icon: 'i-heroicons-user-group', to: '/employees', roles: ['Owner', 'Leader'], description: 'Quản lý nhân viên' },
+  { label: 'Tiến độ', icon: 'i-heroicons-chart-pie', to: '/progress', roles: ['Owner', 'Leader', 'Member'], description: 'Theo dõi tiến độ công việc' },
+  { label: 'Nhiệm vụ', icon: 'i-heroicons-clipboard-document-list', to: '/tasks', roles: ['Owner', 'Leader', 'Member'], description: 'Quản lý nhiệm vụ' },
+  { label: 'Lịch', icon: 'i-heroicons-calendar', to: '/calender', roles: ['Owner', 'Leader', 'Member'], description: 'Xem lịch công việc' },
+  { label: 'Cài đặt', icon: 'i-heroicons-cog-6-tooth', to: '/settings', roles: ['Owner', 'Leader', 'Member'], description: 'Cài đặt hệ thống' }
 ]
 
 // State for filtered links
