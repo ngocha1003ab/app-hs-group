@@ -131,6 +131,24 @@
                   <UInput v-model="newTask.dueDate" type="date" size="lg" icon="i-heroicons-calendar" class="w-full" />
                </div>
             </div>
+
+            <!-- Category Selector -->
+            <div class="space-y-2">
+               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Danh mục công việc</label>
+               <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                  <button 
+                    type="button" 
+                    v-for="cat in categories" 
+                    :key="cat.value"
+                    @click="newTask.category = cat.value as any"
+                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg border-2 transition-all hover:border-primary-300"
+                    :class="newTask.category === cat.value ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900'"
+                  >
+                     <UIcon :name="cat.icon" class="w-5 h-5 mb-1" :class="newTask.category === cat.value ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400'" />
+                     <span class="text-[10px] sm:text-xs font-medium text-center" :class="newTask.category === cat.value ? 'text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400'">{{ cat.label }}</span>
+                  </button>
+               </div>
+            </div>
           </div>
         </div>
 
@@ -163,6 +181,7 @@
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
             <tr>
               <th class="px-3 py-3 sm:px-6 font-medium">Nhiệm vụ</th>
+              <th class="px-3 py-3 sm:px-6 font-medium">Danh mục</th>
               <th class="px-3 py-3 sm:px-6 font-medium">Người thực hiện</th>
               <th class="px-3 py-3 sm:px-6 font-medium">Hạn chót</th>
               <th class="px-3 py-3 sm:px-6 font-medium">Trạng thái</th>
@@ -175,6 +194,13 @@
               <td class="px-3 py-3 sm:px-6 sm:py-4">
                  <div class="font-semibold text-gray-900 dark:text-white">{{ task.title }}</div>
                  <div class="text-xs text-gray-500 line-clamp-1 mt-0.5">{{ task.description }}</div>
+              </td>
+              <td class="px-3 py-3 sm:px-6 sm:py-4">
+                 <div v-if="task.category" class="flex items-center gap-1.5">
+                    <UIcon :name="getCategoryIcon(task.category)" class="w-4 h-4 text-primary-500" />
+                    <span class="text-xs text-gray-600 dark:text-gray-400">{{ getCategoryLabel(task.category) }}</span>
+                 </div>
+                 <span v-else class="text-xs text-gray-400 italic">-</span>
               </td>
               <td class="px-3 py-3 sm:px-6 sm:py-4">
                  <div class="flex items-center gap-2">
@@ -203,7 +229,7 @@
               </td>
             </tr>
             <tr v-if="filteredTasks.length === 0">
-              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              <td colspan="7" class="px-6 py-12 text-center text-gray-500">
                 <span v-if="fetchStatus === 'pending'">Đang tải...</span>
                 <span v-else>Không tìm thấy nhiệm vụ nào.</span>
               </td>
@@ -264,9 +290,14 @@
                </div>
             </div>
             
-            <!-- Priority tag at bottom -->
-            <div class="flex justify-end pt-1">
-               <UBadge :color="priorityBadge(task.priority).color" variant="soft" size="xs" class="flex items-center gap-1">
+             <!-- Priority & Category tags at bottom -->
+             <div class="flex justify-between items-center pt-1">
+                <div v-if="task.category" class="flex items-center gap-1">
+                   <UIcon :name="getCategoryIcon(task.category)" class="w-3.5 h-3.5 text-primary-500" />
+                   <span class="text-[10px] text-gray-600 dark:text-gray-400 font-medium">{{ getCategoryLabel(task.category) }}</span>
+                </div>
+                <div v-else></div>
+                <UBadge :color="priorityBadge(task.priority).color" variant="soft" size="xs" class="flex items-center gap-1">
                   <UIcon name="i-heroicons-flag" class="w-3 h-3" />
                   {{ priorityBadge(task.priority).label }}
                </UBadge>
@@ -417,16 +448,30 @@ interface Task {
   description: string
   assigneeId: string | null
   priority: 'low' | 'medium' | 'high'
+  category?: 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
   dueDate: string
   status: 'todo' | 'in-progress' | 'done'
 }
 
 type Priority = 'low' | 'medium' | 'high'
+type Category = 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
 
 const priorities: { value: Priority, label: string, activeClass: string }[] = [
   { value: 'high', label: 'Cao', activeClass: 'border-red-500 bg-red-50 text-red-700 dark:bg-red-900/30' },
   { value: 'medium', label: 'Trung bình', activeClass: 'border-orange-500 bg-orange-50 text-orange-700 dark:bg-orange-900/30' },
   { value: 'low', label: 'Thấp', activeClass: 'border-gray-500 bg-gray-100 text-gray-700 dark:bg-gray-700/50' }
+]
+
+const categories: { value: Category, label: string, icon: string }[] = [
+  { value: 'video', label: 'Video', icon: 'i-heroicons-video-camera' },
+  { value: 'image', label: 'Hình ảnh', icon: 'i-heroicons-photo' },
+  { value: 'document', label: 'Văn bản', icon: 'i-heroicons-document-text' },
+  { value: 'business', label: 'Kinh doanh', icon: 'i-heroicons-briefcase' },
+  { value: 'design', label: 'Thiết kế', icon: 'i-heroicons-paint-brush' },
+  { value: 'development', label: 'Lập trình', icon: 'i-heroicons-code-bracket' },
+  { value: 'marketing', label: 'Marketing', icon: 'i-heroicons-megaphone' },
+  { value: 'admin', label: 'Hành chính', icon: 'i-heroicons-clipboard-document-list' },
+  { value: 'other', label: 'Khác', icon: 'i-heroicons-ellipsis-horizontal-circle' }
 ]
 
 // --- Mock Data ---
@@ -440,7 +485,7 @@ const taskListSearch = ref('')
 
 const isEditModalOpen = ref(false)
 const editingTask = reactive<Task>({
-   id: '', title: '', description: '', assigneeId: null, priority: 'medium', dueDate: '', status: 'todo'
+   id: '', title: '', description: '', assigneeId: null, priority: 'medium', category: undefined, dueDate: '', status: 'todo'
 })
 
 const newTask = reactive({
@@ -448,6 +493,7 @@ const newTask = reactive({
   description: '',
   assigneeId: null as string | null,
   priority: 'medium' as Priority,
+  category: undefined as Category | undefined,
   dueDate: ''
 })
 
@@ -505,6 +551,7 @@ const tasks = computed<Task[]>(() => {
       description: t.description,
       assigneeId: t.assignee_id,
       priority: t.priority,
+      category: t.category,
       dueDate: t.due_date,
       status: t.status
    }))
@@ -555,6 +602,16 @@ const isOverdue = (date: string) => {
 
 const getEmployee = (id: string | null) => employees.value.find(e => e.id === id)
 
+const getCategoryIcon = (cat: Category) => {
+   const found = categories.find(c => c.value === cat)
+   return found ? found.icon : 'i-heroicons-tag'
+}
+
+const getCategoryLabel = (cat: Category) => {
+   const found = categories.find(c => c.value === cat)
+   return found ? found.label : cat
+}
+
 const priorityBadge = (p: Priority) => {
    switch(p) {
       case 'high': return { label: 'Cao', color: 'error' as const }
@@ -593,6 +650,7 @@ const createTask = async () => {
          description: newTask.description,
          assignee_id: newTask.assigneeId,
          priority: newTask.priority,
+         category: newTask.category,
          due_date: newTask.dueDate
        }
      })
@@ -606,6 +664,7 @@ const createTask = async () => {
      newTask.assigneeId = null
      assigneeSearchQuery.value = ''
      newTask.priority = 'medium'
+     newTask.category = undefined
      newTask.dueDate = ''
    } catch (error: any) {
       toast.add({ title: 'Lỗi', description: error.data?.message || 'Không thể tạo nhiệm vụ', color: 'error' })
@@ -621,6 +680,7 @@ const openEditModal = (task: Task) => {
    editingTask.description = task.description
    editingTask.status = task.status
    editingTask.priority = task.priority
+   editingTask.category = task.category
    editingTask.dueDate = task.dueDate
    editingTask.assigneeId = task.assigneeId
    editingTask.status = task.status
@@ -637,6 +697,7 @@ const updateTask = async () => {
            title: editingTask.title,
            description: editingTask.description,
            priority: editingTask.priority,
+           category: editingTask.category,
            due_date: editingTask.dueDate,
            status: editingTask.status
            // user cannot change assignee/status here in this minimal modal yet unless expanded

@@ -11,10 +11,14 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event)
-    const { taskId, content } = body
+    const { taskId, content, image } = body
 
-    if (!taskId || !content) {
-        throw createError({ statusCode: 400, message: 'Missing taskId or content' })
+    if (!taskId) {
+        throw createError({ statusCode: 400, message: 'Missing taskId' })
+    }
+
+    if (!content && !image) {
+        throw createError({ statusCode: 400, message: 'Comment must have either content or image' })
     }
 
     const db = await useDb()
@@ -54,7 +58,8 @@ export default defineEventHandler(async (event) => {
         id: Date.now().toString(36) + Math.random().toString(36).substring(2),
         task_id: taskId,
         user_id: userId,
-        content,
+        content: content || undefined, // Optional text content
+        image: image || undefined, // Optional image URL
         license_key: licenseKey,
         created_at: new Date().toISOString()
     }

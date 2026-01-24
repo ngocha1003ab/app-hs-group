@@ -64,6 +64,7 @@ const allLinks = [
   { label: 'Nhân viên', icon: 'i-heroicons-user-group', to: '/employees', roles: ['Owner', 'Leader'] },
   { label: 'Tiến độ', icon: 'i-heroicons-chart-pie', to: '/progress', roles: ['Owner', 'Leader', 'Member'] }, // Everyone
   { label: 'Nhiệm vụ', icon: 'i-heroicons-clipboard-document-list', to: '/tasks', roles: ['Owner', 'Leader', 'Member'] }, // Everyone
+  { label: 'Lịch', icon: 'i-heroicons-calendar', to: '/calender', roles: ['Owner', 'Leader', 'Member'] }, // Everyone
   { label: 'Cài đặt', icon: 'i-heroicons-cog-6-tooth', to: '/settings', roles: ['Owner', 'Leader', 'Member'] }
 ]
 

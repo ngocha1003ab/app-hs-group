@@ -62,10 +62,32 @@ export default defineEventHandler(async (event) => {
     // Sort by newest first
     tasks.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
+    // Date Range Filtering (for Calendar)
+    const from = query.from as string
+    const to = query.to as string
+    if (from && to) {
+        const fromDate = new Date(from)
+        fromDate.setHours(0, 0, 0, 0)
+        const toDate = new Date(to)
+        toDate.setHours(23, 59, 59, 999)
+
+        tasks = tasks.filter(t => {
+            if (!t.due_date) return false
+            const d = new Date(t.due_date)
+            return d >= fromDate && d <= toDate
+        })
+    }
+
     // Pagination
     const total = tasks.length
-    const start = (page - 1) * limit
-    const paginatedTasks = tasks.slice(start, start + limit)
+
+    // If limit is 'all' or -1, return all tasks (useful for calendar)
+    // Otherwise apply pagination
+    let paginatedTasks = tasks
+    if (limit !== -1 && query.limit !== 'all') {
+        const start = (page - 1) * limit
+        paginatedTasks = tasks.slice(start, start + limit)
+    }
 
     return {
         data: paginatedTasks,

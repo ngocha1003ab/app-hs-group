@@ -25,7 +25,7 @@
       "product_id": 627,
       "email": "shenlongkake@gmail.com",
       "status": 1,
-      "added_at": "2026-01-24T09:28:49.547Z"
+      "added_at": "2026-01-24T15:22:29.143Z"
     }
   ],
   "settings": [
@@ -87,6 +87,13 @@
       "description": "",
       "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
       "created_at": "2026-01-24T04:37:44.892Z"
+    },
+    {
+      "id": "mksh61wcami2ufjxw7v",
+      "name": "Test 1",
+      "description": "Test",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:39:05.628Z"
     }
   ],
   "members": [
@@ -180,6 +187,19 @@
       "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
       "created_at": "2026-01-24T04:47:55.353Z",
       "avatar": "https://ui-avatars.com/api/?name=Nh%C3%A2n%20vi%C3%AAn%203&background=random"
+    },
+    {
+      "id": "mksh6a11ls5puliazfr",
+      "name": "Test 1",
+      "username": "test1",
+      "password": "test1",
+      "email": "",
+      "phone": "",
+      "department_id": "mksh61wcami2ufjxw7v",
+      "role": "Member",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:39:16.165Z",
+      "avatar": "https://ui-avatars.com/api/?name=Test%201&background=random"
     }
   ],
   "tasks": [
@@ -494,6 +514,86 @@
       "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
       "created_at": "2026-01-24T04:49:27.352Z",
       "updated_at": "2026-01-24T10:28:03.994Z"
+    },
+    {
+      "id": "mksh6jzzzrg4c3865gj",
+      "title": "Sửa phần mềm cho khách hàng",
+      "description": "Sửa phần mềm cho khách hàng",
+      "assignee_id": "mksh6a11ls5puliazfr",
+      "department_id": "mksh61wcami2ufjxw7v",
+      "priority": "medium",
+      "status": "todo",
+      "due_date": "2026-01-16",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:39:29.087Z",
+      "updated_at": "2026-01-24T15:45:02.236Z"
+    },
+    {
+      "id": "mkshe3gqz4mf7ejjq59",
+      "title": "Thêm màn hình lịch",
+      "description": "",
+      "assignee_id": "mksh6a11ls5puliazfr",
+      "department_id": "mksh61wcami2ufjxw7v",
+      "priority": "high",
+      "status": "todo",
+      "due_date": "2026-01-30",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:45:20.906Z",
+      "updated_at": "2026-01-24T15:45:20.906Z"
+    },
+    {
+      "id": "mkshed201pssmi7qix3",
+      "title": "Thêm màn hình lịch cho khách",
+      "description": "",
+      "assignee_id": "mksh6a11ls5puliazfr",
+      "department_id": "mksh61wcami2ufjxw7v",
+      "priority": "medium",
+      "status": "todo",
+      "due_date": "2026-01-24",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:45:33.336Z",
+      "updated_at": "2026-01-24T15:45:33.336Z"
+    },
+    {
+      "id": "mkshepdrru60zbnjpt",
+      "title": "Thêm tính năng upload hình ảnh",
+      "description": "",
+      "assignee_id": "mksh6a11ls5puliazfr",
+      "department_id": "mksh61wcami2ufjxw7v",
+      "priority": "high",
+      "status": "in-progress",
+      "due_date": "2026-01-24",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:45:49.311Z",
+      "updated_at": "2026-01-24T15:47:22.343Z"
+    },
+    {
+      "id": "mksi8nxqgjheolx44w5",
+      "title": "Test 1",
+      "description": "Test 1",
+      "assignee_id": "mksh6a11ls5puliazfr",
+      "department_id": "mksh61wcami2ufjxw7v",
+      "priority": "medium",
+      "status": "todo",
+      "category": "video",
+      "due_date": "2026-01-25",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T16:09:07.128Z",
+      "updated_at": "2026-01-24T16:10:25.935Z"
+    },
+    {
+      "id": "mksi9drialfnclwh3qn",
+      "title": "Test 2",
+      "description": "Test 2",
+      "assignee_id": "mksh6a11ls5puliazfr",
+      "department_id": "mksh61wcami2ufjxw7v",
+      "priority": "medium",
+      "status": "todo",
+      "category": "image",
+      "due_date": "2026-01-25",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T16:09:40.590Z",
+      "updated_at": "2026-01-24T16:09:40.590Z"
     }
   ],
   "comments": [
@@ -568,9 +668,127 @@
       "content": "Làm sao vậy?",
       "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
       "created_at": "2026-01-24T05:18:12.154Z"
+    },
+    {
+      "id": "mkshntguy1hdgfp827",
+      "task_id": "mkshepdrru60zbnjpt",
+      "user_id": "owner",
+      "image": "/uploads/1769269847949-0mqc3b.jpeg",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:52:54.510Z"
     }
   ],
   "notifications": [
+    {
+      "id": "mksiacr9yeuxzbrthlj",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Test 1\" đã được cập nhật trạng thái sang: Cần làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T16:10:25.941Z"
+    },
+    {
+      "id": "mksiabr8s8af6mis4ok",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T16:10:24.644Z"
+    },
+    {
+      "id": "mksi9drmq88wvhbl7zf",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Test 2",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T16:09:40.594Z"
+    },
+    {
+      "id": "mksi8nyarsvbnm7e0hp",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Test 1",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T16:09:07.138Z"
+    },
+    {
+      "id": "mkshnth0icwujclmu5a",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Bình luận mới",
+      "description": "Admin đã bình luận trong nhiệm vụ: Thêm tính năng upload hình ảnh",
+      "type": "comment_added",
+      "link": "/progress",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:52:54.516Z"
+    },
+    {
+      "id": "mkshgp642dwi2xlfdri",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Thêm tính năng upload hình ảnh\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:47:22.348Z"
+    },
+    {
+      "id": "mkshepe39uhslr9pkpo",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Thêm tính năng upload hình ảnh",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:45:49.323Z"
+    },
+    {
+      "id": "mkshed25na9x62f893f",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Thêm màn hình lịch cho khách",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:45:33.341Z"
+    },
+    {
+      "id": "mkshe3guiuzcb88l2na",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Thêm màn hình lịch",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:45:20.910Z"
+    },
+    {
+      "id": "mksh6k06s1077xasnx8",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Test 1",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T15:39:29.094Z"
+    },
     {
       "id": "mks623ns6b23a1su4dt",
       "user_id": "mkrtwn2x1hk0nwjz9wr",

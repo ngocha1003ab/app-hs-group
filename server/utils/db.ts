@@ -41,6 +41,7 @@ export interface Task {
     department_id: string
     priority: 'low' | 'medium' | 'high'
     status: 'todo' | 'in-progress' | 'done'
+    category?: 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
     due_date: string
     license_key: string
     created_at: string
@@ -52,6 +53,7 @@ export interface Comment {
     task_id: string
     user_id: string
     content: string
+    image?: string // Optional image URL
     license_key: string
     created_at: string
 }

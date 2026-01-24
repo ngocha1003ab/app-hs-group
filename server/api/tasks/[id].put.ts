@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
     const body = await readBody(event)
     // Extract fields
-    const { title, description, priority, status, due_date, assignee_id } = body
+    const { title, description, priority, status, due_date, assignee_id, category } = body
 
     const db = await useDb()
     const taskIndex = db.data.tasks.findIndex(t => t.id === id && t.license_key === licenseKey)
@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
             if (priority !== undefined && priority !== currentTask.priority) throw createError({ statusCode: 403, message: 'Nhân viên không được sửa độ ưu tiên' })
             if (due_date !== undefined && due_date !== currentTask.due_date) throw createError({ statusCode: 403, message: 'Nhân viên không được sửa hạn hoàn thành' })
             if (assignee_id !== undefined && assignee_id !== currentTask.assignee_id) throw createError({ statusCode: 403, message: 'Nhân viên không được chuyển giao nhiệm vụ' })
+            if (category !== undefined && category !== currentTask.category) throw createError({ statusCode: 403, message: 'Nhân viên không được sửa danh mục' })
         }
 
         if (user.role === 'Leader') {
@@ -62,6 +63,7 @@ export default defineEventHandler(async (event) => {
         description: description !== undefined ? description : currentTask.description,
         priority: priority !== undefined ? priority : currentTask.priority,
         status: status !== undefined ? status : currentTask.status,
+        category: category !== undefined ? category : currentTask.category,
         due_date: due_date !== undefined ? due_date : currentTask.due_date,
         // If assignee changes, we might need to update department_id too? 
         // For simplicity assuming assignee update logic handles department sync if needed, 

@@ -70,6 +70,7 @@ export default defineEventHandler(async (event) => {
             userName: user.name,
             userAvatar: user.avatar,
             content: c.content,
+            image: c.image,
             createdAt: c.created_at
         }
     })

@@ -64,6 +64,16 @@
                 <span>Nhiệm vụ</span>
               </NuxtLink>
               <NuxtLink 
+                to="/calender"
+                @click="closeDropdown"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400 transition-all group"
+              >
+                <div class="p-1.5 bg-gray-100 dark:bg-gray-800 rounded-md group-hover:bg-white dark:group-hover:bg-gray-700 shadow-sm transition-colors">
+                  <UIcon name="i-heroicons-calendar" class="w-5 h-5 text-gray-500 group-hover:text-primary-500 transition-colors" />
+                </div>
+                <span>Lịch</span>
+              </NuxtLink>
+              <NuxtLink 
                 to="/settings"
                 @click="closeDropdown"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400 transition-all group"

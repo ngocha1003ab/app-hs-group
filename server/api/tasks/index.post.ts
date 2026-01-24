@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event)
-    const { title, description, assignee_id, priority, due_date } = body
+    const { title, description, assignee_id, priority, due_date, category } = body
 
     if (!title || !assignee_id || !due_date) {
         throw createError({
@@ -55,6 +55,7 @@ export default defineEventHandler(async (event) => {
         department_id: assignee.department_id, // Link task to assignee's department info
         priority: priority || 'medium',
         status: 'todo',
+        category: category || undefined, // Optional category
         due_date,
         license_key: licenseKey,
         created_at: new Date().toISOString(),

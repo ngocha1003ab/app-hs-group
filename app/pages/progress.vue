@@ -178,12 +178,16 @@
                 <!-- Header -->
                 <div class="p-4 sm:p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-start bg-white dark:bg-gray-900 sticky top-0 z-10">
                   <div class="space-y-1">
-                    <div class="flex items-center gap-3 mb-2">
+                    <div class="flex items-center gap-3 mb-2 flex-wrap">
                       <UBadge :color="getPriorityColor(selectedTask.priority)" variant="subtle" size="xs">
                         {{ getPriorityLabel(selectedTask.priority) }}
                       </UBadge>
                       <UBadge color="neutral" variant="soft" size="xs">
                         {{ selectedTask.department }}
+                      </UBadge>
+                      <UBadge v-if="selectedTask.category" color="primary" variant="soft" size="xs" class="flex items-center gap-1">
+                        <UIcon :name="getCategoryIcon(selectedTask.category)" class="w-3 h-3" />
+                        {{ getCategoryLabel(selectedTask.category) }}
                       </UBadge>
                     </div>
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
@@ -225,9 +229,18 @@
                      <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-sm md:text-base">
                        {{ selectedTask.description }}
                      </p>
-                  </div>
+                   </div>
 
-                  <!-- Assignee Info -->
+                   <!-- Category Info (if exists) -->
+                   <div v-if="selectedTask.category" class="space-y-3">
+                      <h4 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Danh mục công việc</h4>
+                      <div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-100 dark:border-primary-900">
+                         <UIcon :name="getCategoryIcon(selectedTask.category)" class="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                         <span class="font-medium text-primary-700 dark:text-primary-300">{{ getCategoryLabel(selectedTask.category) }}</span>
+                      </div>
+                   </div>
+
+                   <!-- Assignee Info -->
                   <div class="space-y-3">
                      <h4 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Người thực hiện</h4>
                      <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg w-fit pr-6 border border-gray-100 dark:border-gray-800">
@@ -258,7 +271,16 @@
                                 <span class="font-semibold text-gray-900 dark:text-white">{{ comment.userName }}</span>
                                 <span class="text-xs text-gray-400">{{ formatDate(comment.createdAt) }}</span>
                              </div>
-                             <p class="text-gray-600 dark:text-gray-300">{{ comment.content }}</p>
+                             <p class="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">{{ comment.content }}</p>
+                             <!-- Image Display -->
+                             <div v-if="comment.image" class="mt-2">
+                                <img 
+                                   :src="comment.image" 
+                                   alt="Comment attachment" 
+                                   class="max-w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:opacity-90 transition-opacity"
+                                   @click="openImagePreview(comment.image)"
+                                />
+                             </div>
                           </div>
                        </div>
                        <div v-if="selectedTask.comments.length === 0" class="text-center py-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-200 dark:border-gray-700">
@@ -270,6 +292,21 @@
                     <div class="flex gap-3 items-start pt-4 border-t border-gray-100 dark:border-gray-800">
                        <UAvatar :src="userAvatar" :alt="userName" size="sm" class="mt-0.5" />
                        <div class="flex-1 space-y-2">
+                         <!-- Image Preview -->
+                         <div v-if="commentImagePreview" class="relative inline-block">
+                            <img 
+                               :src="commentImagePreview" 
+                               alt="Preview" 
+                               class="max-w-[200px] h-auto rounded-lg border border-gray-200 dark:border-gray-700"
+                            />
+                            <button 
+                               @click="removeCommentImage"
+                               class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                            >
+                               <UIcon name="i-heroicons-x-mark" class="w-4 h-4" />
+                            </button>
+                         </div>
+                         
                          <UTextarea 
                             v-model="newComment" 
                             placeholder="Viết bình luận..." 
@@ -278,11 +315,33 @@
                             size="sm"
                             class="w-full"
                          />
-                         <div class="flex justify-end">
+                         <div class="flex justify-between items-center">
+                            <!-- Image Upload Button -->
+                            <div>
+                               <input 
+                                  ref="commentImageInput"
+                                  type="file" 
+                                  accept="image/*" 
+                                  class="hidden"
+                                  @change="handleCommentImageSelect"
+                               />
+                               <UButton 
+                                  size="sm" 
+                                  color="neutral" 
+                                  variant="ghost"
+                                  icon="i-heroicons-photo"
+                                  @click="commentImageInput?.click()"
+                                  :disabled="isUploadingImage"
+                               >
+                                  {{ isUploadingImage ? 'Đang tải...' : 'Thêm ảnh' }}
+                               </UButton>
+                            </div>
+                            
+                            <!-- Send Button -->
                             <UButton 
                               size="sm" 
                               color="primary" 
-                              :disabled="!newComment.trim()"
+                              :disabled="!newComment.trim() && !commentImageUrl"
                               @click="addComment"
                               icon="i-heroicons-paper-airplane"
                             >
@@ -320,6 +379,19 @@ useHead({
 // --- Types ---
 // --- Types ---
 type Priority = 'low' | 'medium' | 'high'
+type Category = 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
+
+const categories = [
+  { value: 'video' as Category, label: 'Video', icon: 'i-heroicons-video-camera' },
+  { value: 'image' as Category, label: 'Hình ảnh', icon: 'i-heroicons-photo' },
+  { value: 'document' as Category, label: 'Văn bản', icon: 'i-heroicons-document-text' },
+  { value: 'business' as Category, label: 'Kinh doanh', icon: 'i-heroicons-briefcase' },
+  { value: 'design' as Category, label: 'Thiết kế', icon: 'i-heroicons-paint-brush' },
+  { value: 'development' as Category, label: 'Lập trình', icon: 'i-heroicons-code-bracket' },
+  { value: 'marketing' as Category, label: 'Marketing', icon: 'i-heroicons-megaphone' },
+  { value: 'admin' as Category, label: 'Hành chính', icon: 'i-heroicons-clipboard-document-list' },
+  { value: 'other' as Category, label: 'Khác', icon: 'i-heroicons-ellipsis-horizontal-circle' }
+]
 
 interface Comment {
   id: string
@@ -327,6 +399,7 @@ interface Comment {
   userName: string
   userAvatar: string
   content: string
+  image?: string
   createdAt: string
 }
 
@@ -335,6 +408,7 @@ interface Task {
   title: string
   description: string
   priority: Priority
+  category?: 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
   department: string
   dueDate: string // ISO date string
   assignee: {
@@ -350,6 +424,12 @@ interface Task {
 const isModalOpen = ref(false)
 const selectedTask = ref<Task | null>(null)
 const newComment = ref('')
+
+// Image upload state
+const commentImageInput = ref<HTMLInputElement | null>(null)
+const commentImagePreview = ref<string>('')
+const commentImageUrl = ref<string>('')
+const isUploadingImage = ref(false)
 
 // Mobile Tab State
 const activeMobileTab = ref('todo')
@@ -441,6 +521,7 @@ const useColumnTasks = (status: Task['status']) => {
                     title: t.title,
                     description: t.description,
                     priority: t.priority,
+                    category: t.category,
                     department: getDeptName(t.department_id),
                     dueDate: t.due_date,
                     status: t.status,
@@ -613,14 +694,15 @@ const changeTaskStatus = async (newStatus: string) => { // Using string to match
 }
 
 const addComment = async () => {
-    if (!selectedTask.value || !newComment.value.trim()) return
+    if (!selectedTask.value || (!newComment.value.trim() && !commentImageUrl.value)) return
 
     try {
         const res = await $fetch<any>('/api/comments', {
             method: 'POST',
             body: {
                 taskId: selectedTask.value.id,
-                content: newComment.value
+                content: newComment.value,
+                image: commentImageUrl.value || undefined
             }
         })
         
@@ -635,17 +717,97 @@ const addComment = async () => {
                  userName: userName.value || 'Me', 
                  userAvatar: userAvatar.value,
                  content: newCmt.content,
+                 image: newCmt.image,
                  createdAt: newCmt.created_at
             }
             
             selectedTask.value.comments.push(enrichedCmt)
             newComment.value = ''
+            commentImagePreview.value = ''
+            commentImageUrl.value = ''
             toast.add({ title: 'Thành công', description: 'Đã gửi bình luận', color: 'success' })
         }
     } catch (e: any) {
         toast.add({ title: 'Lỗi', description: e.data?.message || 'Không thể gửi bình luận', color: 'error' })
     }
 }
+
+// Image upload handlers
+const handleCommentImageSelect = async (event: Event) => {
+    const target = event.target as HTMLInputElement
+    const file = target.files?.[0]
+    
+    if (!file) return
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        toast.add({ title: 'Lỗi', description: 'Chỉ chấp nhận file ảnh', color: 'error' })
+        return
+    }
+    
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        toast.add({ title: 'Lỗi', description: 'Kích thước ảnh không được vượt quá 5MB', color: 'error' })
+        return
+    }
+    
+    // Show preview
+    const reader = new FileReader()
+    reader.onload = (e) => {
+        commentImagePreview.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+    
+    // Upload to server
+    isUploadingImage.value = true
+    try {
+        const formData = new FormData()
+        formData.append('file', file)
+        
+        const res = await $fetch<any>('/api/upload', {
+            method: 'POST',
+            body: formData
+        })
+        
+        if (res.success) {
+            commentImageUrl.value = res.url
+            toast.add({ title: 'Thành công', description: 'Đã tải ảnh lên', color: 'success' })
+        }
+    } catch (e: any) {
+        toast.add({ title: 'Lỗi', description: e.data?.message || 'Không thể tải ảnh lên', color: 'error' })
+        commentImagePreview.value = ''
+    } finally {
+        isUploadingImage.value = false
+        // Reset input
+        if (commentImageInput.value) {
+            commentImageInput.value.value = ''
+        }
+    }
+}
+
+const removeCommentImage = () => {
+    commentImagePreview.value = ''
+    commentImageUrl.value = ''
+    if (commentImageInput.value) {
+        commentImageInput.value.value = ''
+    }
+}
+
+const openImagePreview = (imageUrl: string) => {
+    window.open(imageUrl, '_blank')
+}
+
+// Helper functions for category
+const getCategoryIcon = (cat: Category) => {
+   const found = categories.find(c => c.value === cat)
+   return found ? found.icon : 'i-heroicons-tag'
+}
+
+const getCategoryLabel = (cat: Category) => {
+   const found = categories.find(c => c.value === cat)
+   return found ? found.label : cat
+}
+
 const TaskCardContent = defineComponent({
   props: ['task'],
   setup(props) {
@@ -691,7 +853,13 @@ const TaskCardContent = defineComponent({
         h('p', { class: 'text-xs text-gray-500 mt-1 line-clamp-2' }, props.task.description)
       ]),
 
-      // Due Date (New)
+      // Category (if exists) - More prominent badge style
+      props.task.category ? h('div', { class: 'flex items-center gap-1.5 px-2 py-1 bg-primary-50 dark:bg-primary-900/20 rounded-md border border-primary-100 dark:border-primary-800 w-fit' }, [
+         h('span', { class: `${getCategoryIcon(props.task.category)} w-3.5 h-3.5 text-primary-600 dark:text-primary-400` }),
+         h('span', { class: 'text-[10px] font-semibold text-primary-700 dark:text-primary-300' }, getCategoryLabel(props.task.category))
+      ]) : null,
+
+      // Due Date
       h('div', { class: 'flex items-center gap-1.5 text-xs' }, [
          h('span', { class: `i-heroicons-calendar w-3.5 h-3.5 ${isOverdue.value ? 'text-red-500' : 'text-gray-400'}` }),
          h('span', { class: isOverdue.value ? 'text-red-600 font-medium' : 'text-gray-500' }, 
