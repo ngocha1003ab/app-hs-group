@@ -3,7 +3,7 @@
     <!-- Mobile Brand -->
     <div class="md:hidden flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-lg">
       <UIcon name="i-heroicons-squares-2x2" class="w-7 h-7"/>
-      <span>QL CÔNG VIỆC</span>
+      <span>SHEETVN</span>
     </div>
 
     <!-- Desktop Title / Breadcrumbs (Placeholder) -->
@@ -78,6 +78,18 @@
         </Transition>
       </div>
       
+      <!-- Theme Toggle -->
+      <ClientOnly>
+        <UButton
+          :icon="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'"
+          color="neutral"
+          variant="ghost"
+          aria-label="Theme"
+          @click="isDark = !isDark"
+          class="text-gray-500 dark:text-gray-400"
+        />
+      </ClientOnly>
+
       <!-- Notification Button -->
       <div class="relative" ref="notificationContainer">
         <UButton 
@@ -185,6 +197,16 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const isDropdownOpen = ref(false)
 const dropdownContainer = ref<HTMLElement | null>(null)
+
+const colorMode = useColorMode()
+const isDark = computed({
+  get () {
+    return colorMode.value === 'dark'
+  },
+  set () {
+    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+  }
+})
 
 const userInfo = ref({
    name: '',

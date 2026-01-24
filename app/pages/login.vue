@@ -6,6 +6,20 @@
       <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-pulse delay-700"></div>
     </div>
 
+    <!-- Theme Toggle -->
+    <div class="absolute top-4 right-4 z-50">
+       <ClientOnly>
+          <UButton
+            :icon="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'"
+            color="neutral"
+            variant="ghost"
+            aria-label="Theme"
+            @click="isDark = !isDark"
+            class="text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm shadow-sm"
+          />
+       </ClientOnly>
+    </div>
+
     <UCard class="w-full max-w-md z-10 shadow-xl ring-1 ring-gray-200 dark:ring-gray-800 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90 transition-all duration-500 hover:shadow-2xl">
       <template #header>
         <div class="text-center space-y-2">
@@ -70,6 +84,16 @@ const loading = ref(false)
 const form = reactive({
   userId: '',
   password: ''
+})
+
+const colorMode = useColorMode()
+const isDark = computed({
+  get () {
+    return colorMode.value === 'dark'
+  },
+  set () {
+    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+  }
 })
 
 const toast = useToast()

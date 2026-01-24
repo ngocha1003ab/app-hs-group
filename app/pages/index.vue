@@ -7,6 +7,19 @@
     </div>
 
     <!-- Main Content -->
+    <div class="absolute top-4 right-4 z-50">
+       <ClientOnly>
+          <UButton
+            :icon="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'"
+            color="neutral"
+            variant="ghost"
+            aria-label="Theme"
+            @click="isDark = !isDark"
+            class="text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm shadow-sm"
+          />
+       </ClientOnly>
+    </div>
+
     <UContainer class="flex-1 flex flex-col items-center justify-center py-12 relative z-10 w-full max-w-4xl">
       
       <!-- Logo / Brand Section (Animated) -->
@@ -123,6 +136,16 @@ const licenseKey = ref('')
 
 const router = useRouter()
 const toast = useToast()
+
+const colorMode = useColorMode()
+const isDark = computed({
+  get () {
+    return colorMode.value === 'dark'
+  },
+  set () {
+    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+  }
+})
 
 // Auto-redirect if session exists
 const licenseAuthCookie = useCookie('license_key')
