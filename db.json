@@ -463,11 +463,11 @@
       "assignee_id": "mkrtwn2x1hk0nwjz9wr",
       "department_id": "mkrtjk1ot1u4khlsd9",
       "priority": "medium",
-      "status": "in-progress",
+      "status": "done",
       "due_date": "2026-01-22",
       "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
       "created_at": "2026-01-24T04:48:16.018Z",
-      "updated_at": "2026-01-24T10:25:22.685Z"
+      "updated_at": "2026-01-24T10:28:05.506Z"
     },
     {
       "id": "mkrtxg87776a263xxqf",
@@ -476,11 +476,11 @@
       "assignee_id": "mkrtwcozmqsa3d8u9mo",
       "department_id": "mkrtjfgmksgwfm8mbeb",
       "priority": "low",
-      "status": "in-progress",
+      "status": "todo",
       "due_date": "2026-01-28",
       "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
       "created_at": "2026-01-24T04:48:33.127Z",
-      "updated_at": "2026-01-24T10:25:18.555Z"
+      "updated_at": "2026-01-24T10:28:04.697Z"
     },
     {
       "id": "mkrtym2g2uooo2ymfb2",
@@ -489,11 +489,11 @@
       "assignee_id": "mkrth8oyfp2djaov8s4",
       "department_id": "mkrtgwxg51u7ys5g8m7",
       "priority": "medium",
-      "status": "in-progress",
+      "status": "todo",
       "due_date": "2026-01-30",
       "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
       "created_at": "2026-01-24T04:49:27.352Z",
-      "updated_at": "2026-01-24T10:25:12.288Z"
+      "updated_at": "2026-01-24T10:28:03.994Z"
     }
   ],
   "comments": [
@@ -571,6 +571,39 @@
     }
   ],
   "notifications": [
+    {
+      "id": "mks623ns6b23a1su4dt",
+      "user_id": "mkrtwn2x1hk0nwjz9wr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"NV 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T10:28:05.512Z"
+    },
+    {
+      "id": "mks6231afugd7u39dek",
+      "user_id": "mkrtwcozmqsa3d8u9mo",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Nhiệm vụ 2\" đã được cập nhật trạng thái sang: Cần làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T10:28:04.702Z"
+    },
+    {
+      "id": "mks622hrpeocf8ktks",
+      "user_id": "mkrth8oyfp2djaov8s4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"NV 4\" đã được cập nhật trạng thái sang: Cần làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T10:28:03.999Z"
+    },
     {
       "id": "mks5ym0y2nu14pl774q",
       "user_id": "mkrtwn2x1hk0nwjz9wr",
