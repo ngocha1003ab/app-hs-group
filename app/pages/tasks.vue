@@ -13,14 +13,14 @@
     <!-- 1. Create Task Section -->
     <!-- 1. Create Task Section (Hidden for Members) -->
     <div v-if="userInfo.role !== 'Member'" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
-      <div class="p-6 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
+      <div class="p-3 sm:p-6 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
         <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <UIcon name="i-heroicons-plus-circle" class="w-5 h-5 text-primary-500" />
           Tạo nhiệm vụ mới
         </h3>
       </div>
       
-      <form @submit.prevent="createTask" class="p-6 space-y-6">
+      <form @submit.prevent="createTask" class="p-3 sm:p-6 space-y-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Left Column: Basic Info -->
           <div class="space-y-6">
@@ -151,7 +151,7 @@
 
     <!-- 2. Task List Section -->
     <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
-      <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+      <div class="p-3 sm:p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
         <h3 class="text-lg font-bold text-gray-900 dark:text-white">Danh sách Nhiệm vụ ({{ tasks.length }})</h3>
         <UInput v-model="taskListSearch" icon="i-heroicons-magnifying-glass" placeholder="Tìm tên nhiệm vụ..." size="sm" color="neutral" />
       </div>
@@ -161,43 +161,43 @@
            <!-- ... (table content) ... -->
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
             <tr>
-              <th class="px-6 py-3 font-medium">Nhiệm vụ</th>
-              <th class="px-6 py-3 font-medium">Người thực hiện</th>
-              <th class="px-6 py-3 font-medium">Hạn chót</th>
-              <th class="px-6 py-3 font-medium">Trạng thái</th>
-              <th class="px-6 py-3 font-medium">Ưu tiên</th>
-              <th class="px-6 py-3 font-medium text-right">Thao tác</th>
+              <th class="px-3 py-3 sm:px-6 font-medium">Nhiệm vụ</th>
+              <th class="px-3 py-3 sm:px-6 font-medium">Người thực hiện</th>
+              <th class="px-3 py-3 sm:px-6 font-medium">Hạn chót</th>
+              <th class="px-3 py-3 sm:px-6 font-medium">Trạng thái</th>
+              <th class="px-3 py-3 sm:px-6 font-medium">Ưu tiên</th>
+              <th class="px-3 py-3 sm:px-6 font-medium text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
             <tr v-for="task in filteredTasks" :key="task.id" class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-              <td class="px-6 py-4">
+              <td class="px-3 py-3 sm:px-6 sm:py-4">
                  <div class="font-semibold text-gray-900 dark:text-white">{{ task.title }}</div>
                  <div class="text-xs text-gray-500 line-clamp-1 mt-0.5">{{ task.description }}</div>
               </td>
-              <td class="px-6 py-4">
+              <td class="px-3 py-3 sm:px-6 sm:py-4">
                  <div class="flex items-center gap-2">
                     <UAvatar :src="getEmployee(task.assigneeId)?.avatar" size="2xs" />
                     <span class="text-gray-700 dark:text-gray-300">{{ getEmployee(task.assigneeId)?.name }}</span>
                  </div>
               </td>
-              <td class="px-6 py-4">
+              <td class="px-3 py-3 sm:px-6 sm:py-4">
                  <span :class="isOverdue(task.dueDate) ? 'text-red-500 font-medium' : 'text-gray-600'">
                     {{ formatDate(task.dueDate) }}
                  </span>
                  <div v-if="isOverdue(task.dueDate)" class="text-[10px] text-red-500 font-bold uppercase">Quá hạn</div>
               </td>
-              <td class="px-6 py-4">
+              <td class="px-3 py-3 sm:px-6 sm:py-4">
                  <UBadge :color="task.status === 'done' ? 'success' : (task.status === 'in-progress' ? 'info' : 'neutral')" variant="subtle" size="xs">
                     {{ task.status === 'done' ? 'Hoàn thành' : (task.status === 'in-progress' ? 'Đang làm' : 'Cần làm') }}
                  </UBadge>
               </td>
-               <td class="px-6 py-4">
+               <td class="px-3 py-3 sm:px-6 sm:py-4">
                  <UBadge :color="priorityBadge(task.priority).color" variant="subtle" size="xs">
                     {{ priorityBadge(task.priority).label }}
                  </UBadge>
               </td>
-              <td class="px-6 py-4 text-right">
+              <td class="px-3 py-3 sm:px-6 sm:py-4 text-right">
                  <UButton icon="i-heroicons-pencil-square" size="sm" color="neutral" variant="ghost" @click="openEditModal(task)" />
               </td>
             </tr>
@@ -231,7 +231,7 @@
          <div class="fixed inset-0 bg-gray-500/75 transition-opacity" @click="isEditModalOpen = false"></div>
          
          <div class="flex min-h-full items-center justify-center p-4">
-            <div class="relative w-full max-w-lg transform rounded-xl bg-white dark:bg-gray-900 p-6 text-left shadow-2xl transition-all border border-gray-100 dark:border-gray-700">
+            <div class="relative w-full max-w-lg transform rounded-xl bg-white dark:bg-gray-900 p-4 sm:p-6 text-left shadow-2xl transition-all border border-gray-100 dark:border-gray-700">
                <!-- Header -->
                <div class="flex items-center justify-between mb-6">
                   <h3 class="text-xl font-bold text-gray-900 dark:text-white">Cập nhật Nhiệm vụ</h3>

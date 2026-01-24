@@ -13,7 +13,7 @@
     <!-- 1. Create Member Section -->
     <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
       <template #header>
-        <div class="px-6 py-4">
+        <div class="px-3 py-3 sm:px-6 sm:py-4">
           <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <UIcon name="i-heroicons-user-plus" class="w-5 h-5 text-primary-500" />
             Thêm Nhân viên Mới
@@ -21,7 +21,7 @@
         </div>
       </template>
       
-      <form @submit.prevent="createMember" class="p-6 space-y-6">
+      <form @submit.prevent="createMember" class="p-3 sm:p-6 space-y-6">
         <!-- Personal Info Inputs -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-2">
@@ -168,7 +168,7 @@
     <!-- 2. Members List -->
     <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm overflow-hidden">
       <template #header>
-        <div class="px-6 py-4 flex justify-between items-center">
+        <div class="px-3 py-3 sm:px-6 sm:py-4 flex justify-between items-center">
           <h3 class="text-lg font-bold text-gray-900 dark:text-white">Danh sách Nhân viên ({{ members.length }})</h3>
           
           <UInput 
@@ -187,15 +187,15 @@
         <table class="w-full text-sm text-left">
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
             <tr>
-              <th scope="col" class="px-6 py-3 font-medium">Nhân viên</th>
-              <th scope="col" class="px-6 py-3 font-medium">Tài khoản & Liên hệ</th>
-              <th scope="col" class="px-6 py-3 font-medium">Phòng ban</th>
-              <th scope="col" class="px-6 py-3 font-medium text-right">Thao tác</th>
+              <th scope="col" class="px-3 py-3 sm:px-6 font-medium">Nhân viên</th>
+              <th scope="col" class="px-3 py-3 sm:px-6 font-medium">Tài khoản & Liên hệ</th>
+              <th scope="col" class="px-3 py-3 sm:px-6 font-medium">Phòng ban</th>
+              <th scope="col" class="px-3 py-3 sm:px-6 font-medium text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
             <tr v-for="member in filteredMembers" :key="member.id" class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-              <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+              <td class="px-3 py-3 sm:px-6 sm:py-4 font-medium text-gray-900 dark:text-white">
                 <div class="flex items-center gap-3">
                   <UAvatar 
                     :alt="member.name"
@@ -216,7 +216,7 @@
                   </div>
                 </div>
               </td>
-              <td class="px-6 py-4">
+              <td class="px-3 py-3 sm:px-6 sm:py-4">
                 <div class="space-y-2">
                    <!-- Password Reveal/Copy -->
                    <div class="flex items-center gap-2 p-1.5 -ml-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/50 group w-fit transition-colors">
@@ -246,13 +246,13 @@
                   </div>
                 </div>
               </td>
-              <td class="px-6 py-4">
+              <td class="px-3 py-3 sm:px-6 sm:py-4">
                 <UBadge color="neutral" variant="soft" size="sm">
                   <UIcon name="i-heroicons-building-office" class="w-4 h-4 mr-1" />
                   {{ getDepartmentName(member.department_id) }}
                 </UBadge>
               </td>
-              <td class="px-6 py-4 text-right">
+              <td class="px-3 py-3 sm:px-6 sm:py-4 text-right">
                 <UButton icon="i-heroicons-pencil-square" size="sm" color="neutral" variant="ghost" @click="openEditModal(member)" />
               </td>
             </tr>
@@ -280,7 +280,7 @@
         <div class="absolute inset-0" @click="isEditModalOpen = false"></div>
 
         <div class="relative bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col ring-1 ring-gray-200 dark:ring-gray-800">
-          <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+          <div class="px-3 py-3 sm:px-6 sm:py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <h3 class="text-base font-semibold text-gray-900 dark:text-white">
               Cập nhật hồ sơ nhân viên
             </h3>
@@ -289,7 +289,7 @@
             </button>
           </div>
 
-          <div class="p-6 space-y-4">
+          <div class="p-3 sm:p-6 space-y-4">
             <!-- Non-editable Department Info -->
             <div class="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 flex items-center justify-between">
               <span class="text-sm text-gray-500">Phòng ban hiện tại:</span>
@@ -352,7 +352,7 @@
             </div>
           </div>
 
-          <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800">
+          <div class="px-3 py-3 sm:px-6 sm:py-4 bg-gray-50 dark:bg-gray-800/50 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800">
              <UButton color="neutral" variant="ghost" @click="isEditModalOpen = false">Hủy bỏ</UButton>
              <UButton color="primary" @click="updateMember">Lưu thay đổi</UButton>
           </div>

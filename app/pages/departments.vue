@@ -13,7 +13,7 @@
     <!-- 1. Create Department Section -->
     <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
       <template #header>
-        <div class="px-6 py-4">
+        <div class="px-3 py-3 sm:px-6 sm:py-4">
           <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
             <UIcon name="i-heroicons-plus-circle" class="w-5 h-5 text-primary-500" />
             Tạo Phòng Ban / Nhóm Mới
@@ -21,7 +21,7 @@
         </div>
       </template>
       
-      <div class="p-6">
+      <div class="p-3 sm:p-6">
         <form @submit.prevent="createDepartment" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
           <div class="md:col-span-5">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tên phòng ban <span class="text-red-500">*</span></label>
@@ -62,7 +62,7 @@
     <!-- 2. Departments List -->
     <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm overflow-hidden">
       <template #header>
-        <div class="px-6 py-4 flex justify-between items-center">
+        <div class="px-3 py-3 sm:px-6 sm:py-4 flex justify-between items-center">
           <h3 class="text-lg font-bold text-gray-900 dark:text-white">Danh sách Phòng Ban ({{ departments.length }})</h3>
           
           <!-- Search/Filter could go here -->
@@ -82,14 +82,14 @@
         <table class="w-full text-sm text-left">
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
             <tr>
-              <th scope="col" class="px-6 py-3 font-medium">Tên Phòng Ban</th>
-              <th scope="col" class="px-6 py-3 font-medium">Thành viên</th>
-              <th scope="col" class="px-6 py-3 font-medium text-right">Thao tác</th>
+              <th scope="col" class="px-3 py-3 sm:px-6 font-medium">Tên Phòng Ban</th>
+              <th scope="col" class="px-3 py-3 sm:px-6 font-medium">Thành viên</th>
+              <th scope="col" class="px-3 py-3 sm:px-6 font-medium text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
             <tr v-for="dept in filteredDepartments" :key="dept.id" class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-              <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+              <td class="px-3 py-3 sm:px-6 sm:py-4 font-medium text-gray-900 dark:text-white">
                 <div class="flex items-center gap-3">
                   <div class="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/10 text-primary-600 dark:text-primary-400">
                     <UIcon name="i-heroicons-user-group" class="w-5 h-5" />
@@ -100,7 +100,7 @@
                   </div>
                 </div>
               </td>
-              <td class="px-6 py-4">
+              <td class="px-3 py-3 sm:px-6 sm:py-4">
                 <div class="flex flex-wrap gap-1.5">
                   <!-- Leader first -->
                   <template v-for="member in dept.members" :key="'leader-' + member.id">
@@ -137,7 +137,7 @@
                   </div>
                 </div>
               </td>
-              <td class="px-6 py-4 text-right">
+              <td class="px-3 py-3 sm:px-6 sm:py-4 text-right">
                 <div class="flex items-center justify-end gap-2">
                   <UButton icon="i-heroicons-pencil-square" size="sm" color="neutral" variant="ghost" @click="openEditModal(dept)" />
                 </div>
@@ -172,7 +172,7 @@
         <div class="relative bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col ring-1 ring-gray-200 dark:ring-gray-800">
           
           <!-- Header -->
-          <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+          <div class="px-3 py-3 sm:px-6 sm:py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <h3 class="text-base font-semibold text-gray-900 dark:text-white">
               Chỉnh sửa Phòng Ban
             </h3>
@@ -182,7 +182,7 @@
           </div>
 
           <!-- Body -->
-          <div class="p-6 space-y-4">
+          <div class="p-3 sm:p-6 space-y-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tên phòng ban <span class="text-red-500">*</span></label>
               <UInput v-model="editingDepartment.name" size="lg" autofocus class="w-full"/>
@@ -194,7 +194,7 @@
           </div>
 
           <!-- Footer -->
-          <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800">
+          <div class="px-3 py-3 sm:px-6 sm:py-4 bg-gray-50 dark:bg-gray-800/50 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800">
              <UButton color="neutral" variant="ghost" @click="isEditModalOpen = false">Hủy bỏ</UButton>
              <UButton color="primary" @click="updateDepartment">Lưu thay đổi</UButton>
           </div>

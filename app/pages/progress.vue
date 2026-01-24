@@ -17,7 +17,7 @@
           
           <!-- Column: Todo -->
           <div class="flex-1 flex flex-col bg-gray-100 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-800 h-full max-h-full">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
+            <div class="p-2 sm:p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
               <h3 class="font-bold text-gray-700 dark:text-gray-200 flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-gray-400"></div>
                 Chưa làm
@@ -27,12 +27,12 @@
               </h3>
             </div>
             
-            <div ref="todoParent" class="flex-1 p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 flex flex-col gap-3">
+            <div ref="todoParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 flex flex-col gap-3">
               <div 
                 v-for="task in todoTasks" 
                 :key="task.id"
                 @click="openTaskModal(task)"
-                class="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-primary-400 dark:hover:border-primary-500 transition-all group"
+                class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-primary-400 dark:hover:border-primary-500 transition-all group"
               >
                 <TaskCardContent :task="task" />
               </div>
@@ -41,7 +41,7 @@
 
           <!-- Column: In Progress -->
           <div class="flex-1 flex flex-col bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900 h-full max-h-full">
-            <div class="p-4 border-b border-blue-100 dark:border-blue-900 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
+            <div class="p-2 sm:p-4 border-b border-blue-100 dark:border-blue-900 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
               <h3 class="font-bold text-blue-700 dark:text-blue-200 flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
                 Đang làm
@@ -51,12 +51,12 @@
               </h3>
             </div>
             
-            <div ref="inProgressParent" class="flex-1 p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-blue-200 dark:scrollbar-thumb-blue-800 flex flex-col gap-3">
+            <div ref="inProgressParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-blue-200 dark:scrollbar-thumb-blue-800 flex flex-col gap-3">
               <div 
                 v-for="task in inProgressTasks" 
                 :key="task.id"
                 @click="openTaskModal(task)"
-                class="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 transition-all"
+                class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 transition-all"
               >
                 <TaskCardContent :task="task" />
               </div>
@@ -65,7 +65,7 @@
 
           <!-- Column: Done -->
           <div class="flex-1 flex flex-col bg-green-50/50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900 h-full max-h-full">
-            <div class="p-4 border-b border-green-100 dark:border-green-900 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
+            <div class="p-2 sm:p-4 border-b border-green-100 dark:border-green-900 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
               <h3 class="font-bold text-green-700 dark:text-green-200 flex items-center gap-2">
                 <div class="w-3 h-3 rounded-full bg-green-500"></div>
                 Đã hoàn thành
@@ -75,12 +75,12 @@
               </h3>
             </div>
             
-            <div ref="doneParent" class="flex-1 p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-green-200 dark:scrollbar-thumb-green-800 flex flex-col gap-3">
+            <div ref="doneParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-green-200 dark:scrollbar-thumb-green-800 flex flex-col gap-3">
               <div 
                 v-for="task in doneTasks" 
                 :key="task.id"
                 @click="openTaskModal(task)"
-                class="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-green-400 dark:hover:border-green-500 transition-all opacity-75 hover:opacity-100"
+                class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-green-400 dark:hover:border-green-500 transition-all opacity-75 hover:opacity-100"
               >
                 <TaskCardContent :task="task" />
               </div>
@@ -118,7 +118,7 @@
             <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-gray-200 dark:border-gray-800">
               <div v-if="selectedTask" class="flex flex-col max-h-[85vh]">
                 <!-- Header -->
-                <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-start bg-white dark:bg-gray-900 sticky top-0 z-10">
+                <div class="p-4 sm:p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-start bg-white dark:bg-gray-900 sticky top-0 z-10">
                   <div class="space-y-1">
                     <div class="flex items-center gap-3 mb-2">
                       <UBadge :color="getPriorityColor(selectedTask.priority)" variant="subtle" size="xs">
@@ -138,7 +138,7 @@
                 </div>
 
                 <!-- Scrollable Content -->
-                <div class="p-6 overflow-y-auto flex-1 space-y-8 bg-white dark:bg-gray-900">
+                <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-8 bg-white dark:bg-gray-900">
                   
                   <!-- Description -->
                   <div class="space-y-3">

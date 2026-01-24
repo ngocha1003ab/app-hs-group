@@ -1,5 +1,5 @@
 <template>
-  <header class="h-20 flex items-center justify-between px-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 md:relative z-30">
+  <header class="h-20 flex items-center justify-between px-4 sm:px-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 md:relative z-30">
     <!-- Mobile Brand -->
     <div class="md:hidden flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-lg">
       <UIcon name="i-heroicons-squares-2x2" class="w-7 h-7"/>

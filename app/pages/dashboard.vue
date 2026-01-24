@@ -28,7 +28,7 @@
     <!-- 1. Stats Grid (4 Blocks) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
-        <div class="p-6">
+        <div class="p-3 sm:p-6">
           <div class="flex items-start justify-between">
             <div class="space-y-1">
               <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase">Tổng công việc</p>
@@ -42,7 +42,7 @@
       </UCard>
 
       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
-        <div class="p-6">
+        <div class="p-3 sm:p-6">
           <div class="flex items-start justify-between">
             <div class="space-y-1">
               <p class="text-sm font-medium text-yellow-600 dark:text-yellow-400 uppercase">Đang làm</p>
@@ -56,7 +56,7 @@
       </UCard>
 
       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
-        <div class="p-6">
+        <div class="p-3 sm:p-6">
           <div class="flex items-start justify-between">
             <div class="space-y-1">
               <p class="text-sm font-medium text-green-600 dark:text-green-400 uppercase">Đã hoàn thành</p>
@@ -70,7 +70,7 @@
       </UCard>
 
       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800 shadow-sm">
-        <div class="p-6">
+        <div class="p-3 sm:p-6">
           <div class="flex items-start justify-between">
             <div class="space-y-1">
               <p class="text-sm font-medium text-red-600 dark:text-red-400 uppercase">Quá hạn</p>
@@ -90,11 +90,11 @@
       <!-- Chart Column (Takes 2/3 width on large screens) -->
       <UCard class="lg:col-span-2 ring-1 ring-gray-200 dark:ring-gray-800">
         <template #header>
-          <div class="px-6 py-4">
+          <div class="px-3 py-2 sm:px-6 sm:py-4">
             <h3 class="text-lg font-bold text-gray-900 dark:text-white">Công việc hoàn thành ({{ selectedPeriodLabel }})</h3>
           </div>
         </template>
-        <div class="h-80 w-full relative p-6">
+        <div class="h-80 w-full relative p-3 sm:p-6">
           <ClientOnly>
              <Bar :data="chartData" :options="chartOptions" />
              <template #fallback>
@@ -107,7 +107,7 @@
       <!-- Overdue Tasks List (Takes 1/3 width) -->
       <UCard class="lg:col-span-1 ring-1 ring-gray-200 dark:ring-gray-800 h-full">
         <template #header>
-          <div class="flex items-center justify-between px-6 py-4">
+          <div class="flex items-center justify-between px-3 py-2 sm:px-6 sm:py-4">
              <h3 class="text-lg font-bold text-red-600 dark:text-red-400 flex items-center gap-2">
                 <UIcon name="i-heroicons-fire" class="w-5 h-5"/>
                 Cần xử lý gấp
@@ -115,7 +115,7 @@
              <UBadge color="error" variant="soft" size="sm">10</UBadge>
           </div>
         </template>
-        <div v-if="overdueTasks.length > 0" class="space-y-4 p-6">
+        <div v-if="overdueTasks.length > 0" class="space-y-4 p-3 sm:p-6">
           <div v-for="task in overdueTasks" :key="task.id" class="p-3 rounded-lg border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10">
             <div class="flex justify-between items-start mb-1">
                <h4 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-1">{{ task.name }}</h4>
@@ -129,7 +129,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="p-6 h-full flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500 min-h-[200px]">
+        <div v-else class="p-3 sm:p-6 h-full flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500 min-h-[200px]">
            <UIcon name="i-heroicons-clipboard-document-check" class="w-12 h-12 mb-2 text-gray-300 dark:text-gray-600" />
            <p class="text-sm">Không có công việc quá hạn.</p>
         </div>
