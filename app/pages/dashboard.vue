@@ -115,7 +115,7 @@
              <UBadge color="error" variant="soft" size="sm">10</UBadge>
           </div>
         </template>
-        <div class="space-y-4 p-6">
+        <div v-if="overdueTasks.length > 0" class="space-y-4 p-6">
           <div v-for="task in overdueTasks" :key="task.id" class="p-3 rounded-lg border border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10">
             <div class="flex justify-between items-start mb-1">
                <h4 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-1">{{ task.name }}</h4>
@@ -128,6 +128,10 @@
                <span>{{ task.department }}</span>
             </div>
           </div>
+        </div>
+        <div v-else class="p-6 h-full flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500 min-h-[200px]">
+           <UIcon name="i-heroicons-clipboard-document-check" class="w-12 h-12 mb-2 text-gray-300 dark:text-gray-600" />
+           <p class="text-sm">Không có công việc quá hạn.</p>
         </div>
       </UCard>
     </div>
@@ -219,81 +223,39 @@ const selectedPeriodLabel = computed(() => {
   return periods.find(p => p.value === selectedPeriod.value)?.label || '7 ngày qua'
 })
 
-// --- Mock Stats Data (Reactive) ---
-const periodStats = computed(() => {
-  switch (selectedPeriod.value) {
-    case 'today':
-      return { total: 12, inProgress: 8, completed: 3, overdue: 1 }
-    case 'yesterday':
-      return { total: 15, inProgress: 4, completed: 10, overdue: 1 }
-    case '1month':
-      return { total: 340, inProgress: 56, completed: 254, overdue: 30 }
-    case '7days':
-    default:
-      return { total: 128, inProgress: 42, completed: 76, overdue: 10 }
-  }
+// --- Fetch Real Data ---
+const { data, status, refresh } = await useFetch('/api/dashboard/stats', {
+    query: { period: selectedPeriod },
+    watch: [selectedPeriod]
 })
 
-// --- Chart Data (Reactive) ---
-// --- Chart Data (Reactive) ---
+// --- Stats Data ---
+const periodStats = computed(() => {
+    return data.value?.periodStats || { 
+        total: 0, 
+        inProgress: 0, 
+        completed: 0, 
+        overdue: 0 
+    }
+})
+
+// --- Chart Data ---
 const chartData = computed<ChartData<'bar'>>(() => {
-  let labels: string[] = []
-  let completedData: number[] = []
-  let inProgressData: number[] = []
-  let overdueData: number[] = []
-
-  if (selectedPeriod.value === 'today') {
-    labels = ['8h', '10h', '12h', '14h', '16h', '18h']
-    completedData = [2, 5, 3, 6, 8, 4]
-    inProgressData = [4, 2, 5, 3, 2, 1]
-    overdueData = [0, 1, 0, 0, 0, 0]
-  } else if (selectedPeriod.value === 'yesterday') {
-    labels = ['8h', '10h', '12h', '14h', '16h', '18h']
-    completedData = [1, 3, 2, 4, 3, 2]
-    inProgressData = [3, 4, 2, 1, 2, 2]
-    overdueData = [1, 0, 0, 0, 0, 0]
-  } else if (selectedPeriod.value === '1month') {
-    labels = ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4']
-    completedData = [45, 60, 55, 94]
-    inProgressData = [15, 20, 10, 11]
-    overdueData = [5, 8, 12, 5]
-  } else {
-    // 7 days default
-    labels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
-    completedData = [12, 19, 15, 25, 22, 10, 8]
-    inProgressData = [5, 8, 10, 6, 7, 4, 2]
-    overdueData = [1, 2, 0, 1, 3, 2, 1]
-  }
-
-  return {
-    labels,
-    datasets: [
-      {
-        label: 'Hoàn thành',
-        backgroundColor: '#10b981', // emerald-500
-        borderRadius: 4,
-        data: completedData,
-        barPercentage: 0.7,
-        categoryPercentage: 0.8
-      },
-      {
-        label: 'Đang làm',
-        backgroundColor: '#eab308', // yellow-500
-        borderRadius: 4,
-        data: inProgressData,
-        barPercentage: 0.7,
-        categoryPercentage: 0.8
-      },
-      {
-        label: 'Quá hạn',
-        backgroundColor: '#ef4444', // red-500
-        borderRadius: 4,
-        data: overdueData,
-        barPercentage: 0.7,
-        categoryPercentage: 0.8
-      }
-    ]
-  }
+    if (!data.value?.chartData) {
+        return {
+            labels: [],
+            datasets: []
+        }
+    }
+    // Ensure styles are consistent
+    return {
+        ...data.value.chartData,
+        datasets: data.value.chartData.datasets.map((ds: any) => ({
+             ...ds,
+             barPercentage: 0.7,
+             categoryPercentage: 0.8
+        }))
+    }
 })
 
 const chartOptions = computed<ChartOptions<'bar'>>(() => ({
@@ -324,28 +286,9 @@ const chartOptions = computed<ChartOptions<'bar'>>(() => ({
   }
 }))
 
-// 2. Overdue Tasks
-const overdueTasks = [
-   { id: 1, name: 'Báo cáo tài chính Q4', daysOverdue: 3, department: 'Kế toán', assignee: { name: 'Phạm Hương', avatar: 'https://i.pravatar.cc/150?u=1' } },
-   { id: 2, name: 'Thiết kế banner tết', daysOverdue: 1, department: 'Marketing', assignee: { name: 'Trần Minh', avatar: 'https://i.pravatar.cc/150?u=2' } },
-   { id: 3, name: 'Tuyển dụng nhân sự IT', daysOverdue: 5, department: 'Nhân sự', assignee: { name: 'Lê Na', avatar: 'https://i.pravatar.cc/150?u=3' } },
-   { id: 4, name: 'Kiểm kê kho hàng', daysOverdue: 2, department: 'Kho vận', assignee: { name: 'Nguyễn Tùng', avatar: 'https://i.pravatar.cc/150?u=4' } },
-]
+// --- Lists ---
+const overdueTasks = computed(() => data.value?.overdueTasks || [])
+const topDepartments = computed(() => data.value?.topDepartments || [])
+const topEmployees = computed(() => data.value?.topEmployees || [])
 
-// 3. Top Departments
-const topDepartments = [
-   { name: 'Kinh doanh', completed: 45, score: 90 },
-   { name: 'Marketing', completed: 32, score: 75 },
-   { name: 'Kỹ thuật', completed: 28, score: 60 },
-   { name: 'CSKH', completed: 21, score: 45 },
-]
-
-// 4. Top Employees
-const topEmployees = [
-   { id: 101, name: 'Nguyễn Văn A', department: 'Kinh doanh', tasks: 15, avatar: 'https://i.pravatar.cc/150?u=10' },
-   { id: 102, name: 'Trần Thị B', department: 'CSKH', tasks: 12, avatar: 'https://i.pravatar.cc/150?u=11' },
-   { id: 103, name: 'Lê Văn C', department: 'Kỹ thuật', tasks: 10, avatar: 'https://i.pravatar.cc/150?u=12' },
-   { id: 104, name: 'Phạm Thị D', department: 'Marketing', tasks: 9, avatar: 'https://i.pravatar.cc/150?u=13' },
-   { id: 105, name: 'Hoàng Văn E', department: 'Kho vận', tasks: 8, avatar: 'https://i.pravatar.cc/150?u=14' },
-]
 </script>
