@@ -715,7 +715,7 @@ const openEditModal = (task: any) => {
    form.status = task.status
    form.dueDate = task.due_date
    form.status = task.status
-   const assignee = employees.value.find(e => e.id === task.assigneeId)
+   const assignee = employees.value.find((e: any) => e.id === task.assignee_id)
    assigneeSearchQuery.value = assignee ? assignee.name : ''
    
    isMobileDayViewOpen.value = false
