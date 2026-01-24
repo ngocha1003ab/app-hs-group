@@ -124,6 +124,18 @@ const licenseKey = ref('')
 const router = useRouter()
 const toast = useToast()
 
+// Auto-redirect if session exists
+const licenseAuthCookie = useCookie('license_key')
+const memberAuthCookie = useCookie('member_id')
+
+if (licenseAuthCookie.value) {
+  if (memberAuthCookie.value) {
+    await navigateTo('/progress')
+  } else {
+    await navigateTo('/dashboard')
+  }
+}
+
 const handleLicenseSubmit = async () => {
   if (!licenseKey.value.trim()) return
   
