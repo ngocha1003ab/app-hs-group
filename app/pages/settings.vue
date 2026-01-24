@@ -128,6 +128,9 @@
                     placeholder="Nhập tên đăng nhập..."
                     icon="i-heroicons-identification"
                   />
+                  <p v-if="isOwner" class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Tạo tài khoản để đăng nhập với vai trò doanh nghiệp, không cần phải đăng nhập qua mã giấy phép nữa.
+                  </p>
                 </div>
 
                    <div class="space-y-2">
@@ -241,9 +244,9 @@ const saveCompanySettings = async () => {
             method: 'POST',
             body: companyForm
         })
-        toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin công ty.', color: 'green' })
+        toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin công ty.', color: 'success' })
     } catch (e: any) {
-        toast.add({ title: 'Lỗi', description: e.message || 'Không thể lưu.', color: 'red' })
+        toast.add({ title: 'Lỗi', description: e.message || 'Không thể lưu.', color: 'error' })
     } finally {
         isSubmittingCompany.value = false
     }
@@ -257,9 +260,9 @@ const saveProfileSettings = async () => {
             body: profileForm
         })
         await refreshUser() // Refresh local user data
-        toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin cá nhân.', color: 'green' })
+        toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin cá nhân.', color: 'success' })
     } catch (e: any) {
-        toast.add({ title: 'Lỗi', description: e.message || 'Không thể lưu.', color: 'red' })
+        toast.add({ title: 'Lỗi', description: e.message || 'Không thể lưu.', color: 'error' })
     } finally {
         isSubmittingProfile.value = false
     }
