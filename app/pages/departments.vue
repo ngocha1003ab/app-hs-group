@@ -78,7 +78,8 @@
       </template>
 
       <!-- Custom Table View -->
-      <div class="overflow-x-auto">
+      <!-- Desktop Table View -->
+      <div class="hidden sm:block overflow-x-auto">
         <table class="w-full text-sm text-left">
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
             <tr>
@@ -145,6 +146,67 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile List View -->
+      <div class="sm:hidden space-y-3 p-3 pt-0">
+        <div 
+          v-for="dept in filteredDepartments" 
+          :key="'mobile-' + dept.id"
+          class="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm space-y-3"
+        >
+          <!-- Header -->
+          <div class="flex items-start justify-between gap-3">
+             <div class="flex items-center gap-3">
+                <div class="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/10 text-primary-600 dark:text-primary-400 shrink-0">
+                   <UIcon name="i-heroicons-user-group" class="w-5 h-5" />
+                </div>
+                <div>
+                   <h4 class="text-base font-bold text-gray-900 dark:text-white leading-tight mb-0.5">{{ dept.name }}</h4>
+                   <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{{ dept.description || 'Chưa có mô tả' }}</p>
+                </div>
+             </div>
+             <UButton 
+               icon="i-heroicons-pencil-square" 
+               size="xs" 
+               color="neutral" 
+               variant="ghost" 
+               @click="openEditModal(dept)" 
+             />
+          </div>
+
+          <!-- Divider -->
+          <div class="h-px bg-gray-100 dark:bg-gray-800 w-full" v-if="dept.members.length > 0"></div>
+
+          <!-- Members Grid -->
+          <div v-if="dept.members.length > 0">
+             <div class="flex flex-wrap gap-2">
+                <!-- Leader -->
+                <template v-for="member in dept.members" :key="'m-mobile-l-' + member.id">
+                  <UBadge 
+                    v-if="member.role === 'Leader'"
+                    color="primary" 
+                    variant="soft"
+                    size="xs"
+                    class="pr-1.5"
+                  >
+                    {{ member.name }}
+                    <UIcon name="i-heroicons-star" class="w-3 h-3 ml-1" />
+                  </UBadge>
+                </template>
+                
+                <!-- Members -->
+                <template v-for="(member) in dept.members.filter(m => m.role !== 'Leader')" :key="'m-mobile-' + member.id">
+                   <span class="text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-md">
+                     {{ member.name }}
+                   </span>
+                </template>
+             </div>
+          </div>
+          <div v-else class="text-center text-xs text-gray-400 italic py-1">
+             Chưa có thành viên
+          </div>
+        </div>
       </div>
       
       <!-- Empty State -->

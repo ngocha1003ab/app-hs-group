@@ -183,7 +183,8 @@
       </template>
 
       <!-- Table View -->
-      <div class="overflow-x-auto">
+      <!-- Desktop Table View -->
+      <div class="hidden sm:block overflow-x-auto">
         <table class="w-full text-sm text-left">
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
             <tr>
@@ -258,6 +259,64 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile List View -->
+      <div class="sm:hidden space-y-3 p-3 pt-0">
+         <div 
+            v-for="member in filteredMembers" 
+            :key="'mobile-mem-' + member.id"
+            class="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm space-y-3"
+         >
+            <!-- Header: Avatar + Info + Action -->
+            <div class="flex items-start justify-between">
+               <div class="flex items-center gap-3">
+                  <UAvatar :alt="member.name" size="md" />
+                  <div>
+                     <div class="flex items-center gap-1.5">
+                        <span class="font-bold text-gray-900 dark:text-white">{{ member.name }}</span>
+                        <UIcon v-if="member.role === 'Leader'" name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
+                     </div>
+                     <div class="text-xs text-gray-500 mt-0.5">{{ getDepartmentName(member.department_id) }}</div>
+                  </div>
+               </div>
+               <UButton icon="i-heroicons-pencil-square" size="xs" color="neutral" variant="ghost" @click="openEditModal(member)" />
+            </div>
+
+            <div class="h-px bg-gray-100 dark:bg-gray-800 w-full"></div>
+
+            <!-- Credentials Grid -->
+            <div class="grid grid-cols-2 gap-3 text-sm">
+               <!-- Username -->
+               <div class="col-span-1" @click="copyToClipboard(member.username || '', 'Đã sao chép username')">
+                  <span class="text-xs text-gray-500 block">Username</span>
+                  <div class="font-mono bg-gray-50 dark:bg-gray-800 rounded px-2 py-1 mt-1 text-gray-700 dark:text-gray-300 w-full truncate flex items-center justify-between group">
+                     {{ member.username }}
+                     <UIcon name="i-heroicons-document-duplicate" class="w-3 h-3 text-gray-400" />
+                  </div>
+               </div>
+               <!-- Password -->
+               <div class="col-span-1" @click="copyToClipboard(member.password || '', 'Đã sao chép mật khẩu')">
+                  <span class="text-xs text-gray-500 block">Password</span>
+                  <div class="font-mono bg-gray-50 dark:bg-gray-800 rounded px-2 py-1 mt-1 text-gray-700 dark:text-gray-300 w-full truncate flex items-center justify-between group">
+                     ••••••
+                     <UIcon name="i-heroicons-document-duplicate" class="w-3 h-3 text-gray-400" />
+                  </div>
+               </div>
+            </div>
+
+            <!-- Contacts -->
+            <div v-if="member.email || member.phone" class="space-y-1 pt-1">
+               <div v-if="member.email" class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                  <UIcon name="i-heroicons-envelope" class="w-3.5 h-3.5 text-gray-400" />
+                  <span>{{ member.email }}</span>
+               </div>
+               <div v-if="member.phone" class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                  <UIcon name="i-heroicons-phone" class="w-3.5 h-3.5 text-gray-400" />
+                  <span>{{ member.phone }}</span>
+               </div>
+            </div>
+         </div>
       </div>
       
       <!-- Empty State -->

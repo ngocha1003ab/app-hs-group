@@ -109,7 +109,7 @@
             </div>
 
             <!-- Priority & DueDate -->
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                <div class="space-y-2">
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Độ ưu tiên</label>
                   <div class="flex gap-2">
@@ -117,8 +117,8 @@
                       type="button" 
                       v-for="p in priorities" 
                       :key="p.value"
-                      @click="newTask.priority = p.value"
-                      class="flex-1 flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all"
+                      @click="newTask.priority = p.value as any"
+                      class="flex-1 flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-lg border-2 transition-all"
                       :class="newTask.priority === p.value ? p.activeClass : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-500 hover:border-gray-200'"
                     >
                        <span class="text-xs font-bold">{{ p.label }}</span>
@@ -128,7 +128,7 @@
                
                <div class="space-y-2">
                   <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Hạn hoàn thành</label>
-                  <UInput v-model="newTask.dueDate" type="date" size="lg" icon="i-heroicons-calendar" />
+                  <UInput v-model="newTask.dueDate" type="date" size="lg" icon="i-heroicons-calendar" class="w-full" />
                </div>
             </div>
           </div>
@@ -156,7 +156,8 @@
         <UInput v-model="taskListSearch" icon="i-heroicons-magnifying-glass" placeholder="Tìm tên nhiệm vụ..." size="sm" color="neutral" />
       </div>
 
-      <div class="overflow-x-auto">
+      <!-- Desktop Table View -->
+      <div class="hidden sm:block overflow-x-auto">
         <table class="w-full text-sm text-left">
            <!-- ... (table content) ... -->
           <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-800/50">
@@ -209,6 +210,68 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile List View -->
+      <div class="sm:hidden space-y-3 p-3 pt-0">
+         <div v-if="filteredTasks.length === 0" class="p-8 text-center text-gray-500">
+             <span v-if="fetchStatus === 'pending'">Đang tải...</span>
+             <span v-else>Không tìm thấy nhiệm vụ nào.</span>
+         </div>
+         
+         <div 
+            v-for="task in filteredTasks" 
+            :key="'mobile-task-' + task.id"
+            class="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm space-y-3"
+         >
+            <!-- Header: Status + Priority + Title -->
+            <div>
+               <div class="flex justify-between items-start mb-2">
+                  <UBadge :color="task.status === 'done' ? 'success' : (task.status === 'in-progress' ? 'info' : 'neutral')" variant="subtle" size="xs">
+                     {{ task.status === 'done' ? 'Hoàn thành' : (task.status === 'in-progress' ? 'Đang làm' : 'Cần làm') }}
+                  </UBadge>
+                  <UButton icon="i-heroicons-pencil-square" size="xs" color="neutral" variant="ghost" @click="openEditModal(task)" />
+               </div>
+               <h4 class="font-bold text-gray-900 dark:text-white leading-tight">{{ task.title }}</h4>
+               <p class="text-xs text-gray-500 mt-1 line-clamp-2" v-if="task.description">{{ task.description }}</p>
+            </div>
+
+            <!-- Divider -->
+            <div class="h-px bg-gray-100 dark:bg-gray-800 w-full"></div>
+
+            <!-- Meta Grid -->
+            <div class="grid grid-cols-2 gap-4">
+               <!-- Left: Assignee -->
+               <div class="flex items-center gap-2">
+                  <UAvatar :src="getEmployee(task.assigneeId)?.avatar" size="2xs" />
+                  <div class="overflow-hidden">
+                     <div class="text-[10px] text-gray-500 uppercase tracking-wider">Người làm</div>
+                     <div class="text-xs font-medium truncate">{{ getEmployee(task.assigneeId)?.name || 'Unknown' }}</div>
+                  </div>
+               </div>
+               
+               <!-- Right: Due Date -->
+               <div class="flex items-center gap-2">
+                   <div :class="isOverdue(task.dueDate) ? 'bg-red-50 text-red-600' : 'bg-gray-50 text-gray-500'" class="p-1.5 rounded-lg">
+                      <UIcon name="i-heroicons-calendar" class="w-4 h-4"/>
+                   </div>
+                   <div>
+                     <div class="text-[10px] text-gray-500 uppercase tracking-wider">Hạn chót</div>
+                     <div class="text-xs font-medium" :class="isOverdue(task.dueDate) ? 'text-red-500' : ''">
+                        {{ formatDate(task.dueDate) }}
+                     </div>
+                   </div>
+               </div>
+            </div>
+            
+            <!-- Priority tag at bottom -->
+            <div class="flex justify-end pt-1">
+               <UBadge :color="priorityBadge(task.priority).color" variant="soft" size="xs" class="flex items-center gap-1">
+                  <UIcon name="i-heroicons-flag" class="w-3 h-3" />
+                  {{ priorityBadge(task.priority).label }}
+               </UBadge>
+            </div>
+         </div>
       </div>
 
       <!-- Pagination -->
