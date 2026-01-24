@@ -12,82 +12,140 @@
 
     <!-- Kanban Board -->
     <ClientOnly>
-      <div class="flex-1 overflow-x-auto overflow-y-hidden">
-        <div class="h-full flex gap-6 min-w-[1024px]">
-          
-          <!-- Column: Todo -->
-          <div class="flex-1 flex flex-col bg-gray-100 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-800 h-full max-h-full">
-            <div class="p-2 sm:p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
-              <h3 class="font-bold text-gray-700 dark:text-gray-200 flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-gray-400"></div>
-                Chưa làm
-                <span class="ml-2 px-2 py-0.5 bg-gray-200 dark:bg-gray-700 text-xs rounded-full text-gray-600 dark:text-gray-300">
-                  {{ todoTasks.length }}
-                </span>
-              </h3>
-            </div>
-            
-            <div ref="todoParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 flex flex-col gap-3">
-              <div 
-                v-for="task in todoTasks" 
-                :key="task.id"
-                @click="openTaskModal(task)"
-                class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-primary-400 dark:hover:border-primary-500 transition-all group"
-              >
-                <TaskCardContent :task="task" />
-              </div>
-            </div>
-          </div>
+      <div class="flex-1 overflow-hidden">
+         <!-- Desktop View (Horizontal Scroll) -->
+         <div class="hidden lg:flex h-full gap-6 overflow-x-auto min-w-[1024px] pb-4">
+           
+           <!-- Column: Todo -->
+           <div class="flex-1 flex flex-col bg-gray-100 dark:bg-gray-800/50 rounded-xl border border-gray-200 dark:border-gray-800 h-full max-h-full min-w-[320px]">
+             <div class="p-2 sm:p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
+               <h3 class="font-bold text-gray-700 dark:text-gray-200 flex items-center gap-2">
+                 <div class="w-3 h-3 rounded-full bg-gray-400"></div>
+                 Chưa làm
+                 <span class="ml-2 px-2 py-0.5 bg-gray-200 dark:bg-gray-700 text-xs rounded-full text-gray-600 dark:text-gray-300">
+                   {{ todoTasks.length }}
+                 </span>
+               </h3>
+             </div>
+             
+             <div ref="todoParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 flex flex-col gap-3">
+               <div 
+                 v-for="task in todoTasks" 
+                 :key="task.id"
+                 @click="openTaskModal(task)"
+                 class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-primary-400 dark:hover:border-primary-500 transition-all group"
+               >
+                 <TaskCardContent :task="task" />
+               </div>
+             </div>
+           </div>
 
-          <!-- Column: In Progress -->
-          <div class="flex-1 flex flex-col bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900 h-full max-h-full">
-            <div class="p-2 sm:p-4 border-b border-blue-100 dark:border-blue-900 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
-              <h3 class="font-bold text-blue-700 dark:text-blue-200 flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
-                Đang làm
-                <span class="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-xs rounded-full text-blue-600 dark:text-blue-300">
-                  {{ inProgressTasks.length }}
-                </span>
-              </h3>
-            </div>
-            
-            <div ref="inProgressParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-blue-200 dark:scrollbar-thumb-blue-800 flex flex-col gap-3">
-              <div 
-                v-for="task in inProgressTasks" 
-                :key="task.id"
-                @click="openTaskModal(task)"
-                class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 transition-all"
-              >
-                <TaskCardContent :task="task" />
-              </div>
-            </div>
-          </div>
+           <!-- Column: In Progress -->
+           <div class="flex-1 flex flex-col bg-blue-50/50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900 h-full max-h-full min-w-[320px]">
+             <div class="p-2 sm:p-4 border-b border-blue-100 dark:border-blue-900 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
+               <h3 class="font-bold text-blue-700 dark:text-blue-200 flex items-center gap-2">
+                 <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></div>
+                 Đang làm
+                 <span class="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-xs rounded-full text-blue-600 dark:text-blue-300">
+                   {{ inProgressTasks.length }}
+                 </span>
+               </h3>
+             </div>
+             
+             <div ref="inProgressParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-blue-200 dark:scrollbar-thumb-blue-800 flex flex-col gap-3">
+               <div 
+                 v-for="task in inProgressTasks" 
+                 :key="task.id"
+                 @click="openTaskModal(task)"
+                 class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 transition-all"
+               >
+                 <TaskCardContent :task="task" />
+               </div>
+             </div>
+           </div>
 
-          <!-- Column: Done -->
-          <div class="flex-1 flex flex-col bg-green-50/50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900 h-full max-h-full">
-            <div class="p-2 sm:p-4 border-b border-green-100 dark:border-green-900 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
-              <h3 class="font-bold text-green-700 dark:text-green-200 flex items-center gap-2">
-                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                Đã hoàn thành
-                <span class="ml-2 px-2 py-0.5 bg-green-100 dark:bg-green-900/50 text-xs rounded-full text-green-600 dark:text-green-300">
-                  {{ doneTasks.length }}
-                </span>
-              </h3>
-            </div>
-            
-            <div ref="doneParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-green-200 dark:scrollbar-thumb-green-800 flex flex-col gap-3">
-              <div 
-                v-for="task in doneTasks" 
-                :key="task.id"
-                @click="openTaskModal(task)"
-                class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-green-400 dark:hover:border-green-500 transition-all opacity-75 hover:opacity-100"
-              >
-                <TaskCardContent :task="task" />
-              </div>
-            </div>
-          </div>
+           <!-- Column: Done -->
+           <div class="flex-1 flex flex-col bg-green-50/50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900 h-full max-h-full min-w-[320px]">
+             <div class="p-2 sm:p-4 border-b border-green-100 dark:border-green-900 flex justify-between items-center sticky top-0 bg-inherit rounded-t-xl z-10">
+               <h3 class="font-bold text-green-700 dark:text-green-200 flex items-center gap-2">
+                 <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                 Đã hoàn thành
+                 <span class="ml-2 px-2 py-0.5 bg-green-100 dark:bg-green-900/50 text-xs rounded-full text-green-600 dark:text-green-300">
+                   {{ doneTasks.length }}
+                 </span>
+               </h3>
+             </div>
+             
+             <div ref="doneParent" class="flex-1 p-2 sm:p-3 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-green-200 dark:scrollbar-thumb-green-800 flex flex-col gap-3">
+               <div 
+                 v-for="task in doneTasks" 
+                 :key="task.id"
+                 @click="openTaskModal(task)"
+                 class="bg-white dark:bg-gray-900 p-2 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 cursor-pointer hover:shadow-md hover:border-green-400 dark:hover:border-green-500 transition-all opacity-75 hover:opacity-100"
+               >
+                 <TaskCardContent :task="task" />
+               </div>
+             </div>
+           </div>
+         </div>
 
-        </div>
+         <!-- Mobile View (Tabs + Single Column) -->
+         <div class="lg:hidden h-full flex flex-col">
+            <!-- Tabs -->
+            <div class="flex p-1 bg-gray-100 dark:bg-gray-800 rounded-lg mb-4 shrink-0 overflow-x-auto no-scrollbar">
+               <button 
+                  v-for="tab in ['todo', 'in-progress', 'done']" 
+                  :key="tab"
+                  @click="activeMobileTab = tab"
+                  class="flex-1 px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-all duration-200 flex flex-col items-center gap-1"
+                  :class="activeMobileTab === tab ? 'bg-white dark:bg-gray-700 shadow text-primary-600 dark:text-primary-400' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'"
+               >
+                  <span>{{ getColumnTitle(tab) }}</span>
+                  <span class="text-[10px] bg-gray-200 dark:bg-gray-600 px-1.5 rounded-full text-gray-600 dark:text-gray-300">
+                     {{ getColumnLength(tab) }}
+                  </span>
+               </button>
+            </div>
+
+            <!-- Active Column Content -->
+            <div class="flex-1 overflow-hidden relative bg-gray-50 dark:bg-gray-800/10 rounded-xl border border-gray-100 dark:border-gray-800">
+               <!-- Todo Mobile -->
+               <div v-if="activeMobileTab === 'todo'" class="absolute inset-0 flex flex-col">
+                  <div ref="todoParentMobile" class="flex-1 p-3 overflow-y-auto min-h-0">
+                     <div class="space-y-3 pb-safe">
+                        <div v-for="task in todoTasks" :key="task.id" @click="openTaskModal(task)" class="bg-white dark:bg-gray-900 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 active:scale-[0.98] transition-transform">
+                           <TaskCardContent :task="task" />
+                        </div>
+                        <div v-if="todoTasks.length === 0" class="text-center text-gray-400 py-8 text-sm italic">Không có công việc nào</div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- In Progress Mobile -->
+               <div v-if="activeMobileTab === 'in-progress'" class="absolute inset-0 flex flex-col">
+                  <div ref="inProgressParentMobile" class="flex-1 p-3 overflow-y-auto min-h-0">
+                     <div class="space-y-3 pb-safe">
+                        <div v-for="task in inProgressTasks" :key="task.id" @click="openTaskModal(task)" class="bg-white dark:bg-gray-900 p-3 rounded-xl shadow-sm border border-blue-100 dark:border-blue-900/30 active:scale-[0.98] transition-transform">
+                           <TaskCardContent :task="task" />
+                        </div>
+                         <div v-if="inProgressTasks.length === 0" class="text-center text-gray-400 py-8 text-sm italic">Không có công việc nào</div>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Done Mobile -->
+               <div v-if="activeMobileTab === 'done'" class="absolute inset-0 flex flex-col">
+                  <div ref="doneParentMobile" class="flex-1 p-3 overflow-y-auto min-h-0">
+                     <div class="space-y-3 pb-safe">
+                        <div v-for="task in doneTasks" :key="task.id" @click="openTaskModal(task)" class="bg-white dark:bg-gray-900 p-3 rounded-xl shadow-sm border border-green-100 dark:border-green-900/30 opacity-75 active:scale-[0.98] transition-all">
+                           <TaskCardContent :task="task" />
+                        </div>
+                         <div v-if="doneTasks.length === 0" class="text-center text-gray-400 py-8 text-sm italic">Không có công việc nào</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
       </div>
     </ClientOnly>
 
@@ -140,6 +198,27 @@
                 <!-- Scrollable Content -->
                 <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-8 bg-white dark:bg-gray-900">
                   
+                  <!-- Status (Mobile Support) -->
+                  <div>
+                      <label class="block text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Trạng thái</label>
+                      <div class="flex p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
+                        <button
+                          v-for="status in [
+                            { label: 'Cần làm', value: 'todo', activeColor: 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white' },
+                            { label: 'Đang làm', value: 'in-progress', activeColor: 'bg-blue-500 text-white shadow-md' },
+                            { label: 'Hoàn thành', value: 'done', activeColor: 'bg-green-500 text-white shadow-md' }
+                          ]"
+                          :key="status.value"
+                          type="button"
+                          @click="changeTaskStatus(status.value)"
+                          class="flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                          :class="selectedTask.status === status.value ? status.activeColor : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'"
+                        >
+                          {{ status.label }}
+                        </button>
+                      </div>
+                  </div>
+
                   <!-- Description -->
                   <div class="space-y-3">
                      <h4 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Mô tả nhiệm vụ</h4>
@@ -271,6 +350,27 @@ interface Task {
 const isModalOpen = ref(false)
 const selectedTask = ref<Task | null>(null)
 const newComment = ref('')
+
+// Mobile Tab State
+const activeMobileTab = ref('todo')
+
+const getColumnTitle = (tab: string) => {
+   switch(tab) {
+      case 'todo': return 'Chưa làm'
+      case 'in-progress': return 'Đang làm'
+      case 'done': return 'Đã hoàn thành'
+      default: return ''
+   }
+}
+
+const getColumnLength = (tab: string) => {
+   switch(tab) {
+      case 'todo': return todoTasks.value.length
+      case 'in-progress': return inProgressTasks.value.length
+      case 'done': return doneTasks.value.length
+      default: return 0
+   }
+}
 
 // --- User Info for Commenting ---
 const userId = ref<string>('') // To check self
@@ -476,6 +576,41 @@ const openTaskModal = async (task: Task) => {
 }
 
 const toast = useToast()
+
+const changeTaskStatus = async (newStatus: string) => { // Using string to match simple logic, cast internally
+    if (!selectedTask.value || selectedTask.value.status === newStatus) return
+    
+    // cast status
+    const status = newStatus as Task['status']
+    const task = selectedTask.value
+    const oldStatus = task.status
+    
+    // 1. Update UI List (Move task)
+    // Remove from old
+    if (oldStatus === 'todo') todoTasks.value = todoTasks.value.filter(t => t.id !== task.id)
+    else if (oldStatus === 'in-progress') inProgressTasks.value = inProgressTasks.value.filter(t => t.id !== task.id)
+    else if (oldStatus === 'done') doneTasks.value = doneTasks.value.filter(t => t.id !== task.id)
+
+    // Update property
+    task.status = status
+    
+    // Add to new (prepend)
+    if (status === 'todo') todoTasks.value = [task, ...todoTasks.value]
+    else if (status === 'in-progress') inProgressTasks.value = [task, ...inProgressTasks.value]
+    else if (status === 'done') doneTasks.value = [task, ...doneTasks.value]
+
+    // 2. API Update
+    try {
+        await $fetch(`/api/tasks/${task.id}`, {
+            method: 'PUT',
+            body: { status: status }
+        })
+        toast.add({ title: 'Cập nhật', description: 'Đã cập nhật trạng thái', color: 'success' })
+    } catch (e: any) {
+        toast.add({ title: 'Lỗi', description: 'Không thể cập nhật trạng thái', color: 'error' })
+        // Could revert here if strict
+    }
+}
 
 const addComment = async () => {
     if (!selectedTask.value || !newComment.value.trim()) return
