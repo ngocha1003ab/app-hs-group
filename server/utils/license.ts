@@ -18,7 +18,7 @@ export const validateLicenseKey = async (key: string): Promise<LicenseCheckRespo
             method: 'GET',
             query: {
                 key_license: key,
-                product_id: 626
+                product_id: 627
             }
         })
         return response
