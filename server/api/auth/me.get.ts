@@ -37,7 +37,8 @@ export default defineEventHandler(async (event) => {
                 id: member.id,
                 username: member.username || '',
                 phone: member.phone || '',
-                email: member.email || ''
+                email: member.email || '',
+                department_id: member.department_id
             }
         }
     } else {

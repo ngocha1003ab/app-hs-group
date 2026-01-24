@@ -25,7 +25,7 @@
       "product_id": 627,
       "email": "shenlongkake@gmail.com",
       "status": 1,
-      "added_at": "2026-01-24T17:20:07.366Z"
+      "added_at": "2026-01-24T17:24:56.745Z"
     }
   ],
   "settings": [
@@ -627,6 +627,20 @@
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-24T16:09:40.590Z",
       "updated_at": "2026-01-24T16:09:40.590Z"
+    },
+    {
+      "id": "mkskyk6n98e2y7qet8j",
+      "title": "Phòng 2",
+      "description": "Phòng 2",
+      "assignee_id": "mksksqy704nb43qk0qrf",
+      "department_id": "mksks5p5124grv4um6w",
+      "priority": "medium",
+      "status": "in-progress",
+      "category": "video",
+      "due_date": "2026-01-28",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T17:25:14.543Z",
+      "updated_at": "2026-01-24T17:28:28.901Z"
     }
   ],
   "comments": [
@@ -712,6 +726,28 @@
     }
   ],
   "notifications": [
+    {
+      "id": "mksl2q5odvp5mnrpbkj",
+      "user_id": "owner",
+      "title": "Cập nhật tiến độ",
+      "description": "\"P2\" đã cập nhật trạng thái nhiệm vụ \"Phòng 2\" sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T17:28:28.908Z"
+    },
+    {
+      "id": "mkskyk6r52c5nnk100d",
+      "user_id": "mksksqy704nb43qk0qrf",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Phòng 2",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-24T17:25:14.547Z"
+    },
     {
       "id": "mksiacr9yeuxzbrthlj",
       "user_id": "mksh6a11ls5puliazfr",

@@ -40,9 +40,11 @@ export default defineEventHandler(async (event) => {
                 throw createError({ statusCode: 403, message: 'Nhân viên không có quyền tạo nhiệm vụ' })
             }
             if (creator.role === 'Leader' && creator.department_id !== assignee.department_id) {
-                // Leader can only assign to their own department?
-                // For now, let's allow cross-dept assignment or restrict it. 
-                // Sticking to "Leader xem và cập nhật được hết task của phòng ban đó", implies specific scope.
+                // Leader can only assign tasks to members in their own department
+                throw createError({
+                    statusCode: 403,
+                    message: 'Bạn chỉ có thể giao nhiệm vụ cho nhân viên trong phòng ban của mình'
+                })
             }
         }
     }

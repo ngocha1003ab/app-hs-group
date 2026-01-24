@@ -72,12 +72,27 @@ export default defineEventHandler(async (event) => {
         updated_at: new Date().toISOString()
     }
 
-    // If assignee changed, update department_id
+    // If assignee changed, update department_id and validate permissions
     if (assignee_id && assignee_id !== currentTask.assignee_id) {
-        const newAssignee = db.data.members.find(m => m.id === assignee_id)
-        if (newAssignee) {
-            updatedTask.department_id = newAssignee.department_id
+        const newAssignee = db.data.members.find(m => m.id === assignee_id && m.license_key === licenseKey)
+        if (!newAssignee) {
+            throw createError({ statusCode: 400, message: 'Người được giao không tồn tại' })
         }
+
+        // If updater is a Leader, they can only reassign to members in their department
+        if (memberId) {
+            const updater = db.data.members.find(m => m.id === memberId)
+            if (updater && updater.role === 'Leader') {
+                if (newAssignee.department_id !== updater.department_id) {
+                    throw createError({
+                        statusCode: 403,
+                        message: 'Bạn chỉ có thể giao nhiệm vụ cho nhân viên trong phòng ban của mình'
+                    })
+                }
+            }
+        }
+
+        updatedTask.department_id = newAssignee.department_id
     }
 
     db.data.tasks[taskIndex] = updatedTask

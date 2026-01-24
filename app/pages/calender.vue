@@ -320,17 +320,39 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                        Trạng thái
                     </label>
-                    <USelect
-                       v-model="form.status"
-                       :options="[
-                          { label: 'Cần làm', value: 'todo' },
-                          { label: 'Đang làm', value: 'in-progress' },
-                          { label: 'Hoàn thành', value: 'done' }
-                       ]"
-                       option-attribute="label"
-                       size="lg"
-                    />
-                 </div>
+                    <div class="grid grid-cols-3 gap-2">
+                       <button 
+                          type="button" 
+                          @click="form.status = 'todo'"
+                          class="py-2.5 px-3 rounded-lg border text-sm font-medium transition-all"
+                          :class="form.status === 'todo' 
+                             ? 'border-gray-500 bg-gray-50 text-gray-700 ring-1 ring-gray-500 dark:bg-gray-700/50 dark:text-gray-300' 
+                             : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                       >
+                          Cần làm
+                       </button>
+                       <button 
+                          type="button" 
+                          @click="form.status = 'in-progress'"
+                          class="py-2.5 px-3 rounded-lg border text-sm font-medium transition-all"
+                          :class="form.status === 'in-progress' 
+                             ? 'border-blue-500 bg-blue-50 text-blue-700 ring-1 ring-blue-500 dark:bg-blue-900/30 dark:text-blue-400' 
+                             : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                       >
+                          Đang làm
+                       </button>
+                       <button 
+                          type="button" 
+                          @click="form.status = 'done'"
+                          class="py-2.5 px-3 rounded-lg border text-sm font-medium transition-all"
+                          :class="form.status === 'done' 
+                             ? 'border-green-500 bg-green-50 text-green-700 ring-1 ring-green-500 dark:bg-green-900/30 dark:text-green-400' 
+                             : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                       >
+                          Hoàn thành
+                       </button>
+                     </div>
+                  </div>
 
                  <!-- Due Date -->
                  <div>
