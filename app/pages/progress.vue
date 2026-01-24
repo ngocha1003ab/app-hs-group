@@ -164,7 +164,7 @@
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="isModalOpen = false"></div>
 
-        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+        <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 text-center">
           <Transition
             enter-active-class="transition ease-out duration-300"
             enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -173,8 +173,8 @@
             leave-from-class="opacity-100 translate-y-0 sm:scale-100"
             leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl border border-gray-200 dark:border-gray-800">
-              <div v-if="selectedTask" class="flex flex-col max-h-[85vh]">
+            <div class="relative transform overflow-hidden bg-white dark:bg-gray-900 text-left shadow-xl transition-all w-full h-[100dvh] sm:h-auto sm:my-8 sm:max-w-2xl sm:rounded-lg border-0 sm:border border-gray-200 dark:border-gray-800 flex flex-col">
+              <div v-if="selectedTask" class="flex flex-col h-full sm:max-h-[85vh]">
                 <!-- Header -->
                 <div class="p-4 sm:p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-start bg-white dark:bg-gray-900 sticky top-0 z-10">
                   <div class="space-y-1">

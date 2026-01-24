@@ -293,8 +293,8 @@
       <div v-if="isEditModalOpen" class="fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
          <div class="fixed inset-0 bg-gray-500/75 transition-opacity" @click="isEditModalOpen = false"></div>
          
-         <div class="flex min-h-full items-center justify-center p-4">
-            <div class="relative w-full max-w-lg transform rounded-xl bg-white dark:bg-gray-900 p-4 sm:p-6 text-left shadow-2xl transition-all border border-gray-100 dark:border-gray-700">
+         <div class="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4">
+            <div class="relative w-full h-[100dvh] sm:h-auto max-w-lg transform bg-white dark:bg-gray-900 p-4 sm:p-6 text-left shadow-2xl transition-all sm:rounded-xl border-0 sm:border border-gray-100 dark:border-gray-700 flex flex-col">
                <!-- Header -->
                <div class="flex items-center justify-between mb-6">
                   <h3 class="text-xl font-bold text-gray-900 dark:text-white">Cập nhật Nhiệm vụ</h3>

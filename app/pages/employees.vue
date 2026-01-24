@@ -335,10 +335,10 @@
       leave-from-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-95"
     >
-      <div v-if="isEditModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" style="background-color: rgba(0,0,0,0.5);">
+      <div v-if="isEditModalOpen" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-6" style="background-color: rgba(0,0,0,0.5);">
         <div class="absolute inset-0" @click="isEditModalOpen = false"></div>
 
-        <div class="relative bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col ring-1 ring-gray-200 dark:ring-gray-800">
+        <div class="relative bg-white dark:bg-gray-900 w-full h-[100dvh] sm:h-auto sm:max-w-lg sm:rounded-lg shadow-xl overflow-hidden flex flex-col ring-1 ring-gray-200 dark:ring-gray-800">
           <div class="px-3 py-3 sm:px-6 sm:py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
             <h3 class="text-base font-semibold text-gray-900 dark:text-white">
               Cập nhật hồ sơ nhân viên
