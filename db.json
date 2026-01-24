@@ -7,7 +7,7 @@
       "product_id": 626,
       "email": "phamhang@gmail.com",
       "status": 1,
-      "added_at": "2026-01-24T04:47:13.167Z"
+      "added_at": "2026-01-24T05:21:45.436Z"
     },
     {
       "id": 10,
@@ -29,6 +29,11 @@
       "email": "shenlongkake",
       "companyName": "Shen Long",
       "description": "Công Ty Shen Long"
+    },
+    {
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "companyName": "Văn Phòng A",
+      "description": ""
     }
   ],
   "departments": [
@@ -538,9 +543,47 @@
       "content": "Làm rất tốt",
       "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
       "created_at": "2026-01-24T04:50:12.964Z"
+    },
+    {
+      "id": "mkruyokci9watmmgi8",
+      "task_id": "mkrtxg87776a263xxqf",
+      "user_id": "owner",
+      "content": "Công việc đang gặp khó khăn",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T05:17:30.204Z"
+    },
+    {
+      "id": "mkruzkxmxz3pwwmarok",
+      "task_id": "mkrtym2g2uooo2ymfb2",
+      "user_id": "owner",
+      "content": "Làm sao vậy?",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T05:18:12.154Z"
     }
   ],
   "notifications": [
+    {
+      "id": "mkruzkxp8aiy54brzdr",
+      "user_id": "mkrth8oyfp2djaov8s4",
+      "title": "Bình luận mới",
+      "description": "Admin đã bình luận trong nhiệm vụ: NV 4",
+      "type": "comment_added",
+      "link": "/progress",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T05:18:12.157Z"
+    },
+    {
+      "id": "mkruyokf5ri6fwq2vgs",
+      "user_id": "mkrtwcozmqsa3d8u9mo",
+      "title": "Bình luận mới",
+      "description": "Admin đã bình luận trong nhiệm vụ: Nhiệm vụ 2",
+      "type": "comment_added",
+      "link": "/progress",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T05:17:30.207Z"
+    },
     {
       "id": "mkrtzl9i15u43wbt55",
       "user_id": "owner",

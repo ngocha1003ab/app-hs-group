@@ -5,7 +5,7 @@
       <div class="h-20 flex items-center px-6 border-b border-gray-200 dark:border-gray-800">
         <div class="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-xl tracking-tight">
           <UIcon name="i-heroicons-squares-2x2" class="w-8 h-8"/>
-          <span>SheetVN</span>
+          <span>QL CÔNG VIỆC</span>
         </div>
       </div>
 
@@ -52,6 +52,7 @@
         <Footer :links="mobileLinks" />
       </div>
     </div>
+    <PwaInstallPrompt />
   </div>
 </template>
 

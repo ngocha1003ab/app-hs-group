@@ -3,7 +3,7 @@
     <!-- Mobile Brand -->
     <div class="md:hidden flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold text-lg">
       <UIcon name="i-heroicons-squares-2x2" class="w-7 h-7"/>
-      <span>SheetVN</span>
+      <span>QL CÔNG VIỆC</span>
     </div>
 
     <!-- Desktop Title / Breadcrumbs (Placeholder) -->
