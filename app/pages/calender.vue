@@ -505,12 +505,12 @@ const filteredEmployees = computed(() => {
   let list = employees.value
   
   if (assigneeDeptFilter.value !== 'all') {
-    list = list.filter(e => e.departmentId === assigneeDeptFilter.value)
+    list = list.filter((e: any) => e.departmentId === assigneeDeptFilter.value)
   }
   
   if (assigneeSearchQuery.value) {
     const q = assigneeSearchQuery.value.toLowerCase()
-    list = list.filter(e => e.name.toLowerCase().includes(q))
+    list = list.filter((e: any) => e.name.toLowerCase().includes(q))
   }
   
   return list
@@ -529,7 +529,7 @@ const selectAssignee = (emp: any) => {
 
 const handleAssigneeSearchInput = () => {
   if (form.assigneeId) {
-     const selected = employees.value.find(e => e.id === form.assigneeId)
+     const selected = employees.value.find((e: any) => e.id === form.assigneeId)
      if (selected && selected.name !== assigneeSearchQuery.value) {
         form.assigneeId = undefined
      }
@@ -631,11 +631,11 @@ const formatDateDisplay = (date: Date) => {
    return date.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-const formatDateISO = (date: Date) => {
+const formatDateISO = (date: Date): string => {
    // Adjust for timezone to ensure we get YYYY-MM-DD correctly
    const offset = date.getTimezoneOffset()
    const d = new Date(date.getTime() - (offset*60*1000))
-   return d.toISOString().split('T')[0]
+   return d.toISOString().split('T')[0] || ''
 }
 
 const getTasksForDate = (date: Date) => {
@@ -644,7 +644,7 @@ const getTasksForDate = (date: Date) => {
    return tasks.value.filter((t: any) => t.due_date === dateStr)
 }
 
-const getEmployee = (id: string) => employees.value.find(e => e.id === id)
+const getEmployee = (id: string) => employees.value.find((e: any) => e.id === id)
 
 // --- Interaction ---
 const prevMonth = () => {

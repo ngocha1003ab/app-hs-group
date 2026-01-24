@@ -106,6 +106,25 @@
                 class="w-5 h-5 text-primary-600 dark:text-primary-400" 
               />
             </NuxtLink>
+
+            <!-- Divider -->
+            <div class="border-t border-gray-200 dark:border-gray-800 my-2"></div>
+
+            <!-- Logout Button -->
+            <button
+              @click="handleLogout"
+              class="w-full flex items-center gap-4 p-4 rounded-xl transition-colors hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
+            >
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-red-100 dark:bg-red-900/40">
+                <UIcon name="i-heroicons-arrow-right-on-rectangle" class="w-6 h-6" />
+              </div>
+              <div class="flex-1 text-left">
+                <div class="font-semibold">Đăng xuất</div>
+                <div class="text-xs text-red-500 dark:text-red-400 mt-0.5">
+                  Thoát khỏi tài khoản
+                </div>
+              </div>
+            </button>
           </div>
         </div>
       </div>
@@ -114,13 +133,14 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps<{
   links: any[]
 }>()
 
 const route = useRoute()
+const router = useRouter()
 const isMoreMenuOpen = ref(false)
 
 // Split links: first 3 are main, rest are in "More"
@@ -129,6 +149,34 @@ const moreLinks = computed(() => props.links.slice(3))
 
 // Simple active state check
 const isActive = (path: string) => route.path === path
+
+// Logout handler
+const handleLogout = async () => {
+  try {
+    // Clear the auth_token cookie
+    const authCookie = useCookie('auth_token')
+    authCookie.value = null
+    
+    // Close the modal
+    isMoreMenuOpen.value = false
+    
+    // Show success message
+    useToast().add({
+      title: 'Đăng xuất thành công',
+      description: 'Bạn đã đăng xuất khỏi hệ thống',
+      color: 'success'
+    })
+    
+    // Redirect to home page
+    await router.push('/')
+  } catch (error) {
+    useToast().add({
+      title: 'Lỗi',
+      description: 'Không thể đăng xuất. Vui lòng thử lại.',
+      color: 'error'
+    })
+  }
+}
 </script>
 
 <style scoped>
