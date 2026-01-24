@@ -7,7 +7,7 @@
       "product_id": 626,
       "email": "phamhang@gmail.com",
       "status": 1,
-      "added_at": "2026-01-24T03:55:04.112Z"
+      "added_at": "2026-01-24T04:47:13.167Z"
     },
     {
       "id": 10,
@@ -52,6 +52,27 @@
       "description": "Quản lý dự án",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T13:57:10.021Z"
+    },
+    {
+      "id": "mkrtgwxg51u7ys5g8m7",
+      "name": "Nhóm làm việc chung",
+      "description": "",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:35:41.622Z"
+    },
+    {
+      "id": "mkrtjfgmksgwfm8mbeb",
+      "name": "Nhóm team 2",
+      "description": "",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:37:38.950Z"
+    },
+    {
+      "id": "mkrtjk1ot1u4khlsd9",
+      "name": "Nhóm team 3",
+      "description": "",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:37:44.892Z"
     }
   ],
   "members": [
@@ -93,6 +114,58 @@
       "department_id": "",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T17:16:36.511Z"
+    },
+    {
+      "id": "mkrth8oyfp2djaov8s4",
+      "name": "Tam Thanh",
+      "username": "tamthanh",
+      "password": "nghichti1",
+      "email": "",
+      "phone": "",
+      "department_id": "mkrtgwxg51u7ys5g8m7",
+      "role": "Leader",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:35:56.866Z",
+      "avatar": "https://ui-avatars.com/api/?name=Tam%20Thanh&background=random"
+    },
+    {
+      "id": "mkrtopbgvz6ay3yh03",
+      "name": "Nhân viên 1",
+      "username": "nhanvien1",
+      "password": "nghichti1",
+      "email": "",
+      "phone": "",
+      "department_id": "mkrtgwxg51u7ys5g8m7",
+      "role": "Member",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:41:45.004Z",
+      "avatar": "https://ui-avatars.com/api/?name=Nh%C3%A2n%20vi%C3%AAn%201&background=random"
+    },
+    {
+      "id": "mkrtwcozmqsa3d8u9mo",
+      "name": "Nhân viên 2",
+      "username": "nhanvien2",
+      "password": "nghichti1",
+      "email": "",
+      "phone": "",
+      "department_id": "mkrtjfgmksgwfm8mbeb",
+      "role": "Member",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:47:41.891Z",
+      "avatar": "https://ui-avatars.com/api/?name=Nh%C3%A2n%20vi%C3%AAn%202&background=random"
+    },
+    {
+      "id": "mkrtwn2x1hk0nwjz9wr",
+      "name": "Nhân viên 3",
+      "username": "nhanvien3",
+      "password": "nghichti1",
+      "email": "",
+      "phone": "",
+      "department_id": "mkrtjk1ot1u4khlsd9",
+      "role": "Member",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:47:55.353Z",
+      "avatar": "https://ui-avatars.com/api/?name=Nh%C3%A2n%20vi%C3%AAn%203&background=random"
     }
   ],
   "tasks": [
@@ -368,6 +441,45 @@
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T18:09:11.567Z",
       "updated_at": "2026-01-23T18:27:12.751Z"
+    },
+    {
+      "id": "mkrtx30ymlantrya3p",
+      "title": "NV 1",
+      "description": "",
+      "assignee_id": "mkrtwn2x1hk0nwjz9wr",
+      "department_id": "mkrtjk1ot1u4khlsd9",
+      "priority": "medium",
+      "status": "todo",
+      "due_date": "2026-01-22",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:48:16.018Z",
+      "updated_at": "2026-01-24T04:48:16.018Z"
+    },
+    {
+      "id": "mkrtxg87776a263xxqf",
+      "title": "Nhiệm vụ 2",
+      "description": "",
+      "assignee_id": "mkrtwcozmqsa3d8u9mo",
+      "department_id": "mkrtjfgmksgwfm8mbeb",
+      "priority": "low",
+      "status": "in-progress",
+      "due_date": "2026-01-28",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:48:33.127Z",
+      "updated_at": "2026-01-24T04:48:55.071Z"
+    },
+    {
+      "id": "mkrtym2g2uooo2ymfb2",
+      "title": "NV 4",
+      "description": "",
+      "assignee_id": "mkrth8oyfp2djaov8s4",
+      "department_id": "mkrtgwxg51u7ys5g8m7",
+      "priority": "medium",
+      "status": "done",
+      "due_date": "2026-01-30",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:49:27.352Z",
+      "updated_at": "2026-01-24T04:49:35.951Z"
     }
   ],
   "comments": [
@@ -418,9 +530,94 @@
       "content": "vất vả quá anh ạ",
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T17:29:20.207Z"
+    },
+    {
+      "id": "mkrtzl9gazt4ss8vltl",
+      "task_id": "mkrtym2g2uooo2ymfb2",
+      "user_id": "mkrth8oyfp2djaov8s4",
+      "content": "Làm rất tốt",
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:50:12.964Z"
     }
   ],
   "notifications": [
+    {
+      "id": "mkrtzl9i15u43wbt55",
+      "user_id": "owner",
+      "title": "Bình luận mới",
+      "description": "Tam Thanh đã bình luận trong nhiệm vụ: NV 4",
+      "type": "comment_added",
+      "link": "/progress",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:50:12.966Z"
+    },
+    {
+      "id": "mkrtyspdii6xbx5dzt",
+      "user_id": "mkrth8oyfp2djaov8s4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"NV 4\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:49:35.953Z"
+    },
+    {
+      "id": "mkrtys5swgcxnjlbkb",
+      "user_id": "mkrth8oyfp2djaov8s4",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"NV 4\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:49:35.248Z"
+    },
+    {
+      "id": "mkrtym2kty1fadhuvpo",
+      "user_id": "mkrth8oyfp2djaov8s4",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: NV 4",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:49:27.356Z"
+    },
+    {
+      "id": "mkrtxx5zomxt9fx546o",
+      "user_id": "mkrtwcozmqsa3d8u9mo",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Nhiệm vụ 2\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:48:55.079Z"
+    },
+    {
+      "id": "mkrtxg8bdpb1ukajbl",
+      "user_id": "mkrtwcozmqsa3d8u9mo",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Nhiệm vụ 2",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:48:33.131Z"
+    },
+    {
+      "id": "mkrtx316ipcmoy0zwi",
+      "user_id": "mkrtwn2x1hk0nwjz9wr",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: NV 1",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "8f5267f78ffe63265f63de2aad5a7aa1",
+      "created_at": "2026-01-24T04:48:16.026Z"
+    },
     {
       "id": "mkr7qnolnahhubtjbt",
       "user_id": "mkqz4ypau0f0ua9igj",

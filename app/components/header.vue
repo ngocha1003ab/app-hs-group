@@ -244,7 +244,7 @@ const { data: rawNotifications, refresh: refreshNotifications } = await useFetch
   key: 'notifications-header'
 })
 
-const notifications = computed(() => {
+const notifications = computed<Notification[]>(() => {
   const list = rawNotifications.value?.data || []
   return list.map((n: any) => ({
     ...n,

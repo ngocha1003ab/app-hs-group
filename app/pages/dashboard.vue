@@ -143,7 +143,7 @@
          <template #header>
             <h3 class="text-lg font-bold text-gray-900 dark:text-white">Top Bộ Phận Hiệu Quả</h3>
          </template>
-         <div class="space-y-4">
+         <div v-if="topDepartments.length > 0" class="space-y-4">
             <div v-for="(dept, index) in topDepartments" :key="dept.name" class="flex items-center gap-4">
                <div class="flex-none w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 font-bold text-sm" :class="index === 0 ? 'text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20' : 'text-gray-500'">
                   {{ index + 1 }}
@@ -157,6 +157,10 @@
                </div>
             </div>
          </div>
+         <div v-else class="flex flex-col items-center justify-center py-8 text-center text-gray-400 dark:text-gray-500">
+            <UIcon name="i-heroicons-chart-bar" class="w-10 h-10 mb-2 text-gray-300 dark:text-gray-600" />
+            <p class="text-sm">Chưa có dữ liệu xếp hạng bộ phận.</p>
+         </div>
        </UCard>
 
        <!-- Top Employees -->
@@ -164,7 +168,7 @@
          <template #header>
             <h3 class="text-lg font-bold text-gray-900 dark:text-white">Nhân Viên Xuất Sắc</h3>
          </template>
-         <div class="space-y-4">
+         <div v-if="topEmployees.length > 0" class="space-y-4">
             <div v-for="(emp, index) in topEmployees" :key="emp.id" class="flex items-center gap-4">
                <UAvatar :src="emp.avatar" :alt="emp.name" />
                <div class="flex-1">
@@ -176,6 +180,10 @@
                   <p class="text-xs text-gray-400">công việc</p>
                </div>
             </div>
+         </div>
+         <div v-else class="flex flex-col items-center justify-center py-8 text-center text-gray-400 dark:text-gray-500">
+            <UIcon name="i-heroicons-user-group" class="w-10 h-10 mb-2 text-gray-300 dark:text-gray-600" />
+            <p class="text-sm">Chưa có dữ liệu xếp hạng nhân viên.</p>
          </div>
        </UCard>
     </div>

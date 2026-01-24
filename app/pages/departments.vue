@@ -71,7 +71,7 @@
             icon="i-heroicons-magnifying-glass"
             placeholder="Tìm kiếm..."
             size="sm"
-            color="white"
+            color="neutral"
             class="w-64"
           />
         </div>

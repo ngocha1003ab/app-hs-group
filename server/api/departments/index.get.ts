@@ -17,7 +17,17 @@ export default defineEventHandler(async (event) => {
     db.data.departments = db.data.departments || []
 
     // Filter departments by license key
-    const departments = db.data.departments.filter(d => d.license_key === licenseKey)
+    let departments = db.data.departments.filter(d => d.license_key === licenseKey)
+
+    // Role-based filtering
+    const memberId = getCookie(event, 'member_id')
+    if (memberId) {
+        const currentUser = db.data.members.find(m => m.id === memberId && m.license_key === licenseKey)
+        if (currentUser && currentUser.role !== 'Owner') {
+            // Leaders (and Members) see only their own department
+            departments = departments.filter(d => d.id === currentUser.department_id)
+        }
+    }
 
     // Get all members for this license to optimize mapping (avoiding O(N*M) full scans if possible, though lowdb is in-memory so it's fine)
     db.data.members = db.data.members || []

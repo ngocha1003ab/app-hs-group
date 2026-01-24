@@ -104,7 +104,7 @@
             Chọn Phòng ban <span class="text-red-500">*</span>
           </label>
           
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div v-if="departments.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div 
               v-for="dept in departments" 
               :key="dept.id"
@@ -138,6 +138,14 @@
                 </p>
               </div>
             </div>
+          </div>
+          <div v-else class="p-8 text-center border border-dashed border-gray-300 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800/50">
+             <UIcon name="i-heroicons-building-office-2" class="w-12 h-12 mx-auto mb-3 text-gray-400 dark:text-gray-500" />
+             <p class="text-gray-600 dark:text-gray-400 font-medium mb-1">Chưa có phòng ban nào</p>
+             <p class="text-sm text-gray-500 mb-4">Bạn cần tạo phòng ban trước khi thêm nhân viên.</p>
+             <UButton to="/departments" color="primary" variant="solid" icon="i-heroicons-plus-circle">
+                Đi đến quản lý Phòng ban
+             </UButton>
           </div>
         </div>
 
@@ -440,6 +448,13 @@ const copyToClipboard = (text: string, successMessage: string) => {
 // 1. Get Departments for selection
 const { data: deptData } = await useFetch<Department[]>('/api/departments')
 const departments = computed(() => deptData.value || [])
+
+// Auto-select department if only one is available (e.g. for Leaders)
+watch(() => departments.value, (newDepts) => {
+  if (newDepts.length === 1 && newDepts[0]) {
+    newMember.departmentId = newDepts[0].id
+  }
+}, { immediate: true })
 
 // 2. Get Members
 const { data: membersData, refresh: refreshMembers } = await useFetch<Member[]>('/api/members')
