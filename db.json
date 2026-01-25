@@ -25,7 +25,7 @@
       "product_id": 627,
       "email": "shenlongkake@gmail.com",
       "status": 1,
-      "added_at": "2026-01-25T07:15:49.076Z"
+      "added_at": "2026-01-25T07:42:11.394Z"
     }
   ],
   "settings": [
@@ -233,6 +233,19 @@
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-24T17:20:43.375Z",
       "avatar": "https://ui-avatars.com/api/?name=P2&background=random"
+    },
+    {
+      "id": "mktfk0y1e1m8bpxppo",
+      "name": "leader2",
+      "username": "leader2",
+      "password": "nghichti1",
+      "email": "",
+      "phone": "",
+      "department_id": "mksks5p5124grv4um6w",
+      "role": "Member",
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-25T07:41:44.521Z",
+      "avatar": "https://ui-avatars.com/api/?name=leader2&background=random"
     }
   ],
   "tasks": [
