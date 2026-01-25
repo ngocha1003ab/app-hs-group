@@ -255,13 +255,15 @@ const chartData = computed<ChartData<'bar'>>(() => {
             datasets: []
         }
     }
-    // Ensure styles are consistent
+    // Ensure styles are consistent with square corners
     return {
         ...data.value.chartData,
         datasets: data.value.chartData.datasets.map((ds: any) => ({
              ...ds,
              barPercentage: 0.7,
-             categoryPercentage: 0.8
+             categoryPercentage: 0.8,
+             borderRadius: 0,
+             borderSkipped: false
         }))
     }
 })
@@ -290,6 +292,11 @@ const chartOptions = computed<ChartOptions<'bar'>>(() => ({
        grid: {
           display: false
        }
+    }
+  },
+  elements: {
+    bar: {
+       borderRadius: 0
     }
   }
 }))

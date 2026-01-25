@@ -96,20 +96,23 @@ export default defineEventHandler(async (event) => {
     const overdueData: number[] = []
 
     if (period === 'today' || period === 'yesterday') {
-        // Hourly buckets: 8, 10, 12, 14, 16, 18
-        const hours = [8, 10, 12, 14, 16, 18]
+        // Full 24-hour buckets: 0h to 23h
+        const hours = Array.from({ length: 24 }, (_, i) => i)
         labels = hours.map(h => `${h}h`)
 
+        // Use the correct reference date for buckets
+        const referenceDate = period === 'today' ? now : subDays(now, 1)
+
         hours.forEach(h => {
-            // Bucket range: [h, h+2)
-            const bucketStart = new Date(startDate)
+            // Bucket range: [h:00, h+1:00)
+            const bucketStart = new Date(referenceDate)
             bucketStart.setHours(h, 0, 0, 0)
-            const bucketEnd = new Date(startDate)
-            bucketEnd.setHours(h + 2, 0, 0, 0)
+            const bucketEnd = new Date(referenceDate)
+            bucketEnd.setHours(h + 1, 0, 0, 0)
 
             completedData.push(tasks.filter(t => t.status === 'done' && new Date(t.updated_at) >= bucketStart && new Date(t.updated_at) < bucketEnd).length)
             inProgressData.push(tasks.filter(t => t.status === 'in-progress' && new Date(t.updated_at) >= bucketStart && new Date(t.updated_at) < bucketEnd).length)
-            overdueData.push(tasks.filter(t => t.status !== 'done' && t.due_date && new Date(t.due_date) >= bucketStart && new Date(t.due_date) < bucketEnd).length)
+            overdueData.push(tasks.filter(t => t.status !== 'done' && t.due_date && new Date(t.due_date) >= bucketStart && new Date(t.due_date) < bucketEnd && new Date(t.due_date) < now).length)
         })
 
     } else if (period === '7days') {
@@ -207,19 +210,16 @@ export default defineEventHandler(async (event) => {
                 {
                     label: 'Hoàn thành',
                     backgroundColor: '#10b981',
-                    borderRadius: 4,
                     data: completedData
                 },
                 {
                     label: 'Đang làm',
                     backgroundColor: '#eab308',
-                    borderRadius: 4,
                     data: inProgressData
                 },
                 {
                     label: 'Quá hạn',
                     backgroundColor: '#ef4444',
-                    borderRadius: 4,
                     data: overdueData
                 }
             ]
