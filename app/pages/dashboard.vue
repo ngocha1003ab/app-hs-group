@@ -136,6 +136,81 @@
       </UCard>
     </div>
 
+    <!-- 2.5. Additional Charts Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Pie Chart: Task Status Distribution -->
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+        <template #header>
+          <div class="px-4 py-3">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white">Phân bố trạng thái</h3>
+          </div>
+        </template>
+        <div class="h-56 w-full relative px-4 pb-4 flex items-center justify-center">
+          <ClientOnly>
+            <div class="w-full h-full max-w-[200px] mx-auto">
+              <Pie :data="pieChartData" :options="pieChartOptions" />
+            </div>
+            <template #fallback>
+              <div class="flex items-center justify-center h-full text-gray-400 text-sm">Đang tải...</div>
+            </template>
+          </ClientOnly>
+        </div>
+      </UCard>
+
+      <!-- Doughnut Chart: Department Distribution -->
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+        <template #header>
+          <div class="px-4 py-3">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white">Phân bố bộ phận</h3>
+          </div>
+        </template>
+        <div class="h-56 w-full relative px-4 pb-4 flex items-center justify-center">
+          <ClientOnly>
+            <div class="w-full h-full max-w-[200px] mx-auto">
+              <Doughnut :data="doughnutChartData" :options="doughnutChartOptions" />
+            </div>
+            <template #fallback>
+              <div class="flex items-center justify-center h-full text-gray-400 text-sm">Đang tải...</div>
+            </template>
+          </ClientOnly>
+        </div>
+      </UCard>
+
+      <!-- Line Chart: Completion Trend (7 days) -->
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+        <template #header>
+          <div class="px-4 py-3">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white">Xu hướng hoàn thành</h3>
+          </div>
+        </template>
+        <div class="h-56 w-full relative px-4 pb-4">
+          <ClientOnly>
+            <Line :data="lineChartData" :options="lineChartOptions" />
+            <template #fallback>
+              <div class="flex items-center justify-center h-full text-gray-400 text-sm">Đang tải...</div>
+            </template>
+          </ClientOnly>
+        </div>
+      </UCard>
+
+      <!-- Horizontal Bar Chart: Top Assignees -->
+      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+        <template #header>
+          <div class="px-4 py-3">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white">Top người thực hiện</h3>
+          </div>
+        </template>
+        <div class="h-56 w-full relative px-4 pb-4">
+          <ClientOnly>
+            <Bar :data="horizontalBarChartData" :options="horizontalBarChartOptions" />
+            <template #fallback>
+              <div class="flex items-center justify-center h-full text-gray-400 text-sm">Đang tải...</div>
+            </template>
+          </ClientOnly>
+        </div>
+      </UCard>
+    </div>
+
     <!-- 3. Rankings Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
        <!-- Top Departments -->
@@ -199,13 +274,16 @@ import {
   BarElement,
   CategoryScale,
   LinearScale,
+  ArcElement,
+  LineElement,
+  PointElement,
   type ChartData,
   type ChartOptions
 } from 'chart.js'
-import { Bar } from 'vue-chartjs'
+import { Bar, Pie, Doughnut, Line } from 'vue-chartjs'
 
 // Register ChartJS components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, LineElement, PointElement, Title, Tooltip, Legend)
 
 definePageMeta({
   layout: 'app'
@@ -297,6 +375,199 @@ const chartOptions = computed<ChartOptions<'bar'>>(() => ({
   elements: {
     bar: {
        borderRadius: 0
+    }
+  }
+}))
+
+// --- Pie Chart Data (Status Distribution) ---
+const pieChartData = computed<ChartData<'pie'>>(() => {
+  if (!data.value?.pieChartData) {
+    return {
+      labels: [],
+      datasets: []
+    }
+  }
+  return {
+    ...data.value.pieChartData,
+    datasets: data.value.pieChartData.datasets.map((ds: any) => ({
+      ...ds,
+      borderRadius: 0,
+      borderWidth: 2,
+      borderColor: '#fff'
+    }))
+  }
+})
+
+const pieChartOptions = computed<ChartOptions<'pie'>>(() => ({
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: {
+    legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+        usePointStyle: true,
+        padding: 15,
+        font: {
+          size: 12
+        }
+      }
+    },
+    tooltip: {
+      callbacks: {
+        label: function(context: any) {
+          const label = context.label || ''
+          const value = context.parsed || 0
+          const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0)
+          const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
+          return `${label}: ${value} (${percentage}%)`
+        }
+      }
+    }
+  }
+}))
+
+// --- Doughnut Chart Data (Department Distribution) ---
+const doughnutChartData = computed<ChartData<'doughnut'>>(() => {
+  if (!data.value?.doughnutChartData) {
+    return {
+      labels: [],
+      datasets: []
+    }
+  }
+  return {
+    ...data.value.doughnutChartData,
+    datasets: data.value.doughnutChartData.datasets.map((ds: any) => ({
+      ...ds,
+      borderRadius: 0,
+      borderWidth: 2,
+      borderColor: '#fff'
+    }))
+  }
+})
+
+const doughnutChartOptions = computed<ChartOptions<'doughnut'>>(() => ({
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: {
+    legend: {
+      display: true,
+      position: 'bottom',
+      labels: {
+        usePointStyle: true,
+        padding: 15,
+        font: {
+          size: 12
+        }
+      }
+    },
+    tooltip: {
+      callbacks: {
+        label: function(context: any) {
+          const label = context.label || ''
+          const value = context.parsed || 0
+          const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0)
+          const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
+          return `${label}: ${value} (${percentage}%)`
+        }
+      }
+    }
+  },
+  cutout: '60%'
+}))
+
+// --- Line Chart Data (Completion Trend - Last 7 Days) ---
+const lineChartData = computed<ChartData<'line'>>(() => {
+  if (!data.value?.lineChartData) {
+    return {
+      labels: [],
+      datasets: []
+    }
+  }
+  return {
+    ...data.value.lineChartData,
+    datasets: data.value.lineChartData.datasets.map((ds: any) => ({
+      ...ds,
+      borderWidth: 2,
+      tension: 0.4,
+      fill: false,
+      pointRadius: 3,
+      pointHoverRadius: 5
+    }))
+  }
+})
+
+const lineChartOptions = computed<ChartOptions<'line'>>(() => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: false
+    },
+    tooltip: {
+      mode: 'index',
+      intersect: false
+    }
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        precision: 0
+      },
+      grid: {
+        color: 'rgba(200, 200, 200, 0.1)'
+      }
+    },
+    x: {
+      grid: {
+        display: false
+      }
+    }
+  }
+}))
+
+// --- Horizontal Bar Chart Data (Top Assignees) ---
+const horizontalBarChartData = computed<ChartData<'bar'>>(() => {
+  if (!data.value?.horizontalBarChartData) {
+    return {
+      labels: [],
+      datasets: []
+    }
+  }
+  return {
+    ...data.value.horizontalBarChartData,
+    datasets: data.value.horizontalBarChartData.datasets.map((ds: any) => ({
+      ...ds,
+      borderRadius: 0,
+      borderSkipped: false
+    }))
+  }
+})
+
+const horizontalBarChartOptions = computed<ChartOptions<'bar'>>(() => ({
+  indexAxis: 'y' as const,
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: false
+    }
+  },
+  scales: {
+    x: {
+      beginAtZero: true,
+      ticks: {
+        precision: 0
+      },
+      grid: {
+        color: 'rgba(200, 200, 200, 0.1)'
+      }
+    },
+    y: {
+      grid: {
+        display: false
+      }
     }
   }
 }))

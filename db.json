@@ -568,11 +568,11 @@
       "assignee_id": "mksh6a11ls5puliazfr",
       "department_id": "mksh61wcami2ufjxw7v",
       "priority": "high",
-      "status": "todo",
+      "status": "in-progress",
       "due_date": "2026-01-30",
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-24T15:45:20.906Z",
-      "updated_at": "2026-01-24T15:45:20.906Z"
+      "updated_at": "2026-01-25T07:36:43.717Z"
     },
     {
       "id": "mkshed201pssmi7qix3",
@@ -581,11 +581,11 @@
       "assignee_id": "mksh6a11ls5puliazfr",
       "department_id": "mksh61wcami2ufjxw7v",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "due_date": "2026-01-24",
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-24T15:45:33.336Z",
-      "updated_at": "2026-01-24T15:45:33.336Z"
+      "updated_at": "2026-01-25T07:36:48.284Z"
     },
     {
       "id": "mkshepdrru60zbnjpt",
@@ -607,12 +607,12 @@
       "assignee_id": "mksh6a11ls5puliazfr",
       "department_id": "mksh61wcami2ufjxw7v",
       "priority": "medium",
-      "status": "todo",
+      "status": "done",
       "category": "video",
       "due_date": "2026-01-25",
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-24T16:09:07.128Z",
-      "updated_at": "2026-01-24T16:10:25.935Z"
+      "updated_at": "2026-01-25T07:36:44.992Z"
     },
     {
       "id": "mksi9drialfnclwh3qn",
@@ -635,12 +635,12 @@
       "assignee_id": "mksksqy704nb43qk0qrf",
       "department_id": "mksks5p5124grv4um6w",
       "priority": "medium",
-      "status": "in-progress",
+      "status": "done",
       "category": "video",
       "due_date": "2026-01-28",
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-24T17:25:14.543Z",
-      "updated_at": "2026-01-24T17:28:28.901Z"
+      "updated_at": "2026-01-25T07:36:39.490Z"
     }
   ],
   "comments": [
@@ -726,6 +726,72 @@
     }
   ],
   "notifications": [
+    {
+      "id": "mktfdodcs5sehni6xno",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Thêm màn hình lịch cho khách\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-25T07:36:48.288Z"
+    },
+    {
+      "id": "mktfdns8x57upj2lxzi",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Thêm màn hình lịch cho khách\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-25T07:36:47.528Z"
+    },
+    {
+      "id": "mktfdltw66hyi8tndo7",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Test 1\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-25T07:36:44.996Z"
+    },
+    {
+      "id": "mktfdkurhnvo5u5aek9",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Thêm màn hình lịch\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-25T07:36:43.731Z"
+    },
+    {
+      "id": "mktfdikh19eivpu0udn",
+      "user_id": "mksh6a11ls5puliazfr",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Test 1\" đã được cập nhật trạng thái sang: Đang làm",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-25T07:36:40.769Z"
+    },
+    {
+      "id": "mktfdhld2hwv6gahoip",
+      "user_id": "mksksqy704nb43qk0qrf",
+      "title": "Cập nhật nhiệm vụ",
+      "description": "Nhiệm vụ \"Phòng 2\" đã được cập nhật trạng thái sang: Hoàn thành",
+      "type": "task_updated",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
+      "created_at": "2026-01-25T07:36:39.505Z"
+    },
     {
       "id": "mksl2q5odvp5mnrpbkj",
       "user_id": "owner",

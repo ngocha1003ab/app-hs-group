@@ -197,6 +197,92 @@ export default defineEventHandler(async (event) => {
         }
     }).filter(e => e.tasks > 0).sort((a, b) => b.tasks - a.tasks).slice(0, 5)
 
+    // 8. Pie Chart Data - Status Distribution (Period-based)
+    const statusColors = {
+        completed: '#10b981',
+        inProgress: '#eab308',
+        overdue: '#ef4444'
+    }
+
+    const pieChartData = {
+        labels: ['Hoàn thành', 'Đang làm', 'Quá hạn'],
+        datasets: [{
+            data: [completed, inProgress, overdue],
+            backgroundColor: [
+                statusColors.completed,
+                statusColors.inProgress,
+                statusColors.overdue
+            ]
+        }]
+    }
+
+    // 9. Doughnut Chart Data - Department Distribution (Period-based)
+    // Generate colors for departments
+    const generateColor = (index: number) => {
+        const hues = [210, 270, 30, 180, 330, 150, 60, 240]
+        const hue = hues[index % hues.length]
+        return `hsl(${hue}, 70%, 55%)`
+    }
+
+    const deptTaskCounts = departments.map((d, index) => {
+        const count = tasks.filter(t => t.department_id === d.id && new Date(t.created_at) >= startDate && new Date(t.created_at) <= endDate).length
+        return {
+            name: d.name,
+            count,
+            color: generateColor(index)
+        }
+    }).filter(d => d.count > 0)
+
+    const doughnutChartData = {
+        labels: deptTaskCounts.map(d => d.name),
+        datasets: [{
+            data: deptTaskCounts.map(d => d.count),
+            backgroundColor: deptTaskCounts.map(d => d.color)
+        }]
+    }
+
+    // 10. Line Chart Data - Completion Trend (Last 7 Days)
+    const last7DaysLabels: string[] = []
+    const last7DaysCompletedData: number[] = []
+
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date()
+        d.setDate(d.getDate() - i)
+        const label = format(d, 'dd/MM')
+        last7DaysLabels.push(label)
+
+        const dayCompleted = tasks.filter(t => t.status === 'done' && isSameDay(new Date(t.updated_at), d)).length
+        last7DaysCompletedData.push(dayCompleted)
+    }
+
+    const lineChartData = {
+        labels: last7DaysLabels,
+        datasets: [{
+            label: 'Hoàn thành',
+            data: last7DaysCompletedData,
+            borderColor: '#10b981',
+            backgroundColor: '#10b981'
+        }]
+    }
+
+    // 11. Horizontal Bar Chart - Top 5 Assignees (Period-based)
+    const assigneeStats = members.map(m => {
+        const assigneeTasks = tasks.filter(t => t.assignee_id === m.id && t.status === 'done' && new Date(t.updated_at) >= startDate && new Date(t.updated_at) <= endDate)
+        return {
+            name: m.name,
+            count: assigneeTasks.length
+        }
+    }).filter(a => a.count > 0).sort((a, b) => b.count - a.count).slice(0, 5)
+
+    const horizontalBarChartData = {
+        labels: assigneeStats.map(a => a.name),
+        datasets: [{
+            label: 'Hoàn thành',
+            data: assigneeStats.map(a => a.count),
+            backgroundColor: '#3b82f6'
+        }]
+    }
+
     return {
         periodStats: {
             total,
@@ -224,6 +310,10 @@ export default defineEventHandler(async (event) => {
                 }
             ]
         },
+        pieChartData,
+        doughnutChartData,
+        lineChartData,
+        horizontalBarChartData,
         overdueTasks: allOverdue,
         topDepartments: deptStats,
         topEmployees: empStats
