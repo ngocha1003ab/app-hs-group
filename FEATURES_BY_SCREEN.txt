@@ -1,0 +1,304 @@
+================================================================================
+                    DANH SÁCH TÍNH NĂNG THEO MÀN HÌNH
+                        SheetVN App - Quản lý công việc nhóm
+================================================================================
+
+📅 Ngày tạo: 2026-02-01
+📁 Phiên bản: 1.0
+
+================================================================================
+1. TRANG CHỦ (index.vue)
+================================================================================
+
+Mục đích: Trang landing/nhập mã giấy phép để truy cập hệ thống
+
+Tính năng:
+- Nhập mã giấy phép (License Key) để kích hoạt dịch vụ
+- Chuyển hướng tự động nếu đã đăng nhập trước đó
+- Nút chuyển đổi giao diện sáng/tối (Dark/Light mode)
+- Link đến trang đăng nhập cho tài khoản đã có
+- Footer với thông tin SheetVN và link mua bản quyền
+- Hiệu ứng animation nền và fade-in đẹp mắt
+- Thông báo toast khi đăng nhập thành công/thất bại
+
+================================================================================
+2. ĐĂNG NHẬP (login.vue)
+================================================================================
+
+Mục đích: Đăng nhập cho nhân viên/thành viên trong hệ thống
+
+Tính năng:
+- Form đăng nhập với tên đăng nhập và mật khẩu
+- Xác thực qua API member-login
+- Chuyển hướng về trang tiến độ công việc sau khi đăng nhập
+- Thông báo lỗi khi đăng nhập thất bại
+- Nút chuyển đổi giao diện sáng/tối
+- Link quay lại trang chủ
+- Giao diện glassmorphism hiện đại
+
+================================================================================
+3. THỐNG KÊ / DASHBOARD (dashboard.vue)
+================================================================================
+
+Mục đích: Tổng quan tình hình công việc và hiệu suất
+
+Tính năng:
+- Bộ lọc theo thời gian (Hôm nay / Hôm qua / 7 ngày / 30 ngày)
+- 4 thẻ thống kê tổng quan:
+  + Tổng công việc
+  + Công việc đang làm
+  + Công việc đã hoàn thành
+  + Công việc quá hạn
+  
+Biểu đồ:
+- Biểu đồ cột: Công việc hoàn thành theo thời gian
+- Biểu đồ tròn (Pie): Phân bố trạng thái công việc
+- Biểu đồ Doughnut: Phân bố theo bộ phận
+- Biểu đồ đường (Line): Xu hướng hoàn thành (7 ngày)
+- Biểu đồ ngang: Top người thực hiện
+
+Danh sách:
+- Danh sách công việc cần xử lý gấp (quá hạn)
+- Xếp hạng Top bộ phận hiệu quả
+- Xếp hạng Nhân viên xuất sắc
+
+================================================================================
+4. LỊCH LÀM VIỆC (calender.vue)
+================================================================================
+
+Mục đích: Xem lịch và quản lý nhiệm vụ theo ngày
+
+Tính năng:
+- Hiển thị lịch theo tháng với grid 7 cột
+- Điều hướng tháng trước/sau và về hôm nay
+- Đánh dấu ngày hôm nay nổi bật
+- Hiển thị nhiệm vụ trên từng ô ngày với màu theo độ ưu tiên:
+  + Đỏ: Ưu tiên cao
+  + Cam: Ưu tiên trung bình
+  + Xám: Ưu tiên thấp
+  
+- Mobile: Hiển thị dot indicator thay vì text đầy đủ
+- Desktop: Hiển thị danh sách nhiệm vụ và nút "+" khi hover
+
+Modal xem chi tiết ngày (Mobile):
+- Danh sách nhiệm vụ trong ngày
+- Thông tin người thực hiện
+- Trạng thái nhiệm vụ
+- Nút thêm nhiệm vụ mới
+
+Modal Tạo/Sửa nhiệm vụ:
+- Nhập tên nhiệm vụ
+- Mô tả chi tiết
+- Chọn người thực hiện (có tìm kiếm và lọc theo phòng ban)
+- Chọn trạng thái (Cần làm / Đang làm / Hoàn thành)
+- Chọn hạn hoàn thành
+- Chọn độ ưu tiên (Cao / Trung bình / Thấp)
+- Chọn danh mục công việc (Video, Hình ảnh, Văn bản, Kinh doanh, Thiết kế, Lập trình, Marketing, Hành chính, Khác)
+
+Phân quyền:
+- Member chỉ được thay đổi trạng thái, không được sửa các trường khác
+- Owner/Leader có thể tạo và chỉnh sửa đầy đủ
+
+================================================================================
+5. QUẢN LÝ NHIỆM VỤ (tasks.vue)
+================================================================================
+
+Mục đích: Tạo mới và quản lý danh sách nhiệm vụ
+
+Tính năng:
+Form tạo nhiệm vụ mới (chỉ Owner/Leader):
+- Nhập tên nhiệm vụ
+- Mô tả chi tiết
+- Chọn người thực hiện (dropdown với tìm kiếm + lọc phòng ban)
+- Chọn độ ưu tiên (Cao / Trung bình / Thấp)
+- Chọn hạn hoàn thành
+- Chọn danh mục công việc (9 loại)
+
+Danh sách nhiệm vụ:
+- Hiển thị bảng (Desktop) hoặc card (Mobile)
+- Tìm kiếm nhiệm vụ (server-side)
+- Phân trang
+- Thông tin hiển thị:
+  + Tên nhiệm vụ + mô tả
+  + Danh mục công việc
+  + Người thực hiện (avatar + tên)
+  + Hạn chót (đánh dấu đỏ nếu quá hạn)
+  + Trạng thái (Cần làm / Đang làm / Hoàn thành)
+  + Độ ưu tiên
+
+Modal chỉnh sửa:
+- Cập nhật trạng thái (tất cả user)
+- Cập nhật tên, mô tả, hạn chót, độ ưu tiên (chỉ Owner/Leader)
+
+================================================================================
+6. TIẾN ĐỘ CÔNG VIỆC - KANBAN (progress.vue)
+================================================================================
+
+Mục đích: Theo dõi và cập nhật tiến độ công việc dạng Kanban
+
+Tính năng:
+Kanban Board 3 cột:
+- Chưa làm (Todo) - Màu xám
+- Đang làm (In Progress) - Màu xanh dương
+- Đã hoàn thành (Done) - Màu xanh lá
+
+Desktop:
+- 3 cột ngang, có thể cuộn ngang nếu màn hình nhỏ
+- Kéo thả (Drag & Drop) giữa các cột để cập nhật trạng thái
+- Infinite scroll trong mỗi cột
+
+Mobile:
+- Tabs chuyển đổi giữa 3 cột
+- Hiển thị số lượng task trong mỗi tab
+- Touch-friendly với hiệu ứng scale khi tap
+
+Task Card hiển thị:
+- Tên nhiệm vụ
+- Mô tả ngắn
+- Độ ưu tiên (màu badge)
+- Danh mục công việc
+- Người thực hiện (avatar + tên)
+- Hạn chót
+
+Modal chi tiết nhiệm vụ:
+- Xem đầy đủ thông tin
+- Cập nhật trạng thái (3 nút toggle)
+- Xem/thêm bình luận
+- Đính kèm ảnh trong bình luận
+- Upload ảnh bình luận lên server
+- Phân quyền theo vai trò
+
+================================================================================
+7. QUẢN LÝ NHÂN SỰ (employees.vue)
+================================================================================
+
+Mục đích: Thêm mới và quản lý thông tin nhân viên
+
+Tính năng:
+Form thêm nhân viên mới:
+- Họ và tên (bắt buộc)
+- Tên đăng nhập (tự động sinh từ tên + chỉnh sửa được)
+- Mật khẩu (có nút show/hide)
+- Email (tùy chọn)
+- Số điện thoại (tùy chọn)
+- Checkbox: Là người quản lý (Leader)
+- Chọn phòng ban (block-style cards)
+
+Danh sách nhân viên:
+- Bảng Desktop / Card Mobile
+- Tìm kiếm nhân viên
+- Hiển thị:
+  + Avatar + Tên + Badge Leader (nếu có)
+  + Username (có nút copy)
+  + Password (ẩn + nút copy)
+  + Email & Số điện thoại
+  + Phòng ban
+
+Modal chỉnh sửa nhân viên:
+- Cập nhật tên, username
+- Đổi mật khẩu
+- Cập nhật email, số điện thoại
+- Toggle vai trò Leader
+
+================================================================================
+8. QUẢN LÝ PHÒNG BAN (departments.vue)
+================================================================================
+
+Mục đích: Tạo và quản lý cơ cấu phòng ban/nhóm
+
+Tính năng:
+Form tạo phòng ban:
+- Tên phòng ban (bắt buộc)
+- Mô tả (tùy chọn)
+
+Danh sách phòng ban:
+- Bảng Desktop / Card Mobile  
+- Tìm kiếm phòng ban
+- Hiển thị:
+  + Icon + Tên phòng ban
+  + Mô tả
+  + Danh sách thành viên (Leader có badge sao vàng)
+  + Số lượng thành viên còn lại
+
+Modal chỉnh sửa:
+- Cập nhật tên
+- Cập nhật mô tả
+
+================================================================================
+9. THÔNG BÁO (notifications.vue)
+================================================================================
+
+Mục đích: Hiển thị danh sách thông báo hệ thống
+
+Tính năng:
+- Danh sách thông báo với:
+  + Trạng thái đọc/chưa đọc (dot indicator)
+  + Tiêu đề thông báo
+  + Mô tả chi tiết
+  + Thời gian (hiển thị dạng "x phút/giờ/ngày trước")
+- Click để đánh dấu đã đọc và chuyển đến link liên quan
+- Phân trang (10 thông báo/trang)
+- Empty state khi không có thông báo
+
+================================================================================
+10. CÀI ĐẶT (settings.vue)
+================================================================================
+
+Mục đích: Quản lý cài đặt hệ thống và thông tin cá nhân
+
+Tính năng:
+Cài đặt Công ty (chỉ Owner):
+- Tên công ty
+- Mô tả/giới thiệu công ty
+
+Thông tin cá nhân (tất cả user):
+- Avatar (nhập URL)
+- Họ và tên
+- Số điện thoại
+- Tên đăng nhập
+- Email
+- Đổi mật khẩu mới
+
+Note: Owner có thể tạo tài khoản username/password để đăng nhập 
+      thay vì dùng mã giấy phép
+
+================================================================================
+                        TỔNG KẾT TÍNH NĂNG HỆ THỐNG
+================================================================================
+
+✅ HỆ THỐNG XÁC THỰC:
+   - Đăng nhập bằng License Key (Owner)
+   - Đăng nhập bằng Username/Password (Member, Leader, Owner)
+   - Phân quyền 3 vai trò: Owner, Leader, Member
+
+✅ QUẢN LÝ CÔNG VIỆC:
+   - CRUD nhiệm vụ đầy đủ
+   - 9 danh mục công việc
+   - 3 mức độ ưu tiên
+   - 3 trạng thái tiến độ
+   - Kanban board với drag & drop
+   - Lịch công việc theo tháng
+
+✅ QUẢN LÝ NHÂN SỰ:
+   - Quản lý phòng ban/nhóm
+   - Quản lý nhân viên
+   - Phân công công việc
+
+✅ THEO DÕI & BÁO CÁO:
+   - Dashboard thống kê tổng quan
+   - Biểu đồ phân tích đa dạng
+   - Xếp hạng phòng ban & nhân viên
+   - Theo dõi công việc quá hạn
+
+✅ GIAO TIẾP:
+   - Hệ thống thông báo
+   - Bình luận nhiệm vụ với hình ảnh
+
+✅ TRẢI NGHIỆM NGƯỜI DÙNG:
+   - Responsive (Desktop + Mobile)
+   - Dark/Light mode
+   - Vietnamese localization
+   - Animation và micro-interactions
+   - Toast notifications
+
+================================================================================

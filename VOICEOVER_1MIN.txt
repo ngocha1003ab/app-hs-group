@@ -1,0 +1,13 @@
+Chào mừng bạn đến với SheetVN App, giải pháp quản lý công việc nhóm dành cho doanh nghiệp Việt Nam.
+
+Với bảng thống kê trực quan, bạn nắm bắt toàn bộ tiến độ công việc chỉ trong vài giây. Biểu đồ phân tích giúp theo dõi hiệu suất từng phòng ban và nhân viên một cách rõ ràng.
+
+Lịch làm việc hiển thị nhiệm vụ theo từng ngày, đánh dấu màu theo độ ưu tiên. Bạn biết ngay việc nào cần xử lý gấp.
+
+Bảng Kanban với ba cột trạng thái cho phép cập nhật tiến độ chỉ bằng thao tác kéo thả. Mỗi nhiệm vụ đều có phần bình luận để trao đổi nhanh chóng.
+
+Hệ thống phân quyền linh hoạt với ba vai trò: chủ doanh nghiệp, trưởng phòng và nhân viên. Mỗi người chỉ thấy đúng công việc của mình.
+
+Giao diện tiếng Việt, hoạt động mượt trên cả máy tính và điện thoại. Mua một lần, dùng vĩnh viễn.
+
+Truy cập sheetvn.com ngay để sở hữu giải pháp này.

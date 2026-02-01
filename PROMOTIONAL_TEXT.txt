@@ -1,0 +1,120 @@
+================================================================================
+                        SHEETVN APP
+            Giải pháp Quản lý Công việc Nhóm Chuyên nghiệp
+================================================================================
+
+
+Kính chào Quý Doanh nghiệp,
+
+Trong bối cảnh thị trường ngày càng cạnh tranh, việc quản lý công việc một cách 
+khoa học và hiệu quả chính là chìa khóa để doanh nghiệp phát triển bền vững. 
+Thấu hiểu điều đó, SheetVN trân trọng giới thiệu đến Quý vị SheetVN App — một 
+giải pháp quản lý công việc nhóm toàn diện, được thiết kế riêng cho các cửa hàng 
+và doanh nghiệp Việt Nam.
+
+───────────────────────────────────────────────────────────────────────────────
+
+                    🎯 TỔNG QUAN SẢN PHẨM
+
+SheetVN App mang đến một hệ sinh thái quản lý công việc hoàn chỉnh, nơi mọi 
+nhiệm vụ được theo dõi, phân công và hoàn thành một cách trơn tru nhất. Với 
+giao diện tiếng Việt trực quan, ứng dụng phù hợp với mọi quy mô doanh nghiệp 
+— từ cửa hàng nhỏ đến tập đoàn lớn.
+
+───────────────────────────────────────────────────────────────────────────────
+
+                    ✨ TÍNH NĂNG NỔI BẬT
+
+📊 BẢNG THỐNG KÊ TRỰC QUAN
+   Nắm bắt toàn cảnh hoạt động doanh nghiệp chỉ trong tích tắc. Hệ thống 
+   Dashboard thông minh với các biểu đồ phân tích đa chiều giúp Quý vị theo 
+   dõi tiến độ công việc, nhận diện điểm nghẽn, và đưa ra quyết định kịp thời. 
+   Bộ lọc thời gian linh hoạt cho phép xem báo cáo theo ngày, tuần hoặc tháng.
+
+📅 LỊCH LÀM VIỆC THÔNG MINH
+   Quản lý nhiệm vụ theo dòng thời gian một cách trực quan nhất. Mỗi ngày 
+   được hiển thị với các nhiệm vụ được phân loại theo độ ưu tiên — giúp nhân 
+   viên và quản lý dễ dàng nắm bắt công việc cần hoàn thành.
+
+📋 KANBAN BOARD HIỆN ĐẠI
+   Trải nghiệm phương pháp quản lý Kanban tiên tiến với ba cột trạng thái: 
+   Chưa làm, Đang làm và Hoàn thành. Chỉ với thao tác kéo thả đơn giản, 
+   nhân viên có thể cập nhật tiến độ công việc trong tích tắc. Giao diện 
+   thân thiện trên cả máy tính lẫn điện thoại di động.
+
+👥 QUẢN LÝ NHÂN SỰ CHUYÊN NGHIỆP
+   Xây dựng cơ cấu tổ chức bài bản với hệ thống phòng ban và nhân viên. 
+   Phân quyền rõ ràng giữa Chủ doanh nghiệp, Trưởng phòng và Nhân viên — 
+   đảm bảo mỗi người chỉ tiếp cận đúng phạm vi công việc của mình.
+
+💬 GIAO TIẾP LIỀN MẠCH
+   Hệ thống bình luận tích hợp ngay trong từng nhiệm vụ, hỗ trợ đính kèm 
+   hình ảnh, giúp đội ngũ trao đổi thông tin nhanh chóng mà không cần 
+   rời khỏi ứng dụng. Thông báo tức thời đảm bảo không bỏ lỡ bất kỳ 
+   cập nhật quan trọng nào.
+
+🏆 ĐÁNH GIÁ HIỆU SUẤT
+   Theo dõi và vinh danh những cá nhân, bộ phận xuất sắc nhất. Bảng xếp 
+   hạng tự động cập nhật dựa trên số lượng công việc hoàn thành — tạo 
+   động lực thi đua lành mạnh trong tổ chức.
+
+───────────────────────────────────────────────────────────────────────────────
+
+                    🌟 ĐIỂM KHÁC BIỆT
+
+✓ Giao diện hoàn toàn tiếng Việt, thân thiện với người dùng Việt Nam
+✓ Thiết kế responsive, hoạt động mượt mà trên mọi thiết bị
+✓ Chế độ sáng và tối, bảo vệ mắt người dùng
+✓ Hiệu ứng animation tinh tế, nâng cao trải nghiệm sử dụng
+✓ Phân quyền linh hoạt với 3 cấp độ: Owner, Leader, Member
+✓ 9 danh mục công việc đa dạng đáp ứng mọi nhu cầu ngành nghề
+✓ Hệ thống thông báo real-time, không bỏ lỡ cập nhật quan trọng
+
+───────────────────────────────────────────────────────────────────────────────
+
+                    💼 ĐỐI TƯỢNG PHÙ HỢP
+
+SheetVN App được thiết kế dành cho:
+
+• Cửa hàng bán lẻ, chuỗi cửa hàng
+• Công ty vừa và nhỏ (SME)
+• Nhóm làm việc, startup
+• Phòng ban trong doanh nghiệp lớn
+• Agency sáng tạo, marketing
+• Đội ngũ kinh doanh, chăm sóc khách hàng
+
+───────────────────────────────────────────────────────────────────────────────
+
+                    🎁 CAM KẾT TỪ SHEETVN
+
+Chúng tôi cam kết mang đến cho Quý khách hàng:
+
+★ Sản phẩm chất lượng cao với công nghệ hiện đại nhất
+★ Hỗ trợ kỹ thuật tận tình trong suốt quá trình sử dụng
+★ Cập nhật tính năng mới liên tục theo phản hồi người dùng
+★ Bảo mật dữ liệu tuyệt đối, an toàn thông tin doanh nghiệp
+★ Mua một lần, sử dụng vĩnh viễn — không phí duy trì hàng tháng
+
+───────────────────────────────────────────────────────────────────────────────
+
+Kính mời Quý Doanh nghiệp trải nghiệm SheetVN App ngay hôm nay để cảm nhận 
+sự khác biệt trong công tác quản lý công việc. Hãy để chúng tôi đồng hành 
+cùng Quý vị trên hành trình phát triển và thành công.
+
+Để được tư vấn chi tiết hoặc đặt mua sản phẩm, Quý khách vui lòng liên hệ:
+
+                        🌐 Website: sheetvn.com
+
+───────────────────────────────────────────────────────────────────────────────
+
+Trân trọng cảm ơn Quý khách đã dành thời gian quan tâm đến sản phẩm của 
+SheetVN. Chúng tôi tin tưởng rằng SheetVN App sẽ là người bạn đồng hành 
+đắc lực, góp phần nâng cao năng suất và hiệu quả công việc cho doanh nghiệp 
+của Quý vị.
+
+                                            Kính thư,
+                                            Đội ngũ SheetVN
+
+================================================================================
+                    © 2026 SheetVN - All Rights Reserved
+================================================================================
