@@ -181,8 +181,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
-
 definePageMeta({
   layout: 'app'
 })
@@ -191,22 +189,18 @@ useHead({
   title: 'Cài đặt - SheetVN'
 })
 
+const { currentUser } = useMockData()
 const isSubmittingCompany = ref(false)
 const isSubmittingProfile = ref(false)
 const toast = useToast()
 
-// 1. Fetch User Info (Role & Profile)
-const { data: userData, refresh: refreshUser } = await useFetch<any>('/api/auth/me')
-const user = computed(() => userData.value?.user || {})
+const user = computed(() => currentUser.value)
 const isOwner = computed(() => user.value.role === 'Owner')
-
-// 2. Fetch Company Settings (Only needed if owner, but fetching anyway simpler)
-const { data: companyData } = await useFetch<any>('/api/settings')
 
 // Forms
 const companyForm = reactive({
-    companyName: '',
-    description: ''
+    companyName: 'Công ty TNHH SheetVN',
+    description: 'Hệ thống quản lý công việc và nhân sự toàn diện.'
 })
 
 const profileForm = reactive({
@@ -218,53 +212,40 @@ const profileForm = reactive({
     newPassword: ''
 })
 
-// Initialize forms
+// Initialize forms from current user
 watchEffect(() => {
-    if (companyData.value) {
-        companyForm.companyName = companyData.value.companyName || ''
-        companyForm.description = companyData.value.description || ''
-    }
     if (user.value) {
         profileForm.name = user.value.name || ''
         profileForm.username = user.value.username || ''
         profileForm.avatar = user.value.avatar || ''
-        // Check if user has phone/email (Owner might fetch from settings if implemented in API)
-        // Since /api/auth/me returns 'user', we rely on what it returns. 
-        // Note: Me API needs to return phone/email if possible.
         profileForm.phone = user.value.phone || '' 
         profileForm.email = user.value.email || '' 
     }
 })
 
-// Actions
-const saveCompanySettings = async () => {
+// Actions (mock, just show toast)
+const saveCompanySettings = () => {
     isSubmittingCompany.value = true
-    try {
-        await $fetch('/api/settings/company', {
-            method: 'POST',
-            body: companyForm
-        })
+    setTimeout(() => {
         toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin công ty.', color: 'success' })
-    } catch (e: any) {
-        toast.add({ title: 'Lỗi', description: e.message || 'Không thể lưu.', color: 'error' })
-    } finally {
         isSubmittingCompany.value = false
-    }
+    }, 500)
 }
 
-const saveProfileSettings = async () => {
+const saveProfileSettings = () => {
     isSubmittingProfile.value = true
-    try {
-        await $fetch('/api/settings/profile', {
-            method: 'PUT',
-            body: profileForm
-        })
-        await refreshUser() // Refresh local user data
+    setTimeout(() => {
+        // Update current user in mock state
+        currentUser.value = {
+            ...currentUser.value,
+            name: profileForm.name,
+            username: profileForm.username,
+            avatar: profileForm.avatar,
+            phone: profileForm.phone,
+            email: profileForm.email
+        }
         toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin cá nhân.', color: 'success' })
-    } catch (e: any) {
-        toast.add({ title: 'Lỗi', description: e.message || 'Không thể lưu.', color: 'error' })
-    } finally {
         isSubmittingProfile.value = false
-    }
+    }, 500)
 }
 </script>

@@ -57,17 +57,10 @@
       </div>
     </div>
 
-    <!-- Pagination -->
-    <div class="flex justify-center mt-6">
-      <AppPagination v-model="page" :limit="limit" :total="totalNotifications" />
-    </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
 definePageMeta({
   layout: 'app'
 })
@@ -76,8 +69,9 @@ useHead({
   title: 'Thông báo - SheetVN'
 })
 
+// --- Mock Data Integration ---
+const { notifications: globalNotifications } = useMockData()
 
-// Logic
 interface Notification {
   id: string
   title: string
@@ -103,43 +97,23 @@ const timeAgo = (dateStr: string) => {
     return date.toLocaleDateString('vi-VN')
 }
 
-// --- Pagination State ---
-const page = ref(1)
-const limit = ref(10) // 10 notifications per page
-
-const queryParams = computed(() => ({
-  page: page.value,
-  limit: limit.value
-}))
-
-const { data: notificationsData, refresh } = await useFetch<any>('/api/notifications', {
-  key: 'notifications-page',
-  params: queryParams,
-  watch: [page]
-})
-
-const totalNotifications = computed(() => notificationsData.value?.total || 0)
-
 const notifications = computed(() => {
-  const raw = notificationsData.value?.data || []
-  return raw.map((n: any) => ({
+  return globalNotifications.value.map(n => ({
     ...n,
     time: timeAgo(n.created_at)
   }))
 })
 
-const handleClick = async (notif: Notification) => {
+const handleClick = (notif: Notification) => {
     if (!notif.read) {
-        // Optimistic
-        if (notificationsData.value && notificationsData.value.data) {
-            const idx = notificationsData.value.data.findIndex((n: any) => n.id === notif.id)
-            if (idx !== -1 && notificationsData.value.data[idx]) notificationsData.value.data[idx].read = true
+        const idx = globalNotifications.value.findIndex(n => n.id === notif.id)
+        if (idx !== -1) {
+          const item = globalNotifications.value[idx]
+          if (item) item.read = true
         }
-        await $fetch('/api/notifications/mark-read', { method: 'POST', body: { id: notif.id } })
     }
     if (notif.link) {
         navigateTo(notif.link)
     }
 }
-
 </script>

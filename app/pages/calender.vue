@@ -439,7 +439,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 
 definePageMeta({
   layout: 'app'
@@ -448,6 +448,9 @@ definePageMeta({
 useHead({
   title: 'Lịch làm việc - SheetVN'
 })
+
+// --- Mock Data Integration ---
+const { tasks: globalTasks, employees: globalEmployees, departments: globalDepartments, currentUser } = useMockData()
 
 // --- Constants & Types ---
 const weekDays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
@@ -487,28 +490,21 @@ const editingId = ref<string | null>(null)
 const form = reactive({
    title: '',
    description: '',
-   assigneeId: undefined as string | undefined, // Changed to undefined for SelectMenu
+   assigneeId: undefined as string | undefined,
    priority: 'medium',
    category: undefined as Category | undefined,
    dueDate: '',
    status: 'todo'
 })
 
-// User Info
-const userInfo = ref({ role: 'Owner' })
-const { data: authData } = await useFetch<any>('/api/auth/me')
-if(authData.value?.success) userInfo.value = authData.value.user
+// User Info (Context)
+const userInfo = computed(() => currentUser.value)
 
-// --- API Data Fetching ---
-// Fetch Departments
-const { data: deptData } = await useFetch<any>('/api/departments')
-const departments = computed(() => deptData.value || [])
+// --- Data Computed from Mock ---
+const departments = computed(() => globalDepartments.value)
 
-// Fetch Employees
-const { data: empInfo } = await useFetch<any>('/api/members')
 const employees = computed(() => {
-   if (!empInfo.value) return []
-   return empInfo.value.map((e: any) => ({
+   return globalEmployees.value.map((e: any) => ({
       id: e.id,
       name: e.name,
       avatar: e.avatar,
@@ -516,6 +512,9 @@ const employees = computed(() => {
       departmentName: getDepartmentName(e.department_id)
    }))
 })
+
+// Tasks - Reactive from global state
+const tasks = computed(() => globalTasks.value)
 
 // --- Assignee Dropdown Input Logic ---
 const assigneeDropdownRef = ref<HTMLElement | null>(null)
@@ -573,33 +572,6 @@ onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside)
 })
 
-// Calculate Date Range for Fetch
-const fetchRange = computed(() => {
-   const start = new Date(currentYear.value, currentMonth.value, 1) // 1st of month
-   const end = new Date(currentYear.value, currentMonth.value + 1, 0) // Last of month
-   // Add buffer for padding days? The API filters strictly by due_date. 
-   // We should fetch a bit more to cover the visible grid (prev month days / next month days)
-   // But to keep simple, let's just fetch the whole month range + 7 days buffer both sides
-   start.setDate(start.getDate() - 7)
-   end.setDate(end.getDate() + 7)
-   
-   return {
-      from: start.toISOString(),
-      to: end.toISOString()
-   }
-})
-
-// Fetch Tasks
-const { data: tasksData, refresh: refreshTasks } = await useFetch<any>('/api/tasks', {
-  query: computed(() => ({
-    from: fetchRange.value.from,
-    to: fetchRange.value.to,
-    limit: 'all'
-  }))
-})
-
-const tasks = computed(() => tasksData.value?.data || [])
-
 // --- Calendar Logic ---
 const calendarDays = computed(() => {
   const year = currentYear.value
@@ -611,8 +583,6 @@ const calendarDays = computed(() => {
   const daysInMonth = lastDayOfMonth.getDate()
   
   // 0 = Sunday, 1 = Monday. We want Monday start.
-  // JS Day: 0(Sun), 1(Mon), ..., 6(Sat)
-  // Adjusted: 1(Mon)... 6(Sat), 7(Sun)
   let startDay = firstDayOfMonth.getDay() 
   if (startDay === 0) startDay = 7
   
@@ -628,7 +598,7 @@ const calendarDays = computed(() => {
      days.push(new Date(year, month, i))
   }
   
-  // Next Month Padding (fill up to 42 cells for consistent grid, or just enough to finish week)
+  // Next Month Padding (fill up to 42 cells)
   const remaining = 42 - days.length
   for (let i = 1; i <= remaining; i++) {
      days.push(new Date(year, month + 1, i))
@@ -654,14 +624,12 @@ const formatDateDisplay = (date: Date) => {
 }
 
 const formatDateISO = (date: Date): string => {
-   // Adjust for timezone to ensure we get YYYY-MM-DD correctly
    const offset = date.getTimezoneOffset()
    const d = new Date(date.getTime() - (offset*60*1000))
    return d.toISOString().split('T')[0] || ''
 }
 
 const getTasksForDate = (date: Date) => {
-   // Filter tasks where due_date matches this date
    const dateStr = formatDateISO(date)
    return tasks.value.filter((t: any) => t.due_date === dateStr)
 }
@@ -695,12 +663,8 @@ const goToToday = () => {
 
 const handleDayClick = (date: Date) => {
    selectedDate.value = date
-   // On Mobile: Open View Modal
    if (window.innerWidth < 640) { // SM breakpoint
       isMobileDayViewOpen.value = true
-   } else {
-      // Desktop: Do nothing or focus? 
-      // The "+" button is available on hover. 
    }
 }
 
@@ -720,7 +684,6 @@ const openCreateModal = (date: Date) => {
    assigneeSearchQuery.value = ''
    form.assigneeId = undefined
    
-   // Close mobile view if open
    isMobileDayViewOpen.value = false
    isModalOpen.value = true
 }
@@ -748,42 +711,57 @@ const submitTask = async () => {
    if (!form.title || !form.assigneeId || !form.dueDate) return
    isSubmitting.value = true
    
-   try {
-      const payload = {
-         title: form.title,
-         description: form.description,
-         assignee_id: form.assigneeId || '',
-         priority: form.priority,
-         category: form.category,
-         due_date: form.dueDate,
-         status: isEditing.value ? form.status : 'todo'
-      }
-      
-      const endpoint = isEditing.value ? `/api/tasks/${editingId.value}` : '/api/tasks'
-      const method = isEditing.value ? 'PUT' : 'POST'
-      
-      await $fetch(endpoint, {
-         method,
-         body: payload
-      })
-      
-      useToast().add({
-         title: 'Thành công',
-         description: isEditing.value ? 'Đã cập nhật nhiệm vụ' : 'Đã tạo nhiệm vụ mới',
-         color: 'success'
-      })
-      
-      isModalOpen.value = false
-      refreshTasks()
-   } catch (error: any) {
-      useToast().add({
-         title: 'Lỗi',
-         description: error.message || 'Có lỗi xảy ra',
-         color: 'error'
-      })
-   } finally {
-      isSubmitting.value = false
-   }
+   // Mock Delay
+   setTimeout(() => {
+       try {
+           if (isEditing.value && editingId.value) {
+               // Update
+               const idx = globalTasks.value.findIndex((t: any) => t.id === editingId.value)
+               if (idx !== -1) {
+                   globalTasks.value[idx] = {
+                       ...globalTasks.value[idx],
+                       title: form.title,
+                       description: form.description,
+                       assignee_id: form.assigneeId,
+                       priority: form.priority,
+                       category: form.category,
+                       due_date: form.dueDate,
+                       status: form.status
+                   }
+               }
+           } else {
+               // Create
+               const newTask = {
+                   id: 'task-' + Date.now(),
+                   title: form.title,
+                   description: form.description,
+                   assignee_id: form.assigneeId,
+                   priority: form.priority,
+                   category: form.category,
+                   due_date: form.dueDate,
+                   status: 'todo',
+                   department_id: employees.value.find(e => e.id === form.assigneeId)?.departmentId || 'dept-1' // Assign dept based on user
+               }
+               globalTasks.value.push(newTask as any)
+           }
+           
+           useToast().add({
+              title: 'Thành công',
+              description: isEditing.value ? 'Đã cập nhật nhiệm vụ' : 'Đã tạo nhiệm vụ mới',
+              color: 'success'
+           })
+           
+           isModalOpen.value = false
+       } catch (error: any) {
+           useToast().add({
+              title: 'Lỗi',
+              description: 'Có lỗi xảy ra',
+              color: 'error'
+           })
+       } finally {
+           isSubmitting.value = false
+       }
+   }, 500)
 }
 
 const selectedDateTasks = computed(() => {

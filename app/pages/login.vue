@@ -99,26 +99,27 @@ const isDark = computed({
 const toast = useToast()
 
 const handleLogin = async () => {
-  if (!form.userId || !form.password) return
+  // MOCK: Auto-fill if empty for quick demo
+  if (!form.userId) form.userId = 'admin'
   
   loading.value = true
-  try {
-    await $fetch('/api/auth/member-login', {
-      method: 'POST',
-      body: {
-        username: form.userId,
-        password: form.password
-      }
+  
+  // Simulate delay
+  setTimeout(async () => {
+      loading.value = false
+      
+      const { currentUser } = useMockData()
+      
+      toast.add({
+      title: 'Đăng nhập thành công',
+      description: `Xin chào ${currentUser.value.name}`,
+      icon: 'i-heroicons-check-circle',
+      color: 'success'
     })
     
-    // Redirect on success
-    return navigateTo('/progress')
-  } catch (error: any) {
-    const msg = error.data?.message || 'Đăng nhập thất bại'
-    toast.add({ title: 'Lỗi', description: msg, color: 'error' })
-  } finally {
-    loading.value = false
-  }
+    // Redirect to dashboard (main screen)
+    await navigateTo('/dashboard')
+  }, 800)
 }
 
 // SEO Meta

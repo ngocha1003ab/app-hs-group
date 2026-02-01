@@ -147,51 +147,34 @@ const isDark = computed({
   }
 })
 
-// Auto-redirect if session exists
-const licenseAuthCookie = useCookie('license_key')
-const memberAuthCookie = useCookie('member_id')
-
-if (licenseAuthCookie.value) {
-  if (memberAuthCookie.value) {
-    await navigateTo('/progress')
-  } else {
-    await navigateTo('/dashboard')
-  }
-}
+// MOCK: Auto-redirect not strictly needed for demo, but kept simple
+// const licenseAuthCookie = useCookie('license_key')
+// const memberAuthCookie = useCookie('member_id')
+// if (licenseAuthCookie.value || memberAuthCookie.value) { ... }
 
 const handleLicenseSubmit = async () => {
-  if (!licenseKey.value.trim()) return
+  // MOCK: Bypass validation
+  if (!licenseKey.value.trim()) {
+     // Optional: fill fake key for UX
+     licenseKey.value = 'SHEETVN-DEMO-KEY-2024'
+  }
   
   loading.value = true
-  try {
-    const res = await $fetch<{ user: { email: string } }>('/api/auth/login', {
-      method: 'POST',
-      body: {
-        licenseKey: licenseKey.value
-      }
-    })
-
-    const { setLicense } = useLicense()
-    setLicense(res.user as any)
-
+  
+  // Simulate network delay
+  setTimeout(async () => {
+    loading.value = false
+    
+    // Mock success
     toast.add({
-      title: 'Đăng nhập thành công',
-      description: `Xin chào ${res.user.email}`,
+      title: 'Kích hoạt thành công',
+      description: `Chào mừng doanh nghiệp đến với SheetVN`,
       icon: 'i-heroicons-check-circle',
       color: 'success'
     })
     
     await navigateTo('/dashboard')
-  } catch (error: any) {
-    toast.add({
-      title: 'Lỗi xác thực',
-      description: 'Không thể kiểm tra giấy phép. Vui lòng thử lại.',
-      icon: 'i-heroicons-exclamation-circle',
-      color: 'error'
-    })
-  } finally {
-    loading.value = false
-  }
+  }, 800)
 }
 
 // SEO Meta

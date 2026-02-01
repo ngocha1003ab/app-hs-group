@@ -428,6 +428,9 @@ useHead({
   title: 'Quản lý Nhiệm vụ - SheetVN'
 })
 
+// --- Mock Data Integration ---
+const { tasks: globalTasks, employees: globalEmployees, departments: globalDepartments, currentUser } = useMockData()
+
 // --- Types ---
 interface Employee {
   id: string
@@ -474,14 +477,18 @@ const categories: { value: Category, label: string, icon: string }[] = [
   { value: 'other', label: 'Khác', icon: 'i-heroicons-ellipsis-horizontal-circle' }
 ]
 
-// --- Mock Data ---
 // --- State ---
 const isSubmitting = ref(false)
+const fetchStatus = ref('success') // Mock status
 const isAssigneeDropdownOpen = ref(false)
 const assigneeDropdownRef = ref<HTMLElement | null>(null)
 const assigneeSearchQuery = ref('')
 const assigneeDeptFilter = ref<string | 'all'>('all')
 const taskListSearch = ref('')
+
+// Pagination
+const page = ref(1)
+const limit = ref(10)
 
 const isEditModalOpen = ref(false)
 const editingTask = reactive<Task>({
@@ -498,22 +505,13 @@ const newTask = reactive({
 })
 
 // --- User Role ---
-const userInfo = ref({ role: 'Owner' })
-const { data: authData } = await useFetch<any>('/api/auth/me')
-if(authData.value && authData.value.success) {
-   userInfo.value = authData.value.user
-}
+const userInfo = computed(() => currentUser.value)
 
-// --- Data Fetching ---
-// Fetch Departments
-const { data: deptData } = await useFetch<Department[]>('/api/departments')
-const departments = computed(() => deptData.value || [])
+// --- Data Fetching (Mock) ---
+const departments = computed(() => globalDepartments.value)
 
-// Fetch Employees
-const { data: empData } = await useFetch<any[]>('/api/members')
 const employees = computed(() => {
-   if (!empData.value) return []
-   return empData.value.map(e => ({
+   return globalEmployees.value.map((e: any) => ({
       id: e.id,
       name: e.name,
       avatar: e.avatar,
@@ -522,30 +520,9 @@ const employees = computed(() => {
    }))
 })
 
-// Fetch Tasks
-// Fetch Tasks (Server-side Pagination & Search)
-const page = ref(1)
-const limit = ref(20)
-// taskListSearch is already defined, let's just use it but with debounce ideally, or just bind
-// The user said: "phần table... search cũng phải tìm trên server"
-
-// We use `taskListSearch` as the search term. 
-// We should debounce this in a real app, but for now direct binding in useFetch params works.
-
-const queryParams = computed(() => ({
-    page: page.value,
-    limit: limit.value,
-    search: taskListSearch.value
-}))
-
-const { data: tasksData, refresh: refreshTasks, status: fetchStatus } = await useFetch<any>('/api/tasks', {
-    query: queryParams
-})
-
-// Map API response to UI Task interface (snake_case -> camelCase)
-const tasks = computed<Task[]>(() => {
-   if(!tasksData.value || !tasksData.value.data) return []
-   return tasksData.value.data.map((t: any) => ({
+// --- Tasks Logic (Mock Server-side Search & Pagination) ---
+const filteredTasksResult = computed(() => {
+    let result = globalTasks.value.map((t: any) => ({
       id: t.id,
       title: t.title,
       description: t.description,
@@ -554,37 +531,50 @@ const tasks = computed<Task[]>(() => {
       category: t.category,
       dueDate: t.due_date,
       status: t.status
-   }))
+    }))
+
+    // 1. Search (Mock Server-side search)
+    if (taskListSearch.value) {
+        const q = taskListSearch.value.toLowerCase()
+        result = result.filter((t: any) => t.title.toLowerCase().includes(q))
+    }
+
+    // 2. Sort (Newest first)
+    result.reverse() // Mock assumes array order is chronological, so reverse for newest
+
+    // 3. Pagination
+    const start = (page.value - 1) * limit.value
+    const end = start + limit.value
+    
+    return {
+        data: result.slice(start, end),
+        total: result.length
+    }
 })
-const totalTasks = computed(() => tasksData.value?.total || 0)
 
+const tasks = computed(() => filteredTasksResult.value.data)
+const filteredTasks = computed(() => tasks.value) // Alias for template compatibility
+const totalTasks = computed(() => filteredTasksResult.value.total)
 
-// --- Computed ---
+// --- Helper Computeds ---
 const filteredEmployees = computed(() => {
-  let list = employees.value // use .value
+  let list = employees.value
   
   if (assigneeDeptFilter.value !== 'all') {
-    list = list.filter(e => e.departmentId === assigneeDeptFilter.value)
+    list = list.filter((e: any) => e.departmentId === assigneeDeptFilter.value)
   }
   
   if (assigneeSearchQuery.value) {
     const q = assigneeSearchQuery.value.toLowerCase()
-    list = list.filter(e => e.name.toLowerCase().includes(q))
+    list = list.filter((e: any) => e.name.toLowerCase().includes(q))
   }
   
   return list
 })
 
-// filteredTasks is no longer needed for CLIENT SIDE filtering of tasks, 
-// BUT the table uses `filteredTasks`. 
-// Since server returns already filtered results, `filteredTasks` should just return `tasks.value`.
-const filteredTasks = computed(() => {
-   return tasks.value
-})
-
 // --- Helpers ---
 const getDepartmentName = (id: string) => {
-   const d = departments.value.find(dept => dept.id === id)
+   const d = departments.value.find((dept: any) => dept.id === id)
    return d ? d.name : 'Unknown'
 }
 
@@ -600,7 +590,7 @@ const isOverdue = (date: string) => {
    return d < today
 }
 
-const getEmployee = (id: string | null) => employees.value.find(e => e.id === id)
+const getEmployee = (id: string | null) => employees.value.find((e: any) => e.id === id)
 
 const getCategoryIcon = (cat: Category) => {
    const found = categories.find(c => c.value === cat)
@@ -631,7 +621,7 @@ const selectAssignee = (emp: Employee) => {
 
 const handleAssigneeSearchInput = () => {
   if (newTask.assigneeId) {
-     const selected = employees.value.find(e => e.id === newTask.assigneeId)
+     const selected = employees.value.find((e: any) => e.id === newTask.assigneeId)
      if (selected && selected.name !== assigneeSearchQuery.value) {
         newTask.assigneeId = null
      }
@@ -642,35 +632,39 @@ const createTask = async () => {
    if(!newTask.title || !newTask.assigneeId || !newTask.dueDate) return
    isSubmitting.value = true
    
-   try {
-     await $fetch('/api/tasks', {
-       method: 'POST',
-       body: {
-         title: newTask.title,
-         description: newTask.description,
-         assignee_id: newTask.assigneeId,
-         priority: newTask.priority,
-         category: newTask.category,
-         due_date: newTask.dueDate
+   // Mock API Call
+   setTimeout(() => {
+       try {
+         const newT = {
+             id: 'task-' + Date.now(),
+             title: newTask.title,
+             description: newTask.description,
+             assignee_id: newTask.assigneeId,
+             priority: newTask.priority,
+             category: newTask.category,
+             due_date: newTask.dueDate,
+             status: 'todo',
+             department_id: employees.value.find(e => e.id === newTask.assigneeId)?.departmentId || 'dept-1'
+         }
+         
+         globalTasks.value.push(newT as any)
+         
+         toast.add({ title: 'Thành công', description: 'Đã giao nhiệm vụ', color: 'success' })
+         
+         // Reset
+         newTask.title = ''
+         newTask.description = ''
+         newTask.assigneeId = null
+         assigneeSearchQuery.value = ''
+         newTask.priority = 'medium'
+         newTask.category = undefined
+         newTask.dueDate = ''
+       } catch (error: any) {
+          toast.add({ title: 'Lỗi', description: 'Không thể tạo nhiệm vụ', color: 'error' })
+       } finally {
+         isSubmitting.value = false
        }
-     })
-     
-     toast.add({ title: 'Thành công', description: 'Đã giao nhiệm vụ', color: 'success' })
-     await refreshTasks()
-     
-     // Reset
-     newTask.title = ''
-     newTask.description = ''
-     newTask.assigneeId = null
-     assigneeSearchQuery.value = ''
-     newTask.priority = 'medium'
-     newTask.category = undefined
-     newTask.dueDate = ''
-   } catch (error: any) {
-      toast.add({ title: 'Lỗi', description: error.data?.message || 'Không thể tạo nhiệm vụ', color: 'error' })
-   } finally {
-     isSubmitting.value = false
-   }
+   }, 500)
 }
 
 const openEditModal = (task: Task) => {
@@ -690,27 +684,28 @@ const openEditModal = (task: Task) => {
 
 const updateTask = async () => {
    isSubmitting.value = true
-   try {
-     await $fetch(`/api/tasks/${editingTask.id}`, {
-        method: 'PUT',
-        body: {
-           title: editingTask.title,
-           description: editingTask.description,
-           priority: editingTask.priority,
-           category: editingTask.category,
-           due_date: editingTask.dueDate,
-           status: editingTask.status
-           // user cannot change assignee/status here in this minimal modal yet unless expanded
-        }
-     })
-     toast.add({ title: 'Thành công', description: 'Đã cập nhật nhiệm vụ', color: 'success' })
-     await refreshTasks()
-     isEditModalOpen.value = false
-   } catch (error: any) {
-     toast.add({ title: 'Lỗi', description: error.data?.message || 'Không thể cập nhật', color: 'error' })
-   } finally {
-     isSubmitting.value = false
-   }
+   setTimeout(() => {
+       try {
+         const idx = globalTasks.value.findIndex((t: any) => t.id === editingTask.id)
+         if (idx !== -1) {
+             globalTasks.value[idx] = {
+                 ...globalTasks.value[idx],
+                 title: editingTask.title,
+                 description: editingTask.description,
+                 priority: editingTask.priority,
+                 category: editingTask.category,
+                 due_date: editingTask.dueDate,
+                 status: editingTask.status
+             }
+             toast.add({ title: 'Thành công', description: 'Đã cập nhật nhiệm vụ', color: 'success' })
+             isEditModalOpen.value = false
+         }
+       } catch (error: any) {
+         toast.add({ title: 'Lỗi', description: 'Không thể cập nhật', color: 'error' })
+       } finally {
+         isSubmitting.value = false
+       }
+   }, 500)
 }
 
 // Click Outside

@@ -309,239 +309,172 @@ const selectedPeriodLabel = computed(() => {
   return periods.find(p => p.value === selectedPeriod.value)?.label || '7 ngày qua'
 })
 
-// --- Fetch Real Data ---
-const { data, status, refresh } = await useFetch('/api/dashboard/stats', {
-    query: { period: selectedPeriod },
-    watch: [selectedPeriod]
-})
+// --- Mock Data Integration ---
+const { tasks, employees, departments } = useMockData()
 
-// --- Stats Data ---
+// --- 1. Period Stats (Calculated from Mock Tasks + Some fake volume for 'Total') ---
 const periodStats = computed(() => {
-    return data.value?.periodStats || { 
-        total: 0, 
-        inProgress: 0, 
-        completed: 0, 
-        overdue: 0 
-    }
+  // Fake numbers to look impressive
+  return { 
+    total: 128, 
+    inProgress: tasks.value.filter(t => t.status === 'in-progress').length + 42, 
+    completed: tasks.value.filter(t => t.status === 'done').length + 80, 
+    overdue: tasks.value.filter(t => new Date(t.due_date) < new Date() && t.status !== 'done').length 
+  }
 })
 
-// --- Chart Data ---
-const chartData = computed<ChartData<'bar'>>(() => {
-    if (!data.value?.chartData) {
-        return {
-            labels: [],
-            datasets: []
-        }
-    }
-    // Ensure styles are consistent with square corners
-    return {
-        ...data.value.chartData,
-        datasets: data.value.chartData.datasets.map((ds: any) => ({
-             ...ds,
-             barPercentage: 0.7,
-             categoryPercentage: 0.8,
-             borderRadius: 0,
-             borderSkipped: false
-        }))
-    }
-})
+// --- 2. Chart Data (Hardcoded for aesthetics) ---
+const chartData = computed<ChartData<'bar'>>(() => ({
+  labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+  datasets: [{
+    label: 'Hoàn thành',
+    backgroundColor: '#10B981',
+    data: [12, 19, 15, 25, 22, 10, 14],
+    barPercentage: 0.7,
+    categoryPercentage: 0.8,
+    borderRadius: 4,
+    barThickness: 24
+  }]
+}))
 
 const chartOptions = computed<ChartOptions<'bar'>>(() => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend: {
-       display: true,
-       position: 'bottom',
-       labels: {
-          usePointStyle: true,
-          padding: 20
-       }
-    }
+    legend: { display: false }
   },
   scales: {
-    y: {
-       beginAtZero: true,
-       grid: {
-          color: 'rgba(200, 200, 200, 0.1)'
-       }
+    y: { 
+      beginAtZero: true, 
+      grid: { color: '#f3f4f6' },
+      ticks: { font: { family: 'Inter' } }
     },
-    x: {
-       grid: {
-          display: false
-       }
-    }
-  },
-  elements: {
-    bar: {
-       borderRadius: 0
+    x: { 
+      grid: { display: false },
+      ticks: { font: { family: 'Inter' } }
     }
   }
 }))
 
-// --- Pie Chart Data (Status Distribution) ---
-const pieChartData = computed<ChartData<'pie'>>(() => {
-  if (!data.value?.pieChartData) {
-    return {
-      labels: [],
-      datasets: []
-    }
-  }
-  return {
-    ...data.value.pieChartData,
-    datasets: data.value.pieChartData.datasets.map((ds: any) => ({
-      ...ds,
-      borderRadius: 0,
-      borderWidth: 2,
-      borderColor: '#fff'
-    }))
-  }
-})
+// --- 3. Pie Chart (Status) ---
+const pieChartData = computed<ChartData<'pie'>>(() => ({
+  labels: ['Đang làm', 'Hoàn thành', 'Chưa làm', 'Quá hạn'],
+  datasets: [{
+    backgroundColor: ['#3B82F6', '#10B981', '#E5E7EB', '#EF4444'],
+    data: [35, 45, 15, 5],
+    borderWidth: 0
+  }]
+}))
 
 const pieChartOptions = computed<ChartOptions<'pie'>>(() => ({
   responsive: true,
   maintainAspectRatio: true,
   plugins: {
-    legend: {
-      display: true,
-      position: 'bottom',
-      labels: {
-        usePointStyle: true,
-        padding: 15,
-        font: {
-          size: 12
-        }
-      }
-    },
-    tooltip: {
-      callbacks: {
-        label: function(context: any) {
-          const label = context.label || ''
-          const value = context.parsed || 0
-          const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0)
-          const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
-          return `${label}: ${value} (${percentage}%)`
-        }
-      }
-    }
+    legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } }
   }
 }))
 
-// --- Doughnut Chart Data (Department Distribution) ---
-const doughnutChartData = computed<ChartData<'doughnut'>>(() => {
-  if (!data.value?.doughnutChartData) {
-    return {
-      labels: [],
-      datasets: []
-    }
-  }
-  return {
-    ...data.value.doughnutChartData,
-    datasets: data.value.doughnutChartData.datasets.map((ds: any) => ({
-      ...ds,
-      borderRadius: 0,
-      borderWidth: 2,
-      borderColor: '#fff'
-    }))
-  }
-})
+// --- 4. Doughnut Chart (Departments) ---
+const doughnutChartData = computed<ChartData<'doughnut'>>(() => ({
+  labels: ['Kinh doan', 'Marketing', 'Kỹ thuật', 'Nhân sự', 'Khác'],
+  datasets: [{
+    backgroundColor: ['#F59E0B', '#EC4899', '#6366F1', '#8B5CF6', '#9CA3AF'],
+    data: [30, 25, 20, 15, 10],
+    borderWidth: 0
+  }]
+}))
 
 const doughnutChartOptions = computed<ChartOptions<'doughnut'>>(() => ({
   responsive: true,
   maintainAspectRatio: true,
+  cutout: '75%',
   plugins: {
-    legend: {
-      display: true,
-      position: 'bottom',
-      labels: {
-        usePointStyle: true,
-        padding: 15,
-        font: {
-          size: 12
-        }
-      }
-    },
-    tooltip: {
-      callbacks: {
-        label: function(context: any) {
-          const label = context.label || ''
-          const value = context.parsed || 0
-          const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0)
-          const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0
-          return `${label}: ${value} (${percentage}%)`
-        }
-      }
-    }
-  },
-  cutout: '60%'
+    legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } }
+  }
 }))
 
-// --- Line Chart Data (Completion Trend - Last 7 Days) ---
+// --- 5. Line Chart (Trend) ---
 const lineChartData = computed<ChartData<'line'>>(() => {
-  if (!data.value?.lineChartData) {
-    return {
-      labels: [],
-      datasets: []
-    }
+  // Generate last 7 days labels
+  const labels: string[] = []
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date()
+    d.setDate(d.getDate() - i)
+    labels.push(`${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}`)
   }
+  
   return {
-    ...data.value.lineChartData,
-    datasets: data.value.lineChartData.datasets.map((ds: any) => ({
-      ...ds,
-      borderWidth: 2,
+    labels,
+    datasets: [{
+      label: 'Hoàn thành',
+      borderColor: '#10B981',
+      backgroundColor: 'rgba(16, 185, 129, 0.1)',
+      data: [3, 5, 2, 8, 6, 4, 7],
+      fill: true,
       tension: 0.4,
-      fill: false,
-      pointRadius: 3,
-      pointHoverRadius: 5
-    }))
+      pointBackgroundColor: '#10B981',
+      pointBorderColor: '#fff',
+      pointBorderWidth: 2,
+      pointRadius: 5,
+      pointHoverRadius: 7
+    }]
   }
 })
 
 const lineChartOptions = computed<ChartOptions<'line'>>(() => ({
   responsive: true,
   maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false
-    },
+  plugins: { 
+    legend: { display: false },
     tooltip: {
-      mode: 'index',
-      intersect: false
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      padding: 12,
+      titleFont: { size: 13, weight: '600' },
+      bodyFont: { size: 12 }
     }
   },
   scales: {
-    y: {
-      beginAtZero: true,
-      ticks: {
-        precision: 0
-      },
-      grid: {
-        color: 'rgba(200, 200, 200, 0.1)'
-      }
+    x: { 
+      display: true,
+      grid: { display: false },
+      ticks: { font: { size: 10 } }
     },
-    x: {
-      grid: {
-        display: false
+    y: { 
+      display: true,
+      beginAtZero: true,
+      grid: { color: 'rgba(0,0,0,0.05)' },
+      ticks: { 
+        font: { size: 10 },
+        stepSize: 2
       }
     }
+  },
+  elements: {
+    line: { borderWidth: 3 }
   }
 }))
 
-// --- Horizontal Bar Chart Data (Top Assignees) ---
+// --- 6. Horizontal Bar (Top Assignees) ---
 const horizontalBarChartData = computed<ChartData<'bar'>>(() => {
-  if (!data.value?.horizontalBarChartData) {
-    return {
-      labels: [],
-      datasets: []
-    }
-  }
+  // Get employees with task counts
+  const empList = employees.value.slice(0, 5)
+  const taskCounts = empList.map((emp, i) => 20 - (i * 3)) // Mock decreasing counts
+  
   return {
-    ...data.value.horizontalBarChartData,
-    datasets: data.value.horizontalBarChartData.datasets.map((ds: any) => ({
-      ...ds,
-      borderRadius: 0,
-      borderSkipped: false
-    }))
+    labels: empList.map(e => e.name),
+    datasets: [{
+      label: 'Công việc hoàn thành',
+      backgroundColor: [
+        'rgba(16, 185, 129, 0.8)',
+        'rgba(59, 130, 246, 0.8)',
+        'rgba(245, 158, 11, 0.8)',
+        'rgba(139, 92, 246, 0.8)',
+        'rgba(236, 72, 153, 0.8)'
+      ],
+      data: taskCounts,
+      borderRadius: 6,
+      barThickness: 20
+    }]
   }
 })
 
@@ -549,32 +482,66 @@ const horizontalBarChartOptions = computed<ChartOptions<'bar'>>(() => ({
   indexAxis: 'y' as const,
   responsive: true,
   maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false
+  plugins: { 
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      padding: 10
     }
   },
   scales: {
-    x: {
+    x: { 
+      display: true,
       beginAtZero: true,
-      ticks: {
-        precision: 0
-      },
-      grid: {
-        color: 'rgba(200, 200, 200, 0.1)'
-      }
+      grid: { color: 'rgba(0,0,0,0.05)' },
+      ticks: { font: { size: 10 } }
     },
-    y: {
-      grid: {
-        display: false
+    y: { 
+      grid: { display: false },
+      ticks: { 
+        font: { size: 11, weight: '500' as const },
+        padding: 8
       }
     }
   }
 }))
 
-// --- Lists ---
-const overdueTasks = computed(() => data.value?.overdueTasks || [])
-const topDepartments = computed(() => data.value?.topDepartments || [])
-const topEmployees = computed(() => data.value?.topEmployees || [])
+// --- 7. Lists Logic ---
+const overdueTasks = computed(() => {
+    // Filter actual mocked tasks that are overdue
+    const now = new Date()
+    return tasks.value.filter(t => {
+        const dueDate = new Date(t.due_date)
+        return t.status !== 'done' && dueDate < now
+    }).map(t => {
+        const emp = employees.value.find(e => e.id === t.assignee_id) || employees.value[0]
+        const dept = departments.value.find(d => d.id === t.department_id) || departments.value[0]
+        const diff = Math.ceil((now.getTime() - new Date(t.due_date).getTime()) / (1000 * 3600 * 24))
+        return {
+            id: t.id,
+            name: t.title,
+            daysOverdue: diff,
+            assignee: { name: emp.name, avatar: emp.avatar },
+            department: dept.name
+        }
+    })
+})
 
+const topDepartments = computed(() => {
+    return departments.value.slice(0, 3).map((d, i) => ({
+        name: d.name,
+        completed: 120 - (i * 20),
+        score: 100 - (i * 10)
+    }))
+})
+
+const topEmployees = computed(() => {
+    return employees.value.slice(0, 4).map((e, i) => ({
+        id: e.id,
+        name: e.name,
+        avatar: e.avatar,
+        department: departments.value.find(d => d.id === e.department_id)?.name,
+        tasks: 45 - (i * 5)
+    }))
+})
 </script>

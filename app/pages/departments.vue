@@ -275,6 +275,9 @@ useHead({
   title: 'Quản lý Phòng Ban - SheetVN'
 })
 
+// --- Mock Data Integration ---
+const { departments: globalDepartments, employees: globalEmployees } = useMockData()
+
 // --- State ---
 const searchQuery = ref('')
 const isCreating = ref(false)
@@ -304,10 +307,27 @@ interface Department {
   members: Member[]
 }
 
-// --- Data Fetching ---
-const { data: departmentsData, refresh } = await useFetch<Department[]>('/api/departments')
-
-const departments = computed(() => departmentsData.value || [])
+// --- Data from Mock ---
+const departments = computed<Department[]>(() => {
+  return globalDepartments.value.map(dept => {
+    // Get members for this department
+    const members = globalEmployees.value
+      .filter(emp => emp.department_id === dept.id)
+      .map(emp => ({
+        id: emp.id,
+        name: emp.name,
+        avatar: emp.avatar,
+        role: emp.role as 'Leader' | 'Member'
+      }))
+    
+    return {
+      id: dept.id,
+      name: dept.name,
+      description: dept.description,
+      members
+    }
+  })
+})
 
 // --- Computed ---
 const filteredDepartments = computed(() => {
@@ -326,31 +346,34 @@ const createDepartment = async () => {
   if (!newDepartment.name) return
   
   isCreating.value = true
-  try {
-    await $fetch('/api/departments', {
-      method: 'POST',
-      body: {
+  
+  // Mock API Call
+  setTimeout(() => {
+    try {
+      const newDept = {
+        id: 'dept-' + Date.now(),
         name: newDepartment.name,
         description: newDepartment.description
       }
-    })
-    
-    toast.add({ title: 'Thành công', description: 'Đã tạo phòng ban mới', color: 'success' })
-    
-    // Reset form & Refresh list
-    newDepartment.name = ''
-    newDepartment.description = ''
-    await refresh()
-    
-  } catch (error: any) {
-    toast.add({ 
-      title: 'Lỗi', 
-      description: error.data?.message || 'Không thể tạo phòng ban', 
-      color: 'error' 
-    })
-  } finally {
-    isCreating.value = false
-  }
+      
+      globalDepartments.value.push(newDept)
+      
+      toast.add({ title: 'Thành công', description: 'Đã tạo phòng ban mới', color: 'success' })
+      
+      // Reset form
+      newDepartment.name = ''
+      newDepartment.description = ''
+      
+    } catch (error: any) {
+      toast.add({ 
+        title: 'Lỗi', 
+        description: 'Không thể tạo phòng ban', 
+        color: 'error' 
+      })
+    } finally {
+      isCreating.value = false
+    }
+  }, 500)
 }
 
 const openEditModal = (dept: Department) => {
@@ -361,24 +384,27 @@ const openEditModal = (dept: Department) => {
 }
 
 const updateDepartment = async () => {
-  try {
-    await $fetch(`/api/departments/${editingDepartment.id}`, {
-      method: 'PUT',
-      body: {
-        name: editingDepartment.name,
-        description: editingDepartment.description
+  // Mock update
+  setTimeout(() => {
+    try {
+      const idx = globalDepartments.value.findIndex(d => d.id === editingDepartment.id)
+      if (idx !== -1) {
+        const dept = globalDepartments.value[idx]
+        if (dept) {
+          dept.name = editingDepartment.name
+          dept.description = editingDepartment.description
+        }
       }
-    })
-    
-    toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin', color: 'success' })
-    await refresh()
-    isEditModalOpen.value = false
-  } catch (error: any) {
-    toast.add({ 
-       title: 'Lỗi', 
-       description: error.data?.message || 'Không thể cập nhật', 
-       color: 'error' 
-    })
-  }
+      
+      toast.add({ title: 'Thành công', description: 'Đã cập nhật thông tin', color: 'success' })
+      isEditModalOpen.value = false
+    } catch (error: any) {
+      toast.add({ 
+         title: 'Lỗi', 
+         description: 'Không thể cập nhật', 
+         color: 'error' 
+      })
+    }
+  }, 300)
 }
 </script>

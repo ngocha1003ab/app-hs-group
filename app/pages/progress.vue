@@ -453,29 +453,15 @@ const getColumnLength = (tab: string) => {
 }
 
 // --- User Info for Commenting ---
-const userId = ref<string>('') // To check self
-const userAvatar = ref('')
-const userName = ref('')
+const { tasks: globalTasks, employees: globalEmployees, departments: globalDepartments, currentUser, comments: globalComments } = useMockData()
 
-// Fetch User
-const { data: authData } = await useFetch<any>('/api/auth/me')
-if (authData.value && authData.value.success) {
-   userId.value = authData.value.user.role === 'Owner' ? 'owner' : authData.value.user.id // This might need adjustment if 'id' is mapped
-   // Actually auth/me returns the user object we constructed.
-   // Let's rely on userInfo from auth/me
-   userName.value = authData.value.user.name
-   userAvatar.value = authData.value.user.avatar
-}
+const userId = computed(() => currentUser.value.id)
+const userAvatar = computed(() => currentUser.value.avatar)
+const userName = computed(() => currentUser.value.name)
 
-// --- Data Fetching ---
-// Need departments to map names? API tasks might return IDs.
-// Let's assume we can get dept names or tasks API includes them?
-// The tasks API returns department_id. We fetch depts mapping.
-const { data: deptData } = await useFetch<any[]>('/api/departments')
-const departments = computed(() => deptData.value || [])
-
-const { data: empData } = await useFetch<any[]>('/api/members')
-const employees = computed(() => empData.value || [])
+// --- Data Computed from Mock ---
+const departments = computed(() => globalDepartments.value)
+const employees = computed(() => globalEmployees.value)
 
 const getDeptName = (id: string) => {
    const d = departments.value.find(x => x.id === id)
@@ -486,105 +472,52 @@ const getMember = (id: string) => {
    return employees.value.find(x => x.id === id)
 }
 
-// --- Infinite Scroll & Data Management ---
-
-// Helper Composable for Column Data
-const useColumnTasks = (status: Task['status']) => {
-    const page = ref(1)
-    const limit = 20
-    const hasMore = ref(true)
-    const tasks = ref<Task[]>([])
-    const isLoading = ref(false)
-    const total = ref(0)
-    
-    // Capture headers for SSR
-    const headers = useRequestHeaders(['cookie'])
-
-    const fetchTasks = async () => {
-        if (!hasMore.value && page.value !== 1) return
-        
-        isLoading.value = true
-        try {
-            const res = await $fetch<any>('/api/tasks', {
-                params: {
-                    page: page.value,
-                    limit,
-                    status
-                },
-                headers: import.meta.server ? headers : undefined
-            })
-            
-            const newTasks = res.data.map((t: any) => {
-                const assignee = getMember(t.assignee_id)
-                return {
-                    id: t.id,
-                    title: t.title,
-                    description: t.description,
-                    priority: t.priority,
-                    category: t.category,
-                    department: getDeptName(t.department_id),
-                    dueDate: t.due_date,
-                    status: t.status,
-                    assignee: {
-                        name: assignee ? assignee.name : 'Unknown',
-                        avatar: assignee ? assignee.avatar : '',
-                        isLeader: assignee ? assignee.role === 'Leader' : false
-                    },
-                    comments: []
-                }
-            })
-
-            if (page.value === 1) {
-                tasks.value = newTasks
-            } else {
-                tasks.value = [...tasks.value, ...newTasks]
-            }
-
-            total.value = res.total
-            hasMore.value = tasks.value.length < res.total
-            page.value++
-        } catch (error) {
-            console.error(`Error fetching ${status} tasks:`, error)
-        } finally {
-            isLoading.value = false
+// --- Transform mock tasks to UI Task format ---
+const transformedTasks = computed<Task[]>(() => {
+    return globalTasks.value.map((t: any) => {
+        const assignee = getMember(t.assignee_id)
+        return {
+            id: t.id,
+            title: t.title,
+            description: t.description,
+            priority: t.priority,
+            category: t.category,
+            department: getDeptName(t.department_id),
+            dueDate: t.due_date,
+            status: t.status,
+            assignee: {
+                name: assignee ? assignee.name : 'Unknown',
+                avatar: assignee ? assignee.avatar : '',
+                isLeader: assignee ? assignee.role === 'Leader' : false
+            },
+            comments: globalComments.value.map((c: any) => ({
+                id: c.id,
+                userId: c.user_id,
+                userName: getMember(c.user_id)?.name || 'Unknown',
+                userAvatar: getMember(c.user_id)?.avatar || '',
+                content: c.content,
+                image: c.image,
+                createdAt: c.created_at
+            }))
         }
-    }
-    
-    return { tasks, fetchTasks, hasMore, isLoading, total }
-}
-
-const todoState = useColumnTasks('todo')
-const inProgressState = useColumnTasks('in-progress')
-const doneState = useColumnTasks('done')
-
-// Initial Load
-await Promise.all([
-    todoState.fetchTasks(),
-    inProgressState.fetchTasks(),
-    doneState.fetchTasks()
-])
-
-
-// --- Drag & Drop Columns ---
-const [todoParent, todoTasks] = useDragAndDrop<Task>(todoState.tasks.value, { group: 'tasks', sortable: true })
-const [inProgressParent, inProgressTasks] = useDragAndDrop<Task>(inProgressState.tasks.value, { group: 'tasks', sortable: true })
-const [doneParent, doneTasks] = useDragAndDrop<Task>(doneState.tasks.value, { group: 'tasks', sortable: true })
-
-// Sync state tasks to drag and drop refs when fetched
-watch(todoState.tasks, (newVal) => { 
-    // If we just replace the value, it might reset the scroll or state.
-    // Ideally we want to maintain the list reference or careful update.
-    // For infinite scroll append, newVal has all items.
-    todoTasks.value = newVal 
+    })
 })
-watch(inProgressState.tasks, (newVal) => { inProgressTasks.value = newVal })
-watch(doneState.tasks, (newVal) => { doneTasks.value = newVal })
 
-// Infinite Scroll Bindings
-// Use the SAME parent refs from useDragAndDrop for infinite scroll
-useInfiniteScroll(todoParent, () => { todoState.fetchTasks() }, { distance: 10 })
-useInfiniteScroll(inProgressParent, () => { inProgressState.fetchTasks() }, { distance: 10 })
-useInfiniteScroll(doneParent, () => { doneState.fetchTasks() }, { distance: 10 })
+// --- Drag & Drop Columns (directly from transformed tasks) ---
+const initialTodoTasks = transformedTasks.value.filter(t => t.status === 'todo')
+const initialInProgressTasks = transformedTasks.value.filter(t => t.status === 'in-progress')
+const initialDoneTasks = transformedTasks.value.filter(t => t.status === 'done')
+
+const [todoParent, todoTasks] = useDragAndDrop<Task>(initialTodoTasks, { group: 'tasks', sortable: true })
+const [inProgressParent, inProgressTasks] = useDragAndDrop<Task>(initialInProgressTasks, { group: 'tasks', sortable: true })
+const [doneParent, doneTasks] = useDragAndDrop<Task>(initialDoneTasks, { group: 'tasks', sortable: true })
+
+// Update columns when global tasks change
+watch(transformedTasks, (newTasks) => {
+    todoTasks.value = newTasks.filter(t => t.status === 'todo')
+    inProgressTasks.value = newTasks.filter(t => t.status === 'in-progress')
+    doneTasks.value = newTasks.filter(t => t.status === 'done')
+})
 
 // --- Drag & Drop Persistence ---
 const handleStatusChange = async (task: Task, newStatus: Task['status']) => {
@@ -594,19 +527,16 @@ const handleStatusChange = async (task: Task, newStatus: Task['status']) => {
     task.status = newStatus // Optimistic update
     
     try {
-       await $fetch(`/api/tasks/${task.id}`, {
-          method: 'PUT',
-          body: { status: newStatus }
-       })
+       // Mock: Update the task in globalTasks
+       const idx = globalTasks.value.findIndex(t => t.id === task.id)
+       if (idx !== -1) {
+         const taskItem = globalTasks.value[idx]
+         if (taskItem) taskItem.status = newStatus
+       }
        toast.add({ title: 'Cập nhật', description: 'Đã cập nhật trạng thái', color: 'success' })
     } catch (e: any) {
        task.status = oldStatus // Revert
-       // If we revert, we might need to move it back visually? 
-       // Complex with independent lists. For now just toast error.
-       toast.add({ title: 'Lỗi', description: e.data?.message || 'Không thể cập nhật trạng thái', color: 'error' })
-       // Force refresh column to fix visual state?
-       // todoState.fetchTasks() // This appends... not refresh.
-       // Reloading page might be needed or smarter rollback.
+       toast.add({ title: 'Lỗi', description: 'Không thể cập nhật trạng thái', color: 'error' })
     }
 }
 

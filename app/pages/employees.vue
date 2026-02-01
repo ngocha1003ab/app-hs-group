@@ -199,6 +199,7 @@
               <td class="px-3 py-3 sm:px-6 sm:py-4 font-medium text-gray-900 dark:text-white">
                 <div class="flex items-center gap-3">
                   <UAvatar 
+                    :src="member.avatar"
                     :alt="member.name"
                     size="md"
                     class="ring-1 ring-gray-200 dark:ring-gray-700"
@@ -271,7 +272,7 @@
             <!-- Header: Avatar + Info + Action -->
             <div class="flex items-start justify-between">
                <div class="flex items-center gap-3">
-                  <UAvatar :alt="member.name" size="md" />
+                  <UAvatar :src="member.avatar" :alt="member.name" size="md" />
                   <div>
                      <div class="flex items-center gap-1.5">
                         <span class="font-bold text-gray-900 dark:text-white">{{ member.name }}</span>
@@ -360,8 +361,6 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Họ và tên <span class="text-red-500">*</span></label>
                 <UInput v-model="editingMember.name" size="lg" autofocus class="w-full"/>
               </div>
-               <!-- Username Readonly/Editable? Usually username is fixed or editable. User asked to be able to input. Let's make it editable but maybe distinct. -->
-               <!-- Username Readonly/Editable? Usually username is fixed or editable. User asked to be able to input. Let's make it editable but maybe distinct. -->
                   <div>
                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tên đăng nhập</label>
                      <UInput v-model="editingMember.username" size="lg" class="w-full" icon="i-heroicons-at-symbol"/>
@@ -430,7 +429,9 @@ useHead({
   title: 'Quản lý Nhân sự - SheetVN'
 })
 
-// --- State ---
+// --- Mock Data Integration ---
+const { employees: globalEmployees, departments: globalDepartments } = useMockData()
+
 // --- State ---
 const searchQuery = ref('')
 const isCreating = ref(false)
@@ -472,29 +473,17 @@ watch(() => newMember.name, (val) => {
   }
 })
 
-// --- Interfaces (matching DB/API) ---
-// Note: These should ideally be imported from shared types, but defining locally for SFC completeness as requested or typically done in quick Vue setups.
-
-interface Department {
-  id: string
-  name: string
-  description?: string
-  license_key: string
-  created_at: string
-}
-
+// --- Interfaces ---
 interface Member {
   id: string
   name: string
-  username?: string // Added loosely for UI
-  password?: string // Added for display/copy (security caveat noted)
+  username?: string
+  password?: string
   email?: string
   phone?: string
   avatar?: string
   role: 'Leader' | 'Member'
   department_id: string
-  license_key: string
-  created_at: string
 }
 
 const copyToClipboard = (text: string, successMessage: string) => {
@@ -503,21 +492,9 @@ const copyToClipboard = (text: string, successMessage: string) => {
   toast.add({ title: 'Đã sao chép', description: successMessage, color: 'success' })
 }
 
-// --- Data Fetching ---
-// 1. Get Departments for selection
-const { data: deptData } = await useFetch<Department[]>('/api/departments')
-const departments = computed(() => deptData.value || [])
-
-// Auto-select department if only one is available (e.g. for Leaders)
-watch(() => departments.value, (newDepts) => {
-  if (newDepts.length === 1 && newDepts[0]) {
-    newMember.departmentId = newDepts[0].id
-  }
-}, { immediate: true })
-
-// 2. Get Members
-const { data: membersData, refresh: refreshMembers } = await useFetch<Member[]>('/api/members')
-const members = computed<Member[]>(() => membersData.value || [])
+// --- Data from Mock ---
+const departments = computed(() => globalDepartments.value)
+const members = computed<Member[]>(() => globalEmployees.value as Member[])
 
 // --- Computed ---
 const filteredMembers = computed(() => {
@@ -544,42 +521,45 @@ const createMember = async () => {
   if (!newMember.name || !newMember.departmentId || !newMember.username || !newMember.password) return
   
   isCreating.value = true
-  try {
-    await $fetch('/api/members', {
-      method: 'POST',
-      body: {
+  
+  // Mock API Call
+  setTimeout(() => {
+    try {
+      const newEmp = {
+        id: 'emp-' + Date.now(),
         name: newMember.name,
         username: newMember.username,
         password: newMember.password,
         email: newMember.email,
         phone: newMember.phone,
-        department_id: newMember.departmentId,
-        isManager: newMember.isManager
+        avatar: `https://i.pravatar.cc/150?u=emp-${Date.now()}`,
+        role: newMember.isManager ? 'Leader' : 'Member',
+        department_id: newMember.departmentId
       }
-    })
+      
+      globalEmployees.value.push(newEmp as any)
 
-    toast.add({ title: 'Thành công', description: 'Đã thêm nhân viên mới', color: 'success' })
-    
-    // Reset
-    newMember.name = ''
-    newMember.username = ''
-    newMember.password = ''
-    newMember.email = ''
-    newMember.phone = ''
-    newMember.isManager = false
-    newMember.departmentId = null
-    
-    await refreshMembers()
+      toast.add({ title: 'Thành công', description: 'Đã thêm nhân viên mới', color: 'success' })
+      
+      // Reset
+      newMember.name = ''
+      newMember.username = ''
+      newMember.password = ''
+      newMember.email = ''
+      newMember.phone = ''
+      newMember.isManager = false
+      newMember.departmentId = null
 
-  } catch (error: any) {
-    toast.add({ 
-       title: 'Lỗi', 
-       description: error.data?.message || 'Không thể tạo nhân viên', 
-       color: 'error' 
-    })
-  } finally {
-    isCreating.value = false
-  }
+    } catch (error: any) {
+      toast.add({ 
+         title: 'Lỗi', 
+         description: 'Không thể tạo nhân viên', 
+         color: 'error' 
+      })
+    } finally {
+      isCreating.value = false
+    }
+  }, 500)
 }
 
 const openEditModal = (member: Member) => {
@@ -595,27 +575,32 @@ const openEditModal = (member: Member) => {
 }
 
 const updateMember = async () => {
-  try {
-    await $fetch(`/api/members/${editingMember.id}`, {
-      method: 'PUT',
-      body: {
-        name: editingMember.name,
-        email: editingMember.email,
-        phone: editingMember.phone,
-        isManager: editingMember.isManager,
-        password: editingMember.password || undefined // Only send if not empty
+  setTimeout(() => {
+    try {
+      const idx = globalEmployees.value.findIndex(e => e.id === editingMember.id)
+      if (idx !== -1) {
+        const emp = globalEmployees.value[idx]
+        if (emp) {
+          emp.name = editingMember.name
+          emp.username = editingMember.username
+          emp.email = editingMember.email
+          emp.phone = editingMember.phone
+          emp.role = editingMember.isManager ? 'Leader' : 'Member'
+          if (editingMember.password) {
+            (emp as any).password = editingMember.password
+          }
+        }
       }
-    })
 
-    toast.add({ title: 'Thành công', description: 'Đã cập nhật hồ sơ', color: 'success' })
-    await refreshMembers()
-    isEditModalOpen.value = false
-  } catch (error: any) {
-    toast.add({ 
-       title: 'Lỗi', 
-       description: error.data?.message || 'Không thể cập nhật', 
-       color: 'error' 
-    })
-  }
+      toast.add({ title: 'Thành công', description: 'Đã cập nhật hồ sơ', color: 'success' })
+      isEditModalOpen.value = false
+    } catch (error: any) {
+      toast.add({ 
+         title: 'Lỗi', 
+         description: 'Không thể cập nhật', 
+         color: 'error' 
+      })
+    }
+  }, 300)
 }
 </script>
