@@ -70,6 +70,16 @@ export interface Notification {
     created_at: string
 }
 
+export interface Category {
+    id: string
+    name: string
+    icon: string
+    color: string // hex color for display
+    license_key: string
+    is_default: boolean // true = system default, cannot be deleted
+    created_at: string
+}
+
 export interface DatabaseSchema {
     licenses: LicenseData[]
     departments: Department[]
@@ -77,6 +87,7 @@ export interface DatabaseSchema {
     tasks: Task[]
     comments: Comment[]
     notifications: Notification[]
+    categories: Category[]
     settings: {
         license_key: string
         member_id?: string // If set, settings apply to this member. If undefined, applies to company/owner.
@@ -102,6 +113,7 @@ const defaultData: DatabaseSchema = {
     tasks: [],
     comments: [],
     notifications: [],
+    categories: [],
     settings: []
 }
 

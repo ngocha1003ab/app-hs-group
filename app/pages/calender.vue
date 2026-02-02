@@ -389,30 +389,82 @@
                      </div>
                   </div>
 
-                  <!-- Category -->
-                  <div>
-                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Danh mục công việc
-                     </label>
-                     <div class="grid grid-cols-3 gap-2">
-                        <button 
-                           type="button" 
-                           v-for="cat in categories" 
-                           :key="cat.value"
-                           @click="(!isEditing || userInfo.role !== 'Member') && (form.category = cat.value)"
-                           class="flex flex-col items-center justify-center p-2 rounded-lg border text-sm font-medium transition-all"
-                           :class="[
-                              form.category === cat.value 
-                                 ? 'ring-2 ring-primary-500 border-transparent bg-primary-50 dark:bg-primary-900/20' 
-                                 : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-primary-200 hover:bg-gray-50 dark:hover:bg-gray-700',
-                              (isEditing && userInfo.role === 'Member') ? 'opacity-50 cursor-not-allowed' : ''
-                           ]"
-                        >
-                           <UIcon :name="cat.icon" class="w-4 h-4 mb-1" :class="form.category === cat.value ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400'" />
-                           <span class="text-[10px] text-center" :class="form.category === cat.value ? 'text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400'">{{ cat.label }}</span>
-                        </button>
-                     </div>
-                  </div>
+                  <!-- Category (Searchable Dropdown) -->
+                   <div class="relative" ref="categoryDropdownRef">
+                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                         Danh mục công việc
+                      </label>
+                      
+                      <UInput 
+                        v-model="categorySearchQuery"
+                        placeholder="Chọn danh mục..."
+                        size="lg"
+                        icon="i-heroicons-tag"
+                        class="w-full cursor-pointer"
+                        @focus="isCategoryDropdownOpen = true"
+                        autocomplete="off"
+                        readonly
+                        :disabled="isEditing && userInfo.role === 'Member'"
+                      >
+                         <template #trailing>
+                            <div class="flex items-center gap-1">
+                               <UIcon v-if="form.category" name="i-heroicons-check-circle" class="w-5 h-5 text-green-500" />
+                               <UIcon name="i-heroicons-chevron-down" class="w-4 h-4 text-gray-400" />
+                            </div>
+                         </template>
+                      </UInput>
+
+                      <!-- Category Dropdown -->
+                      <div 
+                        v-if="isCategoryDropdownOpen"
+                        class="absolute z-50 top-full left-0 right-0 mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl overflow-hidden"
+                      >
+                         <!-- Search Input -->
+                         <div class="p-2 border-b border-gray-100 dark:border-gray-800">
+                            <UInput 
+                              v-model="categoryFilterQuery" 
+                              placeholder="Tìm danh mục..." 
+                              size="sm" 
+                              icon="i-heroicons-magnifying-glass"
+                              class="w-full"
+                            />
+                         </div>
+                         
+                         <!-- Category List -->
+                         <div class="max-h-48 overflow-y-auto p-2 space-y-1 custom-scrollbar">
+                            <div 
+                              v-for="cat in filteredCategories" 
+                              :key="cat.id"
+                              @click="selectCategory(cat)"
+                              class="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                              :class="{'bg-primary-50 dark:bg-primary-900/20': form.category === cat.id}"
+                            >
+                               <div 
+                                 class="w-8 h-8 rounded-lg flex items-center justify-center"
+                                 :style="{ backgroundColor: cat.color + '20' }"
+                               >
+                                 <UIcon :name="cat.icon" class="w-4 h-4" :style="{ color: cat.color }" />
+                               </div>
+                               <span class="flex-1 text-sm font-medium text-gray-900 dark:text-white">{{ cat.name }}</span>
+                               <UIcon v-if="form.category === cat.id" name="i-heroicons-check" class="w-5 h-5 text-primary-500" />
+                            </div>
+                            <div v-if="filteredCategories.length === 0" class="p-4 text-center text-gray-500 text-sm italic">
+                              Không tìm thấy danh mục phù hợp.
+                            </div>
+                         </div>
+                         
+                         <!-- Clear Selection -->
+                         <div v-if="form.category" class="p-2 border-t border-gray-100 dark:border-gray-800">
+                            <button 
+                              type="button"
+                              @click="clearCategory"
+                              class="w-full py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                            >
+                              Bỏ chọn danh mục
+                            </button>
+                         </div>
+                      </div>
+                   </div>
                </form>
             </div>
 
@@ -452,24 +504,18 @@ useHead({
 // --- Constants & Types ---
 const weekDays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
 
-type Category = 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
+interface CategoryItem {
+  id: string
+  name: string
+  icon: string
+  color: string
+  is_default: boolean
+}
 
 const priorities = [
    { value: 'high', label: 'Cao', activeClass: 'bg-red-50 text-red-700 border-red-500 ring-1 ring-red-500 dark:bg-red-900/30 dark:text-red-400' },
    { value: 'medium', label: 'TB', activeClass: 'bg-orange-50 text-orange-700 border-orange-500 ring-1 ring-orange-500 dark:bg-orange-900/30 dark:text-orange-400' },
    { value: 'low', label: 'Thấp', activeClass: 'bg-gray-100 text-gray-700 border-gray-500 ring-1 ring-gray-500 dark:bg-gray-700/50 dark:text-gray-300' },
-]
-
-const categories = [
-  { value: 'video' as Category, label: 'Video', icon: 'i-heroicons-video-camera' },
-  { value: 'image' as Category, label: 'Hình ảnh', icon: 'i-heroicons-photo' },
-  { value: 'document' as Category, label: 'Văn bản', icon: 'i-heroicons-document-text' },
-  { value: 'business' as Category, label: 'Kinh doanh', icon: 'i-heroicons-briefcase' },
-  { value: 'design' as Category, label: 'Thiết kế', icon: 'i-heroicons-paint-brush' },
-  { value: 'development' as Category, label: 'Lập trình', icon: 'i-heroicons-code-bracket' },
-  { value: 'marketing' as Category, label: 'Marketing', icon: 'i-heroicons-megaphone' },
-  { value: 'admin' as Category, label: 'Hành chính', icon: 'i-heroicons-clipboard-document-list' },
-  { value: 'other' as Category, label: 'Khác', icon: 'i-heroicons-ellipsis-horizontal-circle' }
 ]
 
 // --- State ---
@@ -483,13 +529,19 @@ const isSubmitting = ref(false)
 const isEditing = ref(false)
 const editingId = ref<string | null>(null)
 
+// Category Dropdown State
+const isCategoryDropdownOpen = ref(false)
+const categoryDropdownRef = ref<HTMLElement | null>(null)
+const categorySearchQuery = ref('')
+const categoryFilterQuery = ref('')
+
 // Form State
 const form = reactive({
    title: '',
    description: '',
-   assigneeId: undefined as string | undefined, // Changed to undefined for SelectMenu
+   assigneeId: undefined as string | undefined,
    priority: 'medium',
-   category: undefined as Category | undefined,
+   category: undefined as string | undefined,
    dueDate: '',
    status: 'todo'
 })
@@ -503,6 +555,16 @@ if(authData.value?.success) userInfo.value = authData.value.user
 // Fetch Departments
 const { data: deptData } = await useFetch<any>('/api/departments')
 const departments = computed(() => deptData.value || [])
+
+// Fetch Categories
+const { data: categoriesData } = await useFetch<CategoryItem[]>('/api/categories')
+const categories = computed(() => categoriesData.value || [])
+
+const filteredCategories = computed(() => {
+  if (!categoryFilterQuery.value) return categories.value
+  const q = categoryFilterQuery.value.toLowerCase()
+  return categories.value.filter(c => c.name.toLowerCase().includes(q))
+})
 
 // Fetch Employees
 const { data: empInfo } = await useFetch<any>('/api/members')
@@ -558,10 +620,28 @@ const handleAssigneeSearchInput = () => {
   }
 }
 
+// Category Selection Functions
+const selectCategory = (cat: CategoryItem) => {
+  form.category = cat.id
+  categorySearchQuery.value = cat.name
+  isCategoryDropdownOpen.value = false
+  categoryFilterQuery.value = ''
+}
+
+const clearCategory = () => {
+  form.category = undefined
+  categorySearchQuery.value = ''
+  isCategoryDropdownOpen.value = false
+  categoryFilterQuery.value = ''
+}
+
 // Click Outside
 const handleClickOutside = (event: MouseEvent) => {
   if (assigneeDropdownRef.value && !assigneeDropdownRef.value.contains(event.target as Node)) {
     isAssigneeDropdownOpen.value = false
+  }
+  if (categoryDropdownRef.value && !categoryDropdownRef.value.contains(event.target as Node)) {
+    isCategoryDropdownOpen.value = false
   }
 }
 

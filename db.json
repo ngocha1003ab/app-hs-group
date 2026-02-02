@@ -26,6 +26,15 @@
       "email": "shenlongkake@gmail.com",
       "status": 1,
       "added_at": "2026-01-25T07:42:11.394Z"
+    },
+    {
+      "id": 21,
+      "key_license": "a93c21ed80e0a7abd62b232ce1087627",
+      "expired_at": null,
+      "product_id": 627,
+      "email": "nguyenvannhat@gmail.com",
+      "status": 1,
+      "added_at": "2026-02-02T14:21:14.142Z"
     }
   ],
   "settings": [
@@ -101,6 +110,13 @@
       "description": "",
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-24T17:20:15.833Z"
+    },
+    {
+      "id": "ml59uchqgezstpx9tvp",
+      "name": "Phòng Cá Nhân",
+      "description": "",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T14:35:02.462Z"
     }
   ],
   "members": [
@@ -246,6 +262,19 @@
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-25T07:41:44.521Z",
       "avatar": "https://ui-avatars.com/api/?name=leader2&background=random"
+    },
+    {
+      "id": "ml59uoebuc4ts2ss6z",
+      "name": "Song Long Ma La",
+      "username": "songlongmala",
+      "password": "nghichti1",
+      "email": "",
+      "phone": "",
+      "department_id": "ml59uchqgezstpx9tvp",
+      "role": "Leader",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T14:35:17.891Z",
+      "avatar": "https://ui-avatars.com/api/?name=Song%20Long%20Ma%20La&background=random"
     }
   ],
   "tasks": [
@@ -654,6 +683,20 @@
       "license_key": "5044e26b6e6dacc1ff42bc23f0aa1845",
       "created_at": "2026-01-24T17:25:14.543Z",
       "updated_at": "2026-01-25T07:36:39.490Z"
+    },
+    {
+      "id": "ml59v38rlq1zzx1qh8",
+      "title": "Test",
+      "description": "Test",
+      "assignee_id": "ml59uoebuc4ts2ss6z",
+      "department_id": "ml59uchqgezstpx9tvp",
+      "priority": "low",
+      "status": "todo",
+      "category": "cat_49fa64d2-e6fa-4885-95c0-7459158ef4eb",
+      "due_date": "2026-02-11",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T14:35:37.131Z",
+      "updated_at": "2026-02-02T14:35:37.131Z"
     }
   ],
   "comments": [
@@ -739,6 +782,17 @@
     }
   ],
   "notifications": [
+    {
+      "id": "ml59v39qvd7ewnl13ln",
+      "user_id": "ml59uoebuc4ts2ss6z",
+      "title": "Nhiệm vụ mới",
+      "description": "Bạn đã được phân công nhiệm vụ: Test",
+      "type": "task_assigned",
+      "link": "/tasks",
+      "read": false,
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T14:35:37.166Z"
+    },
     {
       "id": "mktfdodcs5sehni6xno",
       "user_id": "mksh6a11ls5puliazfr",
@@ -2619,6 +2673,107 @@
       "read": true,
       "license_key": "b6236ba1fb61aeb957ef54022951b3fd",
       "created_at": "2026-01-23T15:34:58.256Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat_default_1_1770042462283",
+      "name": "Video",
+      "icon": "i-heroicons-video-camera",
+      "color": "#EF4444",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_default_2_1770042462283",
+      "name": "Hình ảnh",
+      "icon": "i-heroicons-photo",
+      "color": "#F97316",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_default_3_1770042462283",
+      "name": "Văn bản",
+      "icon": "i-heroicons-document-text",
+      "color": "#EAB308",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_default_4_1770042462283",
+      "name": "Kinh doanh",
+      "icon": "i-heroicons-briefcase",
+      "color": "#22C55E",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_default_5_1770042462283",
+      "name": "Thiết kế",
+      "icon": "i-heroicons-paint-brush",
+      "color": "#06B6D4",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_default_6_1770042462283",
+      "name": "Lập trình",
+      "icon": "i-heroicons-code-bracket",
+      "color": "#8B5CF6",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_default_7_1770042462283",
+      "name": "Marketing",
+      "icon": "i-heroicons-megaphone",
+      "color": "#EC4899",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_default_8_1770042462283",
+      "name": "Hành chính",
+      "icon": "i-heroicons-clipboard-document-list",
+      "color": "#64748B",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_default_9_1770042462283",
+      "name": "Khác",
+      "icon": "i-heroicons-ellipsis-horizontal-circle",
+      "color": "#94A3B8",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": true,
+      "created_at": "2026-02-02T14:27:42.283Z"
+    },
+    {
+      "id": "cat_49fa64d2-e6fa-4885-95c0-7459158ef4eb",
+      "name": "Test",
+      "icon": "i-heroicons-megaphone",
+      "color": "#64748B",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": false,
+      "created_at": "2026-02-02T14:34:10.852Z"
+    },
+    {
+      "id": "cat_08fa21bb-60cf-4829-9f04-64985541ce3b",
+      "name": "Money",
+      "icon": "i-heroicons-ellipsis-horizontal-circle",
+      "color": "#3B82F6",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "is_default": false,
+      "created_at": "2026-02-02T14:34:24.214Z"
     }
   ]
 }

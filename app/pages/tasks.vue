@@ -132,21 +132,78 @@
                </div>
             </div>
 
-            <!-- Category Selector -->
-            <div class="space-y-2">
+            <!-- Category Selector (Searchable Dropdown) -->
+            <div class="space-y-2 relative" ref="categoryDropdownRef">
                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Danh mục công việc</label>
-               <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                  <button 
-                    type="button" 
-                    v-for="cat in categories" 
-                    :key="cat.value"
-                    @click="newTask.category = cat.value as any"
-                    class="flex flex-col items-center justify-center p-2 sm:p-3 rounded-lg border-2 transition-all hover:border-primary-300"
-                    :class="newTask.category === cat.value ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900'"
-                  >
-                     <UIcon :name="cat.icon" class="w-5 h-5 mb-1" :class="newTask.category === cat.value ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400'" />
-                     <span class="text-[10px] sm:text-xs font-medium text-center" :class="newTask.category === cat.value ? 'text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400'">{{ cat.label }}</span>
-                  </button>
+               
+               <UInput 
+                 v-model="categorySearchQuery"
+                 placeholder="Chọn danh mục..."
+                 size="lg"
+                 icon="i-heroicons-tag"
+                 class="w-full cursor-pointer"
+                 @focus="isCategoryDropdownOpen = true"
+                 @input="handleCategorySearchInput"
+                 autocomplete="off"
+                 readonly
+               >
+                  <template #trailing>
+                     <div class="flex items-center gap-1">
+                        <UIcon v-if="newTask.category" name="i-heroicons-check-circle" class="w-5 h-5 text-green-500" />
+                        <UIcon name="i-heroicons-chevron-down" class="w-4 h-4 text-gray-400" />
+                     </div>
+                  </template>
+               </UInput>
+
+               <!-- Category Dropdown -->
+               <div 
+                 v-if="isCategoryDropdownOpen"
+                 class="absolute z-50 top-full left-0 right-0 mt-1 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100"
+               >
+                  <!-- Search Input -->
+                  <div class="p-2 border-b border-gray-100 dark:border-gray-800">
+                     <UInput 
+                       v-model="categoryFilterQuery" 
+                       placeholder="Tìm danh mục..." 
+                       size="sm" 
+                       icon="i-heroicons-magnifying-glass"
+                       class="w-full"
+                     />
+                  </div>
+                  
+                  <!-- Category List -->
+                  <div class="max-h-60 overflow-y-auto p-2 space-y-1 custom-scrollbar">
+                     <div 
+                       v-for="cat in filteredCategories" 
+                       :key="cat.id"
+                       @click="selectCategory(cat)"
+                       class="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                       :class="{'bg-primary-50 dark:bg-primary-900/20': newTask.category === cat.id}"
+                     >
+                        <div 
+                          class="w-8 h-8 rounded-lg flex items-center justify-center"
+                          :style="{ backgroundColor: cat.color + '20' }"
+                        >
+                          <UIcon :name="cat.icon" class="w-4 h-4" :style="{ color: cat.color }" />
+                        </div>
+                        <span class="flex-1 text-sm font-medium text-gray-900 dark:text-white">{{ cat.name }}</span>
+                        <UIcon v-if="newTask.category === cat.id" name="i-heroicons-check" class="w-5 h-5 text-primary-500" />
+                     </div>
+                     <div v-if="filteredCategories.length === 0" class="p-4 text-center text-gray-500 text-sm italic">
+                       Không tìm thấy danh mục phù hợp.
+                     </div>
+                  </div>
+                  
+                  <!-- Clear Selection -->
+                  <div v-if="newTask.category" class="p-2 border-t border-gray-100 dark:border-gray-800">
+                     <button 
+                       type="button"
+                       @click="clearCategory"
+                       class="w-full py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                     >
+                       Bỏ chọn danh mục
+                     </button>
+                  </div>
                </div>
             </div>
           </div>
@@ -454,7 +511,14 @@ interface Task {
 }
 
 type Priority = 'low' | 'medium' | 'high'
-type Category = 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
+
+interface CategoryItem {
+  id: string
+  name: string
+  icon: string
+  color: string
+  is_default: boolean
+}
 
 const priorities: { value: Priority, label: string, activeClass: string }[] = [
   { value: 'high', label: 'Cao', activeClass: 'border-red-500 bg-red-50 text-red-700 dark:bg-red-900/30' },
@@ -462,19 +526,6 @@ const priorities: { value: Priority, label: string, activeClass: string }[] = [
   { value: 'low', label: 'Thấp', activeClass: 'border-gray-500 bg-gray-100 text-gray-700 dark:bg-gray-700/50' }
 ]
 
-const categories: { value: Category, label: string, icon: string }[] = [
-  { value: 'video', label: 'Video', icon: 'i-heroicons-video-camera' },
-  { value: 'image', label: 'Hình ảnh', icon: 'i-heroicons-photo' },
-  { value: 'document', label: 'Văn bản', icon: 'i-heroicons-document-text' },
-  { value: 'business', label: 'Kinh doanh', icon: 'i-heroicons-briefcase' },
-  { value: 'design', label: 'Thiết kế', icon: 'i-heroicons-paint-brush' },
-  { value: 'development', label: 'Lập trình', icon: 'i-heroicons-code-bracket' },
-  { value: 'marketing', label: 'Marketing', icon: 'i-heroicons-megaphone' },
-  { value: 'admin', label: 'Hành chính', icon: 'i-heroicons-clipboard-document-list' },
-  { value: 'other', label: 'Khác', icon: 'i-heroicons-ellipsis-horizontal-circle' }
-]
-
-// --- Mock Data ---
 // --- State ---
 const isSubmitting = ref(false)
 const isAssigneeDropdownOpen = ref(false)
@@ -482,6 +533,12 @@ const assigneeDropdownRef = ref<HTMLElement | null>(null)
 const assigneeSearchQuery = ref('')
 const assigneeDeptFilter = ref<string | 'all'>('all')
 const taskListSearch = ref('')
+
+// Category Dropdown State
+const isCategoryDropdownOpen = ref(false)
+const categoryDropdownRef = ref<HTMLElement | null>(null)
+const categorySearchQuery = ref('')
+const categoryFilterQuery = ref('')
 
 const isEditModalOpen = ref(false)
 const editingTask = reactive<Task>({
@@ -493,7 +550,7 @@ const newTask = reactive({
   description: '',
   assigneeId: null as string | null,
   priority: 'medium' as Priority,
-  category: undefined as Category | undefined,
+  category: undefined as string | undefined,
   dueDate: ''
 })
 
@@ -508,6 +565,16 @@ if(authData.value && authData.value.success) {
 // Fetch Departments
 const { data: deptData } = await useFetch<Department[]>('/api/departments')
 const departments = computed(() => deptData.value || [])
+
+// Fetch Categories
+const { data: categoriesData } = await useFetch<CategoryItem[]>('/api/categories')
+const categories = computed(() => categoriesData.value || [])
+
+const filteredCategories = computed(() => {
+  if (!categoryFilterQuery.value) return categories.value
+  const q = categoryFilterQuery.value.toLowerCase()
+  return categories.value.filter(c => c.name.toLowerCase().includes(q))
+})
 
 // Fetch Employees
 const { data: empData } = await useFetch<any[]>('/api/members')
@@ -602,14 +669,22 @@ const isOverdue = (date: string) => {
 
 const getEmployee = (id: string | null) => employees.value.find(e => e.id === id)
 
-const getCategoryIcon = (cat: Category) => {
-   const found = categories.find(c => c.value === cat)
+const getCategoryIcon = (catId: string | undefined) => {
+   if (!catId) return 'i-heroicons-tag'
+   const found = categories.value.find(c => c.id === catId)
    return found ? found.icon : 'i-heroicons-tag'
 }
 
-const getCategoryLabel = (cat: Category) => {
-   const found = categories.find(c => c.value === cat)
-   return found ? found.label : cat
+const getCategoryLabel = (catId: string | undefined) => {
+   if (!catId) return '-'
+   const found = categories.value.find(c => c.id === catId)
+   return found ? found.name : catId
+}
+
+const getCategoryColor = (catId: string | undefined) => {
+   if (!catId) return '#64748B'
+   const found = categories.value.find(c => c.id === catId)
+   return found ? found.color : '#64748B'
 }
 
 const priorityBadge = (p: Priority) => {
@@ -636,6 +711,25 @@ const handleAssigneeSearchInput = () => {
         newTask.assigneeId = null
      }
   }
+}
+
+// Category Selection Functions
+const selectCategory = (cat: CategoryItem) => {
+  newTask.category = cat.id
+  categorySearchQuery.value = cat.name
+  isCategoryDropdownOpen.value = false
+  categoryFilterQuery.value = ''
+}
+
+const clearCategory = () => {
+  newTask.category = undefined
+  categorySearchQuery.value = ''
+  isCategoryDropdownOpen.value = false
+  categoryFilterQuery.value = ''
+}
+
+const handleCategorySearchInput = () => {
+  // No-op since we use readonly input
 }
 
 const createTask = async () => {
@@ -665,6 +759,7 @@ const createTask = async () => {
      assigneeSearchQuery.value = ''
      newTask.priority = 'medium'
      newTask.category = undefined
+     categorySearchQuery.value = ''
      newTask.dueDate = ''
    } catch (error: any) {
       toast.add({ title: 'Lỗi', description: error.data?.message || 'Không thể tạo nhiệm vụ', color: 'error' })
@@ -717,6 +812,9 @@ const updateTask = async () => {
 const handleClickOutside = (event: MouseEvent) => {
   if (assigneeDropdownRef.value && !assigneeDropdownRef.value.contains(event.target as Node)) {
     isAssigneeDropdownOpen.value = false
+  }
+  if (categoryDropdownRef.value && !categoryDropdownRef.value.contains(event.target as Node)) {
+    isCategoryDropdownOpen.value = false
   }
 }
 

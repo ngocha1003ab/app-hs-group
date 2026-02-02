@@ -62,6 +62,7 @@ const allLinks = [
   { label: 'Thống kê', icon: 'i-heroicons-chart-bar', to: '/dashboard', roles: ['Owner', 'Leader'], description: 'Xem báo cáo và thống kê' },
   { label: 'Phòng ban', icon: 'i-heroicons-building-office-2', to: '/departments', roles: ['Owner'], description: 'Quản lý phòng ban' },
   { label: 'Nhân viên', icon: 'i-heroicons-user-group', to: '/employees', roles: ['Owner', 'Leader'], description: 'Quản lý nhân viên' },
+  { label: 'Danh mục', icon: 'i-heroicons-tag', to: '/categories', roles: ['Owner'], description: 'Quản lý danh mục công việc' },
   { label: 'Tiến độ', icon: 'i-heroicons-chart-pie', to: '/progress', roles: ['Owner', 'Leader', 'Member'], description: 'Theo dõi tiến độ công việc' },
   { label: 'Nhiệm vụ', icon: 'i-heroicons-clipboard-document-list', to: '/tasks', roles: ['Owner', 'Leader', 'Member'], description: 'Quản lý nhiệm vụ' },
   { label: 'Lịch', icon: 'i-heroicons-calendar', to: '/calender', roles: ['Owner', 'Leader', 'Member'], description: 'Xem lịch công việc' },

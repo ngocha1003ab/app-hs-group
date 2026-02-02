@@ -377,21 +377,15 @@ useHead({
 })
 
 // --- Types ---
-// --- Types ---
 type Priority = 'low' | 'medium' | 'high'
-type Category = 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
 
-const categories = [
-  { value: 'video' as Category, label: 'Video', icon: 'i-heroicons-video-camera' },
-  { value: 'image' as Category, label: 'Hình ảnh', icon: 'i-heroicons-photo' },
-  { value: 'document' as Category, label: 'Văn bản', icon: 'i-heroicons-document-text' },
-  { value: 'business' as Category, label: 'Kinh doanh', icon: 'i-heroicons-briefcase' },
-  { value: 'design' as Category, label: 'Thiết kế', icon: 'i-heroicons-paint-brush' },
-  { value: 'development' as Category, label: 'Lập trình', icon: 'i-heroicons-code-bracket' },
-  { value: 'marketing' as Category, label: 'Marketing', icon: 'i-heroicons-megaphone' },
-  { value: 'admin' as Category, label: 'Hành chính', icon: 'i-heroicons-clipboard-document-list' },
-  { value: 'other' as Category, label: 'Khác', icon: 'i-heroicons-ellipsis-horizontal-circle' }
-]
+interface CategoryItem {
+  id: string
+  name: string
+  icon: string
+  color: string
+  is_default: boolean
+}
 
 interface Comment {
   id: string
@@ -408,7 +402,7 @@ interface Task {
   title: string
   description: string
   priority: Priority
-  category?: 'video' | 'image' | 'document' | 'business' | 'design' | 'development' | 'marketing' | 'admin' | 'other'
+  category?: string
   department: string
   dueDate: string // ISO date string
   assignee: {
@@ -476,6 +470,10 @@ const departments = computed(() => deptData.value || [])
 
 const { data: empData } = await useFetch<any[]>('/api/members')
 const employees = computed(() => empData.value || [])
+
+// Fetch Categories
+const { data: categoriesData } = await useFetch<CategoryItem[]>('/api/categories')
+const categories = computed(() => categoriesData.value || [])
 
 const getDeptName = (id: string) => {
    const d = departments.value.find(x => x.id === id)
@@ -798,14 +796,16 @@ const openImagePreview = (imageUrl: string) => {
 }
 
 // Helper functions for category
-const getCategoryIcon = (cat: Category) => {
-   const found = categories.find(c => c.value === cat)
+const getCategoryIcon = (catId: string | undefined) => {
+   if (!catId) return 'i-heroicons-tag'
+   const found = categories.value.find(c => c.id === catId)
    return found ? found.icon : 'i-heroicons-tag'
 }
 
-const getCategoryLabel = (cat: Category) => {
-   const found = categories.find(c => c.value === cat)
-   return found ? found.label : cat
+const getCategoryLabel = (catId: string | undefined) => {
+   if (!catId) return '-'
+   const found = categories.value.find(c => c.id === catId)
+   return found ? found.name : catId
 }
 
 const TaskCardContent = defineComponent({
