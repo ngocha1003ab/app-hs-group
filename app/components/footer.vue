@@ -153,9 +153,16 @@ const isActive = (path: string) => route.path === path
 // Logout handler
 const handleLogout = async () => {
   try {
-    // Clear the auth_token cookie
+    // Clear ALL auth cookies - this is critical!
     const authCookie = useCookie('auth_token')
+    const licenseCookie = useCookie('license_key')
+    const memberIdCookie = useCookie('member_id')
+    const memberRoleCookie = useCookie('member_role')
+    
     authCookie.value = null
+    licenseCookie.value = null
+    memberIdCookie.value = null
+    memberRoleCookie.value = null
     
     // Close the modal
     isMoreMenuOpen.value = false

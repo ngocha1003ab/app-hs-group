@@ -12,12 +12,22 @@ export default defineEventHandler(async (event) => {
     }
 
     const body = await readBody(event)
-    const { name, department_id, username, password, email, phone, isManager } = body
+    const { name, department_id, username: rawUsername, password, email, phone, role } = body
 
-    if (!name || !department_id || !username || !password) {
+    if (!name || !department_id || !rawUsername || !password) {
         throw createError({
             statusCode: 400,
             message: 'Thiếu thông tin bắt buộc (Tên, Phòng ban, Username, Password)'
+        })
+    }
+
+    // Sanitize username: lowercase, no spaces, alphanumeric only
+    const username = rawUsername.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '')
+
+    if (username.length < 3) {
+        throw createError({
+            statusCode: 400,
+            message: 'Tên đăng nhập phải có ít nhất 3 ký tự'
         })
     }
 
@@ -35,15 +45,31 @@ export default defineEventHandler(async (event) => {
         })
     }
 
+    // Validate role
+    const validRoles = ['Member', 'Leader', 'Owner']
+    let memberRole = validRoles.includes(role) ? role : 'Member'
+
+    // Check creator's role - Leaders can only create Members
+    const memberId = getCookie(event, 'member_id')
+    if (memberId) {
+        const currentUser = db.data.members.find(m => m.id === memberId && m.license_key === licenseKey)
+        if (currentUser && currentUser.role === 'Leader') {
+            // Leaders can only create Members
+            if (role !== 'Member') {
+                memberRole = 'Member' // Force to Member if Leader tries to create Leader/Owner
+            }
+        }
+    }
+
     const newMember = {
         id: Date.now().toString(36) + Math.random().toString(36).substring(2),
         name,
-        username, // Add to schema if needed or just store in object if NoSQL flexibility allowed 
+        username,
         password, // In real app, HASH THIS!
         email: email || '',
         phone: phone || '',
         department_id,
-        role: isManager ? 'Leader' : 'Member',
+        role: memberRole,
         license_key: licenseKey,
         created_at: new Date().toISOString(),
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`

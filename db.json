@@ -34,7 +34,7 @@
       "product_id": 627,
       "email": "nguyenvannhat@gmail.com",
       "status": 1,
-      "added_at": "2026-02-02T14:21:14.142Z"
+      "added_at": "2026-02-02T15:29:49.462Z"
     }
   ],
   "settings": [
@@ -117,6 +117,13 @@
       "description": "",
       "license_key": "a93c21ed80e0a7abd62b232ce1087627",
       "created_at": "2026-02-02T14:35:02.462Z"
+    },
+    {
+      "id": "ml5bc4f95u2n9zb2hle",
+      "name": "Phong Ban 2",
+      "description": "",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T15:16:51.429Z"
     }
   ],
   "members": [
@@ -275,6 +282,71 @@
       "license_key": "a93c21ed80e0a7abd62b232ce1087627",
       "created_at": "2026-02-02T14:35:17.891Z",
       "avatar": "https://ui-avatars.com/api/?name=Song%20Long%20Ma%20La&background=random"
+    },
+    {
+      "id": "ml5a0gpqx6o7s5ajss",
+      "name": "phongbanmana",
+      "username": "phongbanmana",
+      "password": "123456",
+      "email": "",
+      "phone": "",
+      "department_id": "ml59uchqgezstpx9tvp",
+      "role": "Leader",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T14:39:47.870Z",
+      "avatar": "https://ui-avatars.com/api/?name=phongbanmana&background=random"
+    },
+    {
+      "id": "ml5bail3qcyrf02she",
+      "name": "Testnhanvien",
+      "username": "testnhanvien",
+      "password": "123456",
+      "email": "",
+      "phone": "",
+      "department_id": "ml59uchqgezstpx9tvp",
+      "role": "Member",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T15:15:36.473Z",
+      "avatar": "https://ui-avatars.com/api/?name=Testnhanvien&background=random"
+    },
+    {
+      "id": "ml5bbwbzlr8yp9rza",
+      "name": "Test Trương Phong",
+      "username": "testtruongphong",
+      "password": "1234567",
+      "email": "",
+      "phone": "",
+      "department_id": "ml59uchqgezstpx9tvp",
+      "role": "Owner",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T15:16:40.943Z",
+      "avatar": "https://ui-avatars.com/api/?name=Test%20Tr%C6%B0%C6%A1ng%20Phong&background=random"
+    },
+    {
+      "id": "ml5bcdzvnhx6bnnm8ck",
+      "name": "Phong Ban 2",
+      "username": "phongban2",
+      "password": "123456",
+      "email": "",
+      "phone": "",
+      "department_id": "ml5bc4f95u2n9zb2hle",
+      "role": "Member",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T15:17:03.835Z",
+      "avatar": "https://ui-avatars.com/api/?name=Phong%20Ban%202&background=random"
+    },
+    {
+      "id": "ml5bmu50ezg9bs6oq2",
+      "name": "Test",
+      "username": "tesst123456",
+      "password": "12345678",
+      "email": "",
+      "phone": "",
+      "department_id": "ml59uchqgezstpx9tvp",
+      "role": "Member",
+      "license_key": "a93c21ed80e0a7abd62b232ce1087627",
+      "created_at": "2026-02-02T15:25:11.316Z",
+      "avatar": "https://ui-avatars.com/api/?name=Test&background=random"
     }
   ],
   "tasks": [

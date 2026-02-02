@@ -42,7 +42,11 @@
               icon="i-heroicons-at-symbol"
               size="lg"
               class="w-full"
+              @input="sanitizeUsername('new')"
+              :color="newMember.username && newMember.username.length < 3 ? 'error' : undefined"
             />
+            <p v-if="newMember.username && newMember.username.length < 3" class="text-xs text-red-500">Tên đăng nhập phải có ít nhất 3 ký tự</p>
+            <p v-else class="text-xs text-gray-500">Chỉ dùng chữ thường (a-z), số (0-9), tối thiểu 3 ký tự</p>
           </div>
           <div class="space-y-2">
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mật khẩu <span class="text-red-500">*</span></label>
@@ -88,13 +92,75 @@
             />
           </div>
           
-          <!-- Manager Checkbox -->
-          <div class="flex items-end pb-2">
-             <UCheckbox 
-                v-model="newMember.isManager" 
-                label="Là người quản lý (Trưởng phòng/Leader)" 
-                class="cursor-pointer"
-             />
+          <!-- Role Selection (Radio Buttons) -->
+          <div class="md:col-span-2 space-y-3">
+             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Vai trò nhân viên</label>
+             <div class="grid grid-cols-1 gap-3" :class="currentUserRole === 'Owner' ? 'sm:grid-cols-3' : ''">
+                <!-- Member -->
+                <div
+                  @click="newMember.role = 'Member'"
+                  class="cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center gap-3"
+                  :class="newMember.role === 'Member' 
+                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' 
+                    : 'border-gray-200 dark:border-gray-700 hover:border-primary-200'"
+                >
+                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                    :class="newMember.role === 'Member' ? 'border-primary-500' : 'border-gray-300'"
+                  >
+                    <div v-if="newMember.role === 'Member'" class="w-2.5 h-2.5 rounded-full bg-primary-500"></div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-900 dark:text-white">Nhân viên</div>
+                    <div class="text-xs text-gray-500">Thực hiện công việc được giao</div>
+                  </div>
+                </div>
+
+                <!-- Leader (only visible to Owner) -->
+                <div
+                  v-if="currentUserRole === 'Owner'"
+                  @click="newMember.role = 'Leader'"
+                  class="cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center gap-3"
+                  :class="newMember.role === 'Leader' 
+                    ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' 
+                    : 'border-gray-200 dark:border-gray-700 hover:border-yellow-200'"
+                >
+                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                    :class="newMember.role === 'Leader' ? 'border-yellow-500' : 'border-gray-300'"
+                  >
+                    <div v-if="newMember.role === 'Leader'" class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-900 dark:text-white flex items-center gap-1.5">
+                      Trưởng phòng
+                      <UIcon name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
+                    </div>
+                    <div class="text-xs text-gray-500">Quản lý phòng ban được chọn</div>
+                  </div>
+                </div>
+
+                <!-- Owner (only visible to Owner) -->
+                <div
+                  v-if="currentUserRole === 'Owner'"
+                  @click="newMember.role = 'Owner'"
+                  class="cursor-pointer p-4 rounded-xl border-2 transition-all flex items-center gap-3"
+                  :class="newMember.role === 'Owner' 
+                    ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' 
+                    : 'border-gray-200 dark:border-gray-700 hover:border-purple-200'"
+                >
+                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                    :class="newMember.role === 'Owner' ? 'border-purple-500' : 'border-gray-300'"
+                  >
+                    <div v-if="newMember.role === 'Owner'" class="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-900 dark:text-white flex items-center gap-1.5">
+                      Quản lý toàn bộ
+                      <UIcon name="i-heroicons-shield-check" class="w-4 h-4 text-purple-500" />
+                    </div>
+                    <div class="text-xs text-gray-500">Quản lý tất cả phòng ban</div>
+                  </div>
+                </div>
+             </div>
           </div>
         </div>
 
@@ -156,7 +222,7 @@
             color="primary" 
             size="lg"
             :loading="isCreating"
-            :disabled="!newMember.name || !newMember.departmentId || !newMember.username || !newMember.password"
+            :disabled="!isNewMemberFormValid"
             icon="i-heroicons-paper-airplane"
           >
             Thêm nhân viên
@@ -206,7 +272,8 @@
                   <div>
                     <div class="text-base font-semibold flex items-center gap-2">
                        {{ member.name }}
-                       <UIcon v-if="member.role === 'Leader'" name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
+                       <UIcon v-if="member.role === 'Leader'" name="i-heroicons-star" class="w-4 h-4 text-yellow-500" title="Trưởng phòng" />
+                       <UIcon v-if="member.role === 'Owner'" name="i-heroicons-shield-check" class="w-4 h-4 text-purple-500" title="Quản lý toàn bộ" />
                     </div>
                     <!-- Username with Copy -->
                     <div class="text-xs text-gray-500 flex items-center gap-1 mt-0.5 group cursor-pointer" @click="copyToClipboard(member.username || '', 'Đã sao chép tên đăng nhập')">
@@ -273,10 +340,11 @@
                <div class="flex items-center gap-3">
                   <UAvatar :alt="member.name" size="md" />
                   <div>
-                     <div class="flex items-center gap-1.5">
-                        <span class="font-bold text-gray-900 dark:text-white">{{ member.name }}</span>
-                        <UIcon v-if="member.role === 'Leader'" name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
-                     </div>
+                      <div class="flex items-center gap-1.5">
+                         <span class="font-bold text-gray-900 dark:text-white">{{ member.name }}</span>
+                         <UIcon v-if="member.role === 'Leader'" name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
+                         <UIcon v-if="member.role === 'Owner'" name="i-heroicons-shield-check" class="w-4 h-4 text-purple-500" />
+                      </div>
                      <div class="text-xs text-gray-500 mt-0.5">{{ getDepartmentName(member.department_id) }}</div>
                   </div>
                </div>
@@ -364,7 +432,16 @@
                <!-- Username Readonly/Editable? Usually username is fixed or editable. User asked to be able to input. Let's make it editable but maybe distinct. -->
                   <div>
                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tên đăng nhập</label>
-                     <UInput v-model="editingMember.username" size="lg" class="w-full" icon="i-heroicons-at-symbol"/>
+                     <UInput 
+                       v-model="editingMember.username" 
+                       size="lg" 
+                       class="w-full" 
+                       icon="i-heroicons-at-symbol"
+                       @input="sanitizeUsername('edit')"
+                       :color="editingMember.username && editingMember.username.length < 3 ? 'error' : undefined"
+                     />
+                     <p v-if="editingMember.username && editingMember.username.length < 3" class="text-xs text-red-500 mt-1">Tên đăng nhập phải có ít nhất 3 ký tự</p>
+                     <p v-else class="text-xs text-gray-500 mt-1">Chỉ dùng chữ thường (a-z), số (0-9), tối thiểu 3 ký tự</p>
                   </div>
                   <div>
                      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mật khẩu mới</label>
@@ -401,19 +478,54 @@
                 </div>
               </div>
               
-              <div>
-                 <UCheckbox 
-                    v-model="editingMember.isManager" 
-                    label="Là người quản lý" 
-                    class="cursor-pointer"
-                 />
+              <!-- Role Selection (Radio Buttons) -->
+              <div class="space-y-3" v-if="currentUserRole === 'Owner'">
+                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Vai trò</label>
+                 <div class="grid grid-cols-3 gap-2">
+                    <!-- Member -->
+                    <div
+                      @click="editingMember.role = 'Member'"
+                      class="cursor-pointer p-3 rounded-lg border-2 text-center transition-all"
+                      :class="editingMember.role === 'Member' 
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20' 
+                        : 'border-gray-200 dark:border-gray-700 hover:border-primary-200'"
+                    >
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">Nhân viên</div>
+                    </div>
+                    <!-- Leader -->
+                    <div
+                      @click="editingMember.role = 'Leader'"
+                      class="cursor-pointer p-3 rounded-lg border-2 text-center transition-all"
+                      :class="editingMember.role === 'Leader' 
+                        ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' 
+                        : 'border-gray-200 dark:border-gray-700 hover:border-yellow-200'"
+                    >
+                      <div class="text-sm font-medium text-gray-900 dark:text-white flex items-center justify-center gap-1">
+                        Trưởng phòng
+                        <UIcon name="i-heroicons-star" class="w-4 h-4 text-yellow-500" />
+                      </div>
+                    </div>
+                    <!-- Owner -->
+                    <div
+                      @click="editingMember.role = 'Owner'"
+                      class="cursor-pointer p-3 rounded-lg border-2 text-center transition-all"
+                      :class="editingMember.role === 'Owner' 
+                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' 
+                        : 'border-gray-200 dark:border-gray-700 hover:border-purple-200'"
+                    >
+                      <div class="text-sm font-medium text-gray-900 dark:text-white flex items-center justify-center gap-1">
+                        QL Toàn bộ
+                        <UIcon name="i-heroicons-shield-check" class="w-4 h-4 text-purple-500" />
+                      </div>
+                    </div>
+                 </div>
               </div>
             </div>
           </div>
 
           <div class="px-3 py-3 sm:px-6 sm:py-4 bg-gray-50 dark:bg-gray-800/50 flex justify-end gap-3 border-t border-gray-100 dark:border-gray-800">
              <UButton color="neutral" variant="ghost" @click="isEditModalOpen = false">Hủy bỏ</UButton>
-             <UButton color="primary" @click="updateMember">Lưu thay đổi</UButton>
+             <UButton color="primary" @click="updateMember" :disabled="!isEditMemberFormValid">Lưu thay đổi</UButton>
           </div>
         </div>
       </div>
@@ -431,12 +543,18 @@ useHead({
 })
 
 // --- State ---
-// --- State ---
 const searchQuery = ref('')
 const isCreating = ref(false)
 const isEditModalOpen = ref(false)
 const showCreatePassword = ref(true)
 const showEditPassword = ref(true)
+
+// Get current user role
+const currentUserRole = ref<'Owner' | 'Leader' | 'Member'>('Owner')
+const { data: authData } = await useFetch<any>('/api/auth/me')
+if (authData.value?.success) {
+  currentUserRole.value = authData.value.user.role || 'Owner'
+}
 
 const newMember = reactive({
   name: '',
@@ -445,7 +563,7 @@ const newMember = reactive({
   email: '',
   phone: '',
   departmentId: null as string | null,
-  isManager: false
+  role: 'Member' as 'Member' | 'Leader' | 'Owner'
 })
 
 const editingMember = reactive({
@@ -456,7 +574,7 @@ const editingMember = reactive({
   email: '',
   phone: '',
   departmentId: '' as string,
-  isManager: false
+  role: 'Member' as 'Member' | 'Leader' | 'Owner'
 })
 
 // Auto-generate username
@@ -470,6 +588,40 @@ watch(() => newMember.name, (val) => {
       .replace(/\s+/g, '') // remove spaces
       .replace(/[^a-z0-9]/g, '') // remove non-alphanumeric
   }
+})
+
+// Sanitize username function - removes spaces and converts to lowercase
+const sanitizeUsername = (type: 'new' | 'edit') => {
+  if (type === 'new') {
+    newMember.username = newMember.username
+      .toLowerCase()
+      .replace(/\s+/g, '') // remove spaces
+      .replace(/[^a-z0-9]/g, '') // only allow a-z and 0-9
+  } else {
+    editingMember.username = editingMember.username
+      .toLowerCase()
+      .replace(/\s+/g, '') // remove spaces
+      .replace(/[^a-z0-9]/g, '') // only allow a-z and 0-9
+  }
+}
+
+// Validate username: only lowercase letters and numbers, min 3 chars
+const isValidUsername = (username: string): boolean => {
+  if (!username || username.length < 3) return false
+  return /^[a-z0-9]+$/.test(username)
+}
+
+// Form validation computed properties
+const isNewMemberFormValid = computed(() => {
+  return !!newMember.name && 
+         !!newMember.departmentId && 
+         !!newMember.password &&
+         isValidUsername(newMember.username)
+})
+
+const isEditMemberFormValid = computed(() => {
+  return !!editingMember.name && 
+         isValidUsername(editingMember.username)
 })
 
 // --- Interfaces (matching DB/API) ---
@@ -486,12 +638,12 @@ interface Department {
 interface Member {
   id: string
   name: string
-  username?: string // Added loosely for UI
-  password?: string // Added for display/copy (security caveat noted)
+  username?: string
+  password?: string
   email?: string
   phone?: string
   avatar?: string
-  role: 'Leader' | 'Member'
+  role: 'Leader' | 'Member' | 'Owner'
   department_id: string
   license_key: string
   created_at: string
@@ -554,7 +706,7 @@ const createMember = async () => {
         email: newMember.email,
         phone: newMember.phone,
         department_id: newMember.departmentId,
-        isManager: newMember.isManager
+        role: newMember.role
       }
     })
 
@@ -566,7 +718,7 @@ const createMember = async () => {
     newMember.password = ''
     newMember.email = ''
     newMember.phone = ''
-    newMember.isManager = false
+    newMember.role = 'Member'
     newMember.departmentId = null
     
     await refreshMembers()
@@ -589,7 +741,7 @@ const openEditModal = (member: Member) => {
   editingMember.email = member.email || ''
   editingMember.phone = member.phone || ''
   editingMember.departmentId = member.department_id
-  editingMember.isManager = member.role === 'Leader'
+  editingMember.role = member.role
   editingMember.password = '' 
   isEditModalOpen.value = true
 }
@@ -600,9 +752,10 @@ const updateMember = async () => {
       method: 'PUT',
       body: {
         name: editingMember.name,
+        username: editingMember.username,
         email: editingMember.email,
         phone: editingMember.phone,
-        isManager: editingMember.isManager,
+        role: editingMember.role,
         password: editingMember.password || undefined // Only send if not empty
       }
     })
