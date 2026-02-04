@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Công việc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iconify/iconify@3.1.0/dist/iconify.min.css">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+
+        .gradient-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+
+        .shadow-soft {
+            box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.08);
+        }
+
+        .shadow-glow {
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.25);
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-10px)
+            }
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Form Styles */
+        .form-group {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #fff;
+            font-size: 15px;
+            color: #1e293b;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .form-input.error:focus {
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+
+        .form-input:focus+.form-icon {
+            color: #6366f1;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .form-error {
+            font-size: 12px;
+            color: #ef4444;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 14px 40px 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E") no-repeat right 12px center;
+            background-size: 20px;
+            font-size: 15px;
+            color: #1e293b;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .form-select:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            min-height: 100px;
+            resize: vertical;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #fff;
+            font-size: 15px;
+            color: #1e293b;
+            transition: all 0.2s ease;
+        }
+
+        .form-textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-danger {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #fee2e2;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81' },
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-100 text-slate-800 h-screen overflow-hidden">
+    <div id="app" class="h-full">
+
+        <!-- Loading -->
+        <div v-if="globalLoading" class="fixed inset-0 bg-white/90 z-[99] flex items-center justify-center">
+            <div class="flex flex-col items-center gap-4">
+                <div class="w-12 h-12 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div>
+                <span class="text-slate-500 font-medium">Đang tải...</span>
+            </div>
+        </div>
+
+        <!-- LOGIN -->
+        <div v-if="!currentUser"
+            class="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-900 via-slate-800 to-brand-900 relative">
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl animate-float">
+                </div>
+                <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-float"
+                    style="animation-delay:1s"></div>
+            </div>
+
+            <div class="w-full max-w-md relative z-10">
+                <div class="text-center mb-8">
+                    <div
+                        class="inline-flex items-center justify-center w-20 h-20 rounded-2xl gradient-primary shadow-glow mb-6">
+                        <iconify-icon icon="solar:clipboard-list-bold" width="40" class="text-white"></iconify-icon>
+                    </div>
+                    <h1 class="text-3xl font-bold text-white mb-2">Workflow Pro</h1>
+                    <p class="text-slate-400">Hệ thống quản lý công việc thông minh</p>
+                </div>
+
+                <div class="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+                    <form @submit.prevent="handleLogin" class="space-y-5">
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Tên đăng nhập</label>
+                            <div class="relative">
+                                <input v-model="loginForm.username" type="text"
+                                    class="w-full px-4 py-3.5 pl-12 rounded-xl bg-white/10 border-2 border-white/20 text-white placeholder-slate-400 focus:border-brand-400 focus:ring-0 outline-none transition"
+                                    :class="{'border-red-400': errors.username}" placeholder="Nhập tên đăng nhập">
+                                <iconify-icon icon="solar:user-bold" width="20"
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></iconify-icon>
+                            </div>
+                            <p v-if="errors.username" class="text-red-400 text-xs mt-2 flex items-center gap-1">
+                                <iconify-icon icon="solar:danger-circle-bold" width="14"></iconify-icon>{{
+                                errors.username }}
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Mật khẩu</label>
+                            <div class="relative">
+                                <input v-model="loginForm.password" :type="showPassword ? 'text' : 'password'"
+                                    class="w-full px-4 py-3.5 pl-12 pr-12 rounded-xl bg-white/10 border-2 border-white/20 text-white placeholder-slate-400 focus:border-brand-400 focus:ring-0 outline-none transition"
+                                    :class="{'border-red-400': errors.password}" placeholder="••••••••">
+                                <iconify-icon icon="solar:lock-password-bold" width="20"
+                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></iconify-icon>
+                                <button type="button" @click="showPassword = !showPassword"
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
+                                    <iconify-icon :icon="showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'"
+                                        width="20"></iconify-icon>
+                                </button>
+                            </div>
+                            <p v-if="errors.password" class="text-red-400 text-xs mt-2 flex items-center gap-1">
+                                <iconify-icon icon="solar:danger-circle-bold" width="14"></iconify-icon>{{
+                                errors.password }}
+                            </p>
+                        </div>
+                        <button type="submit" :disabled="authLoading"
+                            class="w-full py-4 gradient-primary text-white font-semibold rounded-xl shadow-glow hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                            <span v-if="authLoading"
+                                class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                            <iconify-icon v-else icon="solar:login-3-bold" width="20"></iconify-icon>
+                            {{ authLoading ? 'Đang xử lý...' : 'Đăng nhập' }}
+                        </button>
+                        <p v-if="authError"
+                            class="text-center text-red-400 text-sm bg-red-500/10 py-3 rounded-xl flex items-center justify-center gap-2">
+                            <iconify-icon icon="solar:danger-triangle-bold" width="18"></iconify-icon>{{ authError }}
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN APP -->
+        <div v-else class="flex h-full">
+            <!-- Sidebar -->
+            <aside class="w-72 bg-slate-900 text-white flex-shrink-0 hidden lg:flex flex-col">
+                <div class="p-6 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
+                            <iconify-icon icon="solar:clipboard-list-bold" width="22" class="text-white"></iconify-icon>
+                        </div>
+                        <div>
+                            <h1 class="font-bold text-lg">Workflow Pro</h1>
+                            <p class="text-xs text-slate-400">{{ settings.companyName || 'Doanh nghiệp' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="flex-1 p-4 space-y-1 overflow-y-auto hide-scrollbar">
+                    <a v-for="link in menuLinks" :key="link.to" @click="navigate(link.to)"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer font-medium text-sm transition-all"
+                        :class="currentRoute === link.to ? 'bg-brand-500/20 text-brand-300' : 'text-slate-400 hover:bg-slate-800 hover:text-white hover:translate-x-1'">
+                        <iconify-icon :icon="link.icon" width="20"></iconify-icon>
+                        {{ link.label }}
+                    </a>
+                </nav>
+
+                <div class="p-4 border-t border-slate-800">
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 mb-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg">
+                            {{ currentUser.name.charAt(0) }}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-semibold text-sm truncate">{{ currentUser.name }}</p>
+                            <p class="text-xs text-slate-400">{{ currentUser.role }}</p>
+                        </div>
+                    </div>
+                    <button @click="logout"
+                        class="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-medium text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition">
+                        <iconify-icon icon="solar:logout-2-bold" width="20"></iconify-icon>
+                        Đăng xuất
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+                <!-- Header -->
+                <header
+                    class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 flex-shrink-0 shadow-sm">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">{{ pageTitle }}</h2>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button @click="navigate('notifications')"
+                            class="relative p-2.5 text-slate-500 hover:bg-slate-100 rounded-xl transition">
+                            <iconify-icon icon="solar:bell-bold" width="24"></iconify-icon>
+                            <span v-if="unreadCount > 0"
+                                class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+                        </button>
+                        <div class="h-8 w-px bg-slate-200"></div>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                {{ currentUser.name.charAt(0) }}
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Page Content -->
+                <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
+
+                    <!-- Dashboard -->
+                    <div v-if="currentRoute === 'dashboard'" class="space-y-6 max-w-7xl mx-auto">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                            <div class="bg-white rounded-2xl p-6 shadow-soft border border-slate-100">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-slate-500 font-medium text-sm">Tổng nhiệm vụ</span>
+                                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                                        <iconify-icon icon="solar:clipboard-list-bold" width="22"
+                                            class="text-blue-500"></iconify-icon>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-slate-800">{{ stats.totalTasks || 0 }}</p>
+                            </div>
+                            <div class="bg-white rounded-2xl p-6 shadow-soft border border-slate-100">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-slate-500 font-medium text-sm">Đang thực hiện</span>
+                                    <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                                        <iconify-icon icon="solar:clock-circle-bold" width="22"
+                                            class="text-amber-500"></iconify-icon>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-slate-800">{{ stats.inProgressTasks || 0 }}</p>
+                            </div>
+                            <div class="bg-white rounded-2xl p-6 shadow-soft border border-slate-100">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-slate-500 font-medium text-sm">Hoàn thành</span>
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                                        <iconify-icon icon="solar:check-circle-bold" width="22"
+                                            class="text-emerald-500"></iconify-icon>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-slate-800">{{ stats.doneTasks || 0 }}</p>
+                            </div>
+                            <div class="bg-white rounded-2xl p-6 shadow-soft border border-slate-100">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-slate-500 font-medium text-sm">Quá hạn</span>
+                                    <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
+                                        <iconify-icon icon="solar:danger-triangle-bold" width="22"
+                                            class="text-red-500"></iconify-icon>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-slate-800">{{ stats.overdueTasks || 0 }}</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-6 shadow-soft border border-slate-100">
+                            <h3 class="font-bold text-lg text-slate-800 mb-6">Nhiệm vụ gần đây</h3>
+                            <div v-if="data.tasks.length === 0" class="text-center py-12 text-slate-400">
+                                <iconify-icon icon="solar:clipboard-remove-bold-duotone" width="48"
+                                    class="mb-3 opacity-50"></iconify-icon>
+                                <p>Chưa có nhiệm vụ nào</p>
+                            </div>
+                            <div v-else class="space-y-3">
+                                <div v-for="task in data.tasks.slice(0,5)" :key="task.id"
+                                    class="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-slate-100 transition cursor-pointer"
+                                    @click="viewTask(task)">
+                                    <div
+                                        :class="['w-3 h-3 rounded-full', task.status==='done'?'bg-emerald-500':task.status==='in-progress'?'bg-amber-500':'bg-slate-300']">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="font-semibold text-slate-700 truncate">{{ task.title }}</p>
+                                        <p class="text-sm text-slate-400">{{ task.assignee?.name || 'Chưa giao' }}</p>
+                                    </div>
+                                    <span class="text-xs text-slate-400 bg-white px-3 py-1.5 rounded-lg border">{{
+                                        formatDate(task.due_date) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks -->
+                    <div v-if="currentRoute === 'tasks'" class="max-w-5xl mx-auto space-y-6">
+                        <div class="flex flex-col sm:flex-row gap-4 justify-between">
+                            <div class="relative flex-1 max-w-md">
+                                <input v-model="searchQuery" placeholder="Tìm kiếm nhiệm vụ..."
+                                    class="form-input pl-12">
+                                <iconify-icon icon="solar:magnifer-linear" width="20" class="form-icon"></iconify-icon>
+                            </div>
+                            <button @click="openModal('task')" class="btn btn-primary">
+                                <iconify-icon icon="solar:add-circle-bold" width="20"></iconify-icon>
+                                Tạo nhiệm vụ
+                            </button>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-soft border border-slate-100 overflow-hidden">
+                            <div v-if="filteredTasks.length === 0" class="p-12 text-center text-slate-400">
+                                <iconify-icon icon="solar:clipboard-remove-bold-duotone" width="48"
+                                    class="mb-3 opacity-50"></iconify-icon>
+                                <p>Không có nhiệm vụ nào</p>
+                            </div>
+                            <div v-else class="divide-y divide-slate-100">
+                                <div v-for="task in filteredTasks" :key="task.id"
+                                    class="p-5 hover:bg-slate-50 transition flex items-center gap-4">
+                                    <div
+                                        :class="['w-3 h-3 rounded-full flex-shrink-0', task.priority==='high'?'bg-red-500':task.priority==='medium'?'bg-amber-400':'bg-slate-300']">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="font-semibold text-slate-800">{{ task.title }}</p>
+                                        <p class="text-sm text-slate-400 mt-0.5 flex items-center gap-2">
+                                            <iconify-icon icon="solar:user-linear" width="14"></iconify-icon>{{
+                                            task.assignee?.name || 'Chưa giao' }}
+                                            <span class="text-slate-300">•</span>
+                                            <iconify-icon icon="solar:calendar-linear" width="14"></iconify-icon>{{
+                                            formatDate(task.due_date) }}
+                                        </p>
+                                    </div>
+                                    <select :value="task.status"
+                                        @change="updateTaskStatus(task.id, $event.target.value)"
+                                        class="form-select w-auto text-sm py-2">
+                                        <option value="todo">Cần làm</option>
+                                        <option value="in-progress">Đang làm</option>
+                                        <option value="done">Hoàn thành</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Kanban -->
+                    <div v-if="currentRoute === 'progress'" class="h-full">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 h-full">
+                            <div v-for="col in kanbanColumns" :key="col.id"
+                                class="flex flex-col bg-white rounded-2xl shadow-soft border border-slate-200 overflow-hidden">
+                                <!-- Column Header -->
+                                <div class="flex items-center justify-between p-4 border-b border-slate-100"
+                                    :class="col.id==='todo'?'bg-slate-50':col.id==='in-progress'?'bg-amber-50':'bg-emerald-50'">
+                                    <h3 class="font-bold flex items-center gap-2"
+                                        :class="col.id==='todo'?'text-slate-700':col.id==='in-progress'?'text-amber-700':'text-emerald-700'">
+                                        <iconify-icon
+                                            :icon="col.id==='todo'?'solar:clipboard-list-bold':col.id==='in-progress'?'solar:clock-circle-bold':'solar:check-circle-bold'"
+                                            width="20"></iconify-icon>
+                                        {{ col.label }}
+                                    </h3>
+                                    <span class="text-sm font-bold px-3 py-1 rounded-full"
+                                        :class="col.id==='todo'?'bg-slate-200 text-slate-600':col.id==='in-progress'?'bg-amber-200 text-amber-700':'bg-emerald-200 text-emerald-700'">
+                                        {{ col.tasks.length }}
+                                    </span>
+                                </div>
+                                <!-- Column Body -->
+                                <!-- Column Body -->
+                                <div class="flex-1 p-4 space-y-3 overflow-y-auto hide-scrollbar bg-slate-50/50 min-h-[300px]"
+                                    @dragover.prevent @dragenter.prevent @drop="onDrop($event, col.id)">
+                                    <div v-if="col.tasks.length === 0"
+                                        class="flex flex-col items-center justify-center h-full text-slate-400 py-8">
+                                        <iconify-icon icon="solar:clipboard-remove-bold-duotone" width="40"
+                                            class="mb-2 opacity-50"></iconify-icon>
+                                        <p class="text-sm">Không có nhiệm vụ</p>
+                                    </div>
+                                    <div v-for="task in col.tasks" :key="task.id"
+                                        class="task-card bg-white p-4 rounded-xl border border-slate-200 cursor-pointer transition-all hover:border-brand-300"
+                                        draggable="true" @dragstart="onDragStart($event, task)"
+                                        @dragend="onDragEnd($event)" @click="viewTask(task)">
+                                        <div class="flex items-start gap-2 mb-3">
+                                            <span class="w-2 h-2 rounded-full mt-2 flex-shrink-0"
+                                                :class="task.priority==='high'?'bg-red-500':task.priority==='medium'?'bg-amber-400':'bg-slate-300'"></span>
+                                            <p class="font-semibold text-slate-800 line-clamp-2 flex-1">{{ task.title }}
+                                            </p>
+                                        </div>
+                                        <div
+                                            class="flex items-center justify-between text-xs text-slate-500 pt-3 border-t border-slate-100">
+                                            <span class="flex items-center gap-1.5 bg-slate-100 px-2 py-1 rounded-md">
+                                                <iconify-icon icon="solar:user-circle-bold" width="14"
+                                                    class="text-slate-400"></iconify-icon>
+                                                {{ task.assignee?.name?.split(' ').pop() || 'Chưa giao' }}
+                                            </span>
+                                            <span
+                                                :class="isOverdue(task.due_date)?'text-red-500 bg-red-50':'bg-slate-100'"
+                                                class="flex items-center gap-1.5 px-2 py-1 rounded-md font-medium">
+                                                <iconify-icon icon="solar:calendar-bold" width="14"></iconify-icon>
+                                                {{ formatDateShort(task.due_date) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employees -->
+                    <div v-if="currentRoute === 'employees'" class="max-w-5xl mx-auto space-y-6">
+                        <div class="flex justify-between gap-4">
+                            <div class="relative flex-1 max-w-xs">
+                                <input v-model="searchQuery" placeholder="Tìm nhân viên..." class="form-input pl-12">
+                                <iconify-icon icon="solar:magnifer-linear" width="20" class="form-icon"></iconify-icon>
+                            </div>
+                            <button v-if="currentUser.role==='Owner'" @click="openModal('employee')"
+                                class="btn btn-primary">
+                                <iconify-icon icon="solar:user-plus-bold" width="20"></iconify-icon>
+                                Thêm nhân viên
+                            </button>
+                        </div>
+                        <div v-if="filteredEmployees.length === 0"
+                            class="bg-white rounded-2xl shadow-soft border border-slate-100 p-12 text-center">
+                            <iconify-icon icon="solar:users-group-rounded-bold-duotone" width="56"
+                                class="text-slate-300 mb-4"></iconify-icon>
+                            <p class="text-slate-500 font-medium">Chưa có nhân viên nào</p>
+                            <p class="text-slate-400 text-sm mt-1">Bấm "Thêm nhân viên" để bắt đầu</p>
+                        </div>
+                        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div v-for="emp in filteredEmployees" :key="emp.id"
+                                class="bg-white p-5 rounded-2xl shadow-soft border border-slate-100 flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-gradient-to-br from-brand-400 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
+                                    {{ emp.name.charAt(0) }}</div>
+                                <div class="flex-1">
+                                    <p class="font-semibold text-slate-800">{{ emp.name }}</p>
+                                    <p class="text-sm text-slate-400 flex items-center gap-1">
+                                        <iconify-icon icon="solar:buildings-2-linear" width="14"></iconify-icon>
+                                        {{ emp.department?.name || 'Chưa phân bổ' }}
+                                    </p>
+                                </div>
+                                <span
+                                    :class="['text-xs font-semibold px-3 py-1.5 rounded-full', emp.role==='Leader'?'bg-blue-100 text-blue-700':'bg-slate-100 text-slate-600']">{{
+                                    emp.role }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div v-if="currentRoute === 'categories'" class="max-w-4xl mx-auto space-y-6">
+                        <div class="flex justify-between gap-4">
+                            <div class="relative flex-1 max-w-xs">
+                                <input v-model="searchQuery" placeholder="Tìm danh mục..." class="form-input pl-12">
+                                <iconify-icon icon="solar:magnifer-linear" width="20" class="form-icon"></iconify-icon>
+                            </div>
+                            <button @click="openModal('category')" class="btn btn-primary">
+                                <iconify-icon icon="solar:add-folder-bold" width="20"></iconify-icon>
+                                Thêm danh mục
+                            </button>
+                        </div>
+                        <div v-if="filteredCategories.length === 0"
+                            class="bg-white rounded-2xl shadow-soft border border-slate-100 p-12 text-center">
+                            <iconify-icon icon="solar:folder-with-files-bold-duotone" width="56"
+                                class="text-slate-300 mb-4"></iconify-icon>
+                            <p class="text-slate-500 font-medium">Chưa có danh mục nào</p>
+                            <p class="text-slate-400 text-sm mt-1">Bấm "Thêm danh mục" để bắt đầu</p>
+                        </div>
+                        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div v-for="cat in filteredCategories" :key="cat.id"
+                                class="bg-white p-5 rounded-2xl shadow-soft border border-slate-100 hover:shadow-md transition">
+                                <div class="flex items-start justify-between mb-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                                            :style="{backgroundColor: cat.color + '20'}">
+                                            <iconify-icon icon="solar:folder-bold" width="22"
+                                                :style="{color: cat.color}"></iconify-icon>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-slate-800">{{ cat.name }}</p>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <span class="w-3 h-3 rounded-full"
+                                                    :style="{backgroundColor: cat.color}"></span>
+                                                <span class="text-xs text-slate-400">{{ cat.color }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span v-if="cat.is_default"
+                                        class="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-1 rounded-full">Mặc
+                                        định</span>
+                                </div>
+                                <div v-if="currentUser.role==='Owner' && !cat.is_default"
+                                    class="flex gap-2 pt-3 border-t border-slate-100">
+                                    <button @click="openModal('category', cat)"
+                                        class="flex-1 btn btn-secondary btn-sm text-xs">
+                                        <iconify-icon icon="solar:pen-2-bold" width="14"></iconify-icon> Sửa
+                                    </button>
+                                    <button @click="deleteItem('category', cat.id)"
+                                        class="btn btn-danger btn-sm text-xs">
+                                        <iconify-icon icon="solar:trash-bin-trash-bold" width="14"></iconify-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Pages -->
+                    <div v-if="['departments','settings','notifications'].includes(currentRoute)"
+                        class="max-w-3xl mx-auto">
+                        <div class="bg-white rounded-2xl shadow-soft border border-slate-100 p-6">
+                            <!-- Departments -->
+                            <div v-if="currentRoute==='departments'">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="font-bold text-lg flex items-center gap-2">
+                                        <iconify-icon icon="solar:buildings-2-bold" width="22"
+                                            class="text-brand-500"></iconify-icon>
+                                        Phòng ban
+                                    </h3>
+                                    <button v-if="currentUser.role==='Owner'" @click="openModal('department')"
+                                        class="btn btn-primary btn-sm">
+                                        <iconify-icon icon="solar:add-circle-bold" width="18"></iconify-icon>
+                                        Thêm
+                                    </button>
+                                </div>
+                                <div class="space-y-3">
+                                    <div v-for="d in data.departments" :key="d.id"
+                                        class="p-4 rounded-xl bg-slate-50 flex justify-between items-center hover:bg-slate-100 transition">
+                                        <div>
+                                            <p class="font-semibold text-slate-800">{{ d.name }}</p>
+                                            <p class="text-sm text-slate-400">{{ d.description || 'Không có mô tả'
+                                                }}
+                                            </p>
+                                        </div>
+                                        <button v-if="currentUser.role==='Owner'" @click="deleteItem('department',d.id)"
+                                            class="btn btn-danger btn-sm">
+                                            <iconify-icon icon="solar:trash-bin-trash-bold" width="16"></iconify-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Settings -->
+                            <div v-if="currentRoute==='settings'" class="space-y-8">
+                                <div v-if="currentUser.role==='Owner'">
+                                    <h3 class="font-bold text-lg flex items-center gap-2 mb-6">
+                                        <iconify-icon icon="solar:buildings-bold" width="22"
+                                            class="text-brand-500"></iconify-icon>
+                                        Thông tin công ty
+                                    </h3>
+                                    <div class="space-y-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Tên công ty</label>
+                                            <div class="relative">
+                                                <input v-model="settings.companyName" class="form-input pl-12"
+                                                    placeholder="Nhập tên công ty">
+                                                <iconify-icon icon="solar:buildings-2-linear" width="20"
+                                                    class="form-icon"></iconify-icon>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Mô tả</label>
+                                            <textarea v-model="settings.description" class="form-textarea"
+                                                placeholder="Mô tả về công ty..." rows="3"></textarea>
+                                        </div>
+                                        <button @click="updateCompany" class="btn btn-primary">
+                                            <iconify-icon icon="solar:diskette-bold" width="18"></iconify-icon>
+                                            Lưu thay đổi
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="pt-8 border-t">
+                                    <h3 class="font-bold text-lg flex items-center gap-2 mb-6">
+                                        <iconify-icon icon="solar:user-circle-bold" width="22"
+                                            class="text-brand-500"></iconify-icon>
+                                        Thông tin cá nhân
+                                    </h3>
+                                    <div class="space-y-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Họ tên</label>
+                                            <div class="relative">
+                                                <input v-model="currentUser.name" class="form-input pl-12"
+                                                    placeholder="Họ và tên">
+                                                <iconify-icon icon="solar:user-linear" width="20"
+                                                    class="form-icon"></iconify-icon>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Mật khẩu mới</label>
+                                            <div class="relative">
+                                                <input v-model="profileForm.newPassword" type="password"
+                                                    class="form-input pl-12" placeholder="Để trống nếu không đổi">
+                                                <iconify-icon icon="solar:lock-password-linear" width="20"
+                                                    class="form-icon"></iconify-icon>
+                                            </div>
+                                        </div>
+                                        <button @click="updateProfile" class="btn btn-primary">
+                                            <iconify-icon icon="solar:pen-2-bold" width="18"></iconify-icon>
+                                            Cập nhật
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notifications -->
+                            <div v-if="currentRoute==='notifications'">
+                                <h3 class="font-bold text-lg flex items-center gap-2 mb-6">
+                                    <iconify-icon icon="solar:bell-bold" width="22"
+                                        class="text-brand-500"></iconify-icon>
+                                    Thông báo
+                                </h3>
+                                <div v-if="data.notifications.length === 0" class="text-center py-12 text-slate-400">
+                                    <iconify-icon icon="solar:bell-off-bold-duotone" width="48"
+                                        class="mb-3 opacity-50"></iconify-icon>
+                                    <p>Không có thông báo</p>
+                                </div>
+                                <div v-else class="space-y-2">
+                                    <div v-for="n in data.notifications" :key="n.id"
+                                        :class="[!n.read ? 'bg-brand-50 border-brand-200' : 'bg-slate-50 border-slate-200']"
+                                        class="p-4 rounded-xl border cursor-pointer hover:shadow-md transition"
+                                        @click="markRead(n)">
+                                        <div class="flex items-start gap-3">
+                                            <div :class="[!n.read ? 'bg-brand-500' : 'bg-slate-300']"
+                                                class="w-2 h-2 rounded-full mt-2 flex-shrink-0"></div>
+                                            <div>
+                                                <p class="font-semibold text-slate-800">{{ n.title }}</p>
+                                                <p class="text-sm text-slate-500 mt-1">{{ n.description }}</p>
+                                                <p class="text-xs text-slate-400 mt-2">{{ formatDate(n.created_at)
+                                                    }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Detail Modal (Task View) -->
+        <div v-if="detailModal.open"
+            class="fixed inset-0 z-50 flex justify-center items-end sm:items-center p-0 sm:p-4">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="closeDetailModal">
+            </div>
+            <div
+                class="relative w-full max-w-2xl bg-white rounded-t-2xl sm:rounded-2xl shadow-xl flex flex-col max-h-[90vh] overflow-hidden transform transition-all h-[90vh] sm:h-auto">
+
+                <!-- Header -->
+                <div class="p-6 border-b border-slate-100 flex justify-between items-start bg-white z-10 sticky top-0">
+                    <div class="space-y-2 flex-1 mr-4">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="px-2 py-0.5 rounded text-xs font-medium"
+                                :class="detailModal.task.priority==='high'?'bg-red-100 text-red-700':detailModal.task.priority==='medium'?'bg-amber-100 text-amber-700':'bg-slate-100 text-slate-700'">
+                                {{ detailModal.task.priority==='high'?'Cao':detailModal.task.priority==='medium'?'Trung
+                                bình':'Thấp' }}
+                            </span>
+                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
+                                {{ detailModal.task.department?.name || 'N/A' }}
+                            </span>
+                            <span v-if="detailModal.task.category"
+                                class="px-2 py-0.5 rounded text-xs font-medium bg-brand-50 text-brand-700 flex items-center gap-1">
+                                <iconify-icon icon="solar:folder-bold" width="12"></iconify-icon>
+                                {{ detailModal.task.category?.name || detailModal.task.category_id }}
+                            </span>
+                        </div>
+                        <h2 class="text-2xl font-bold text-slate-900 leading-tight">{{ detailModal.task.title }}</h2>
+                    </div>
+                    <button @click="closeDetailModal"
+                        class="p-2 -mr-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition">
+                        <iconify-icon icon="solar:close-circle-bold" width="28"></iconify-icon>
+                    </button>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="p-6 overflow-y-auto space-y-8 flex-1 bg-white">
+
+                    <!-- Status -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Trạng
+                            thái</label>
+                        <div class="flex p-1 bg-slate-100 rounded-xl">
+                            <button
+                                v-for="st in [{val:'todo',lbl:'Cần làm',cls:'bg-white text-slate-900 shadow-sm'}, {val:'in-progress',lbl:'Đang làm',cls:'bg-blue-500 text-white shadow-md'}, {val:'done',lbl:'Hoàn thành',cls:'bg-emerald-500 text-white shadow-md'}]"
+                                :key="st.val"
+                                @click="updateTaskStatus(detailModal.task.id, st.val); detailModal.task.status = st.val"
+                                class="flex-1 py-2 text-sm font-medium rounded-lg transition-all"
+                                :class="detailModal.task.status === st.val ? st.cls : 'text-slate-500 hover:text-slate-900'">
+                                {{ st.lbl }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Mô tả nhiệm vụ</h4>
+                        <p class="text-slate-700 leading-relaxed whitespace-pre-line text-sm">{{
+                            detailModal.task.description || 'Không có mô tả' }}</p>
+                    </div>
+
+                    <!-- Assignee -->
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Người thực hiện</h4>
+                        <div
+                            class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100 w-fit pr-6">
+                            <div
+                                class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-brand-600 font-bold shadow-sm overflow-hidden">
+                                <img v-if="detailModal.task.assignee && detailModal.task.assignee.avatar"
+                                    :src="detailModal.task.assignee.avatar" class="w-full h-full object-cover">
+                                <span v-else>{{ (detailModal.task.assignee?.name || 'U').charAt(0) }}</span>
+                            </div>
+                            <div>
+                                <div class="font-bold text-slate-900 text-sm">{{ detailModal.task.assignee?.name ||
+                                    'Chưa giao' }}</div>
+                                <div class="text-xs text-slate-500">Nhân viên Ban {{ detailModal.task.department?.name
+                                    }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="space-y-4 pt-4 border-t border-slate-100">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <iconify-icon icon="solar:chat-line-bold" width="16"></iconify-icon>
+                            Bình luận ({{ detailModal.comments.length }})
+                        </h4>
+
+                        <div class="space-y-4 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                            <div v-if="isCommentLoading" class="flex justify-center py-8">
+                                <div
+                                    class="w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin">
+                                </div>
+                            </div>
+                            <div v-else-if="detailModal.comments.length === 0"
+                                class="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                                <p class="text-slate-400 italic text-sm">Chưa có bình luận nào.</p>
+                            </div>
+                            <div v-else v-for="cmt in detailModal.comments" :key="cmt.id" class="flex gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 flex-shrink-0 mt-1 overflow-hidden">
+                                    <img v-if="cmt.user && cmt.user.avatar" :src="cmt.user.avatar"
+                                        class="w-full h-full object-cover">
+                                    <span v-else>{{ (cmt.user?.name || 'U').charAt(0) }}</span>
+                                </div>
+                                <div
+                                    class="bg-slate-50 rounded-2xl rounded-tl-none p-3 flex-1 text-sm border border-slate-100">
+                                    <div class="flex justify-between items-baseline mb-1">
+                                        <span class="font-bold text-slate-800">{{ cmt.user?.name || 'Unknown' }}</span>
+                                        <span class="text-xs text-slate-400">{{ formatDate(cmt.created_at) }}</span>
+                                    </div>
+                                    <p class="text-slate-600 whitespace-pre-wrap">{{ cmt.content }}</p>
+                                    <img v-if="cmt.image" :src="cmt.image"
+                                        class="mt-2 rounded-lg max-w-full h-auto border border-slate-200 max-h-48 object-cover cursor-pointer"
+                                        onclick="window.open(this.src)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Comment -->
+                        <div class="flex gap-3 items-start pt-4 border-t border-slate-100">
+                            <div
+                                class="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1 overflow-hidden">
+                                <img v-if="currentUser.avatar" :src="currentUser.avatar"
+                                    class="w-full h-full object-cover">
+                                <span v-else>{{ currentUser.name.charAt(0) }}</span>
+                            </div>
+                            <div class="flex-1 space-y-3">
+                                <div v-if="detailModal.imagePreview" class="relative inline-block group">
+                                    <img :src="detailModal.imagePreview"
+                                        class="h-20 w-auto rounded-lg border border-slate-200">
+                                    <button @click="removeCommentImage"
+                                        class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600">
+                                        <iconify-icon icon="solar:close-circle-bold" width="16"></iconify-icon>
+                                    </button>
+                                </div>
+                                <div class="relative">
+                                    <textarea v-model="detailModal.newComment" placeholder="Viết bình luận..." rows="1"
+                                        class="w-full bg-slate-50 border-0 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:bg-white transition resize-none pr-12"></textarea>
+                                    <label
+                                        class="absolute right-3 bottom-2.5 p-1.5 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg cursor-pointer transition">
+                                        <iconify-icon icon="solar:gallery-add-bold" width="20"></iconify-icon>
+                                        <input type="file" accept="image/*" class="hidden" @change="handleCommentImage">
+                                    </label>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button @click="submitComment"
+                                        :disabled="!detailModal.newComment.trim() && !detailModal.image"
+                                        class="btn btn-primary btn-sm px-6 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                                        Gửi
+                                        <iconify-icon icon="solar:plain-3-bold" width="16" class="ml-2"></iconify-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div v-if="modal.open" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" @click="closeModal"></div>
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-lg z-10 overflow-hidden max-h-[90vh] flex flex-col">
+                <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center flex-shrink-0">
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        <iconify-icon
+                            :icon="modal.type==='task'?'solar:clipboard-add-bold':modal.type==='employee'?'solar:user-plus-bold':'solar:buildings-2-bold'"
+                            width="22" class="text-brand-500"></iconify-icon>
+                        {{ modalTitle }}
+                    </h3>
+                    <button @click="closeModal" class="p-2 hover:bg-slate-100 rounded-lg transition">
+                        <iconify-icon icon="solar:close-circle-bold" width="24" class="text-slate-400"></iconify-icon>
+                    </button>
+                </div>
+                <form @submit.prevent="submitModal" class="p-6 space-y-5 overflow-y-auto">
+                    <!-- Task Form -->
+                    <template v-if="modal.type==='task'">
+                        <div class="form-group">
+                            <label class="form-label">Tiêu đề nhiệm vụ <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input v-model="modal.data.title" class="form-input pl-12"
+                                    :class="{'error': modalErrors.title}" placeholder="Nhập tiêu đề nhiệm vụ">
+                                <iconify-icon icon="solar:document-text-linear" width="20"
+                                    class="form-icon"></iconify-icon>
+                            </div>
+                            <p v-if="modalErrors.title" class="form-error"><iconify-icon icon="solar:danger-circle-bold"
+                                    width="14"></iconify-icon>{{ modalErrors.title }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mô tả</label>
+                            <textarea v-model="modal.data.description" class="form-textarea"
+                                placeholder="Mô tả chi tiết nhiệm vụ..." rows="3"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Người thực hiện <span class="text-red-500">*</span></label>
+                                <select v-model="modal.data.assignee_id" class="form-select"
+                                    :class="{'error': modalErrors.assignee_id}">
+                                    <option value="">-- Chọn người --</option>
+                                    <option v-for="e in data.employees" :value="e.id">{{ e.name }}</option>
+                                </select>
+                                <p v-if="modalErrors.assignee_id" class="form-error"><iconify-icon
+                                        icon="solar:danger-circle-bold" width="14"></iconify-icon>{{
+                                    modalErrors.assignee_id }}</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Hạn hoàn thành <span class="text-red-500">*</span></label>
+                                <input v-model="modal.data.due_date" type="date" class="form-input"
+                                    :class="{'error': modalErrors.due_date}">
+                                <p v-if="modalErrors.due_date" class="form-error"><iconify-icon
+                                        icon="solar:danger-circle-bold" width="14"></iconify-icon>{{
+                                    modalErrors.due_date }}</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Độ ưu tiên</label>
+                                <select v-model="modal.data.priority" class="form-select">
+                                    <option value="high">🔴 Cao</option>
+                                    <option value="medium">🟡 Trung bình</option>
+                                    <option value="low">🟢 Thấp</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Danh mục</label>
+                                <select v-model="modal.data.category_id" class="form-select">
+                                    <option value="">-- Chọn danh mục --</option>
+                                    <option v-for="c in data.categories" :value="c.id">{{ c.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Employee Form -->
+                    <template v-if="modal.type==='employee'">
+                        <div class="form-group">
+                            <label class="form-label">Họ tên <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input v-model="modal.data.name" class="form-input pl-12"
+                                    :class="{'error': modalErrors.name}" placeholder="Nhập họ và tên">
+                                <iconify-icon icon="solar:user-linear" width="20" class="form-icon"></iconify-icon>
+                            </div>
+                            <p v-if="modalErrors.name" class="form-error"><iconify-icon icon="solar:danger-circle-bold"
+                                    width="14"></iconify-icon>{{ modalErrors.name }}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Tên đăng nhập <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <input v-model="modal.data.username" class="form-input pl-12"
+                                        :class="{'error': modalErrors.username}" placeholder="Không dấu, viết liền">
+                                    <iconify-icon icon="solar:user-id-linear" width="20"
+                                        class="form-icon"></iconify-icon>
+                                </div>
+                                <p v-if="modalErrors.username" class="form-error"><iconify-icon
+                                        icon="solar:danger-circle-bold" width="14"></iconify-icon>{{
+                                    modalErrors.username }}
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mật khẩu <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <input v-model="modal.data.password" type="password" class="form-input pl-12"
+                                        :class="{'error': modalErrors.password}" placeholder="Tối thiểu 3 ký tự">
+                                    <iconify-icon icon="solar:lock-password-linear" width="20"
+                                        class="form-icon"></iconify-icon>
+                                </div>
+                                <p v-if="modalErrors.password" class="form-error"><iconify-icon
+                                        icon="solar:danger-circle-bold" width="14"></iconify-icon>{{
+                                    modalErrors.password }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <div class="relative">
+                                    <input v-model="modal.data.email" type="email" class="form-input pl-12"
+                                        :class="{'error': modalErrors.email}" placeholder="email@example.com">
+                                    <iconify-icon icon="solar:letter-linear" width="20"
+                                        class="form-icon"></iconify-icon>
+                                </div>
+                                <p v-if="modalErrors.email" class="form-error"><iconify-icon
+                                        icon="solar:danger-circle-bold" width="14"></iconify-icon>{{ modalErrors.email
+                                    }}
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Điện thoại</label>
+                                <div class="relative">
+                                    <input v-model="modal.data.phone" type="tel" class="form-input pl-12"
+                                        placeholder="0901234567">
+                                    <iconify-icon icon="solar:phone-linear" width="20" class="form-icon"></iconify-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Vai trò</label>
+                                <select v-model="modal.data.role" class="form-select">
+                                    <option value="Member">👤 Nhân viên</option>
+                                    <option value="Leader">👑 Trưởng nhóm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phòng ban <span class="text-red-500">*</span></label>
+                                <select v-model="modal.data.department_id" class="form-select"
+                                    :class="{'error': modalErrors.department_id}">
+                                    <option value="">-- Chọn --</option>
+                                    <option v-for="d in data.departments" :value="d.id">{{ d.name }}</option>
+                                </select>
+                                <p v-if="modalErrors.department_id" class="form-error"><iconify-icon
+                                        icon="solar:danger-circle-bold" width="14"></iconify-icon>{{
+                                    modalErrors.department_id }}</p>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Department Form -->
+                    <template v-if="modal.type==='department'">
+                        <div class="form-group">
+                            <label class="form-label">Tên phòng ban <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input v-model="modal.data.name" class="form-input pl-12"
+                                    :class="{'error': modalErrors.name}" placeholder="Nhập tên phòng ban">
+                                <iconify-icon icon="solar:buildings-2-linear" width="20"
+                                    class="form-icon"></iconify-icon>
+                            </div>
+                            <p v-if="modalErrors.name" class="form-error"><iconify-icon icon="solar:danger-circle-bold"
+                                    width="14"></iconify-icon>{{ modalErrors.name }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mô tả</label>
+                            <textarea v-model="modal.data.description" class="form-textarea"
+                                placeholder="Mô tả về phòng ban..."></textarea>
+                        </div>
+                    </template>
+
+                    <!-- Category Form -->
+                    <template v-if="modal.type==='category'">
+                        <div class="form-group">
+                            <label class="form-label">Tên danh mục <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <input v-model="modal.data.name" class="form-input pl-12"
+                                    :class="{'error': modalErrors.name}" placeholder="Nhập tên danh mục">
+                                <iconify-icon icon="solar:folder-linear" width="20" class="form-icon"></iconify-icon>
+                            </div>
+                            <p v-if="modalErrors.name" class="form-error"><iconify-icon icon="solar:danger-circle-bold"
+                                    width="14"></iconify-icon>{{ modalErrors.name }}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="form-group">
+                                <label class="form-label">Icon</label>
+                                <div class="relative">
+                                    <input v-model="modal.data.icon" class="form-input pl-12"
+                                        placeholder="VD: briefcase">
+                                    <iconify-icon icon="solar:pallete-2-linear" width="20"
+                                        class="form-icon"></iconify-icon>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Màu sắc <span class="text-red-500">*</span></label>
+                                <div class="flex gap-2">
+                                    <input v-model="modal.data.color" type="color"
+                                        class="w-12 h-12 rounded-xl border-2 border-slate-200 cursor-pointer">
+                                    <input v-model="modal.data.color" class="form-input flex-1"
+                                        :class="{'error': modalErrors.color}" placeholder="#3B82F6">
+                                </div>
+                                <p v-if="modalErrors.color" class="form-error"><iconify-icon
+                                        icon="solar:danger-circle-bold" width="14"></iconify-icon>{{ modalErrors.color
+                                    }}</p>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl">
+                            <p class="text-sm text-slate-600 mb-2">Xem trước:</p>
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                                    :style="{backgroundColor: (modal.data.color || '#3B82F6') + '20'}">
+                                    <iconify-icon icon="solar:folder-bold" width="22"
+                                        :style="{color: modal.data.color || '#3B82F6'}"></iconify-icon>
+                                </div>
+                                <span class="font-medium text-slate-800">{{ modal.data.name || 'Tên danh mục' }}</span>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="flex justify-end gap-3 pt-4 border-t">
+                        <button type="button" @click="closeModal" class="btn btn-secondary">Hủy</button>
+                        <button type="submit" class="btn btn-primary">
+                            <iconify-icon icon="solar:diskette-bold" width="18"></iconify-icon>
+                            Lưu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, computed, onMounted } = Vue
+        const api = new Proxy({}, { get: (_, prop) => (...args) => new Promise((res, rej) => google.script.run.withSuccessHandler(res).withFailureHandler(rej)[prop](...args)) })
+
+        createApp({
+            setup() {
+                const currentUser = ref(null), globalLoading = ref(false), currentRoute = ref('dashboard'), showPassword = ref(false)
+                const menuLinks = [
+                    { label: 'Thống kê', icon: 'solar:chart-2-bold', to: 'dashboard' },
+                    { label: 'Phòng ban', icon: 'solar:buildings-2-bold', to: 'departments' },
+                    { label: 'Nhân viên', icon: 'solar:users-group-rounded-bold', to: 'employees' },
+                    { label: 'Danh mục', icon: 'solar:folder-with-files-bold', to: 'categories' },
+                    { label: 'Nhiệm vụ', icon: 'solar:clipboard-list-bold', to: 'tasks' },
+                    { label: 'Tiến độ', icon: 'solar:chart-square-bold', to: 'progress' },
+                    { label: 'Thông báo', icon: 'solar:bell-bold', to: 'notifications' },
+                    { label: 'Cài đặt', icon: 'solar:settings-bold', to: 'settings' }
+                ]
+                const data = reactive({ departments: [], employees: [], tasks: [], categories: [], notifications: [] })
+                const stats = ref({}), settings = ref({})
+                const loginForm = reactive({ username: '', password: '' }), authLoading = ref(false), authError = ref(''), errors = reactive({})
+                const searchQuery = ref(''), taskFilter = reactive({ status: 'all' })
+                const modal = reactive({ open: false, type: '', data: {} }), modalErrors = reactive({}), profileForm = reactive({})
+
+                const pageTitle = computed(() => menuLinks.find(l => l.to === currentRoute.value)?.label || '')
+                const navigate = (to) => currentRoute.value = to
+                const formatDate = (s) => s ? new Date(s).toLocaleDateString('vi-VN') : ''
+                const formatDateShort = (s) => s ? new Date(s).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }) : ''
+                const isOverdue = (d) => new Date(d) < new Date()
+                const filteredEmployees = computed(() => searchQuery.value ? data.employees.filter(e => e.name.toLowerCase().includes(searchQuery.value.toLowerCase())) : data.employees)
+                const filteredTasks = computed(() => { let t = data.tasks; if (taskFilter.status !== 'all') t = t.filter(x => x.status === taskFilter.status); if (searchQuery.value) t = t.filter(x => x.title.toLowerCase().includes(searchQuery.value.toLowerCase())); return t })
+                const kanbanColumns = computed(() => [{ id: 'todo', label: 'Cần làm', tasks: filteredTasks.value.filter(t => t.status === 'todo') }, { id: 'in-progress', label: 'Đang làm', tasks: filteredTasks.value.filter(t => t.status === 'in-progress') }, { id: 'done', label: 'Hoàn thành', tasks: filteredTasks.value.filter(t => t.status === 'done') }])
+                const unreadCount = computed(() => data.notifications.filter(n => !n.read).length)
+                const filteredCategories = computed(() => searchQuery.value ? data.categories.filter(c => c.name.toLowerCase().includes(searchQuery.value.toLowerCase())) : data.categories)
+                const modalTitle = computed(() => ({ task: 'Tạo nhiệm vụ mới', employee: 'Thêm nhân viên mới', department: 'Thêm phòng ban mới', category: 'Thêm danh mục mới' }[modal.type] || ''))
+
+                // Validation
+                const validateLogin = () => {
+                    errors.username = ''; errors.password = ''
+                    let valid = true
+                    if (!loginForm.username.trim()) { errors.username = 'Vui lòng nhập tên đăng nhập'; valid = false }
+                    if (!loginForm.password) { errors.password = 'Vui lòng nhập mật khẩu'; valid = false }
+                    else if (loginForm.password.length < 3) { errors.password = 'Mật khẩu phải từ 3 ký tự'; valid = false }
+                    return valid
+                }
+
+                const validateModal = () => {
+                    Object.keys(modalErrors).forEach(k => modalErrors[k] = '')
+                    let valid = true
+                    if (modal.type === 'task') {
+                        if (!modal.data.title?.trim()) { modalErrors.title = 'Vui lòng nhập tiêu đề'; valid = false }
+                        if (!modal.data.assignee_id) { modalErrors.assignee_id = 'Vui lòng chọn người thực hiện'; valid = false }
+                        if (!modal.data.due_date) { modalErrors.due_date = 'Vui lòng chọn ngày'; valid = false }
+                    } else if (modal.type === 'employee') {
+                        if (!modal.data.name?.trim()) { modalErrors.name = 'Vui lòng nhập họ tên'; valid = false }
+                        if (!modal.data.username?.trim()) { modalErrors.username = 'Vui lòng nhập tên đăng nhập'; valid = false }
+                        else if (!/^[a-zA-Z0-9_]+$/.test(modal.data.username)) { modalErrors.username = 'Chỉ cho phép chữ, số và _'; valid = false }
+                        if (!modal.data.password?.trim()) { modalErrors.password = 'Vui lòng nhập mật khẩu'; valid = false }
+                        else if (modal.data.password.length < 3) { modalErrors.password = 'Mật khẩu phải từ 3 ký tự'; valid = false }
+                        if (modal.data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(modal.data.email)) { modalErrors.email = 'Email không hợp lệ'; valid = false }
+                        if (!modal.data.department_id) { modalErrors.department_id = 'Vui lòng chọn phòng ban'; valid = false }
+                    } else if (modal.type === 'department') {
+                        if (!modal.data.name?.trim()) { modalErrors.name = 'Vui lòng nhập tên phòng ban'; valid = false }
+                    } else if (modal.type === 'category') {
+                        if (!modal.data.name?.trim()) { modalErrors.name = 'Vui lòng nhập tên danh mục'; valid = false }
+                        if (!modal.data.color?.trim()) { modalErrors.color = 'Vui lòng chọn màu sắc'; valid = false }
+                        else if (!/^#[0-9A-Fa-f]{6}$/.test(modal.data.color)) { modalErrors.color = 'Mã màu không hợp lệ'; valid = false }
+                    }
+                    return valid
+                }
+
+                const handleLogin = async () => {
+                    if (!validateLogin()) return
+                    authLoading.value = true; authError.value = ''
+                    try {
+                        const r = await api.login(loginForm.username, loginForm.password)
+                        if (r.success) {
+                            currentUser.value = r.user
+                            localStorage.setItem('workflow_user', JSON.stringify(r.user))
+                            await fetchAllData()
+                        }
+                        else authError.value = r.message || 'Đăng nhập thất bại'
+                    } catch (e) { authError.value = 'Lỗi kết nối: ' + e }
+                    finally { authLoading.value = false }
+                }
+                const logout = () => {
+                    currentUser.value = null
+                    localStorage.removeItem('workflow_user')
+                }
+
+                // Restore session on page load
+                onMounted(async () => {
+                    const saved = localStorage.getItem('workflow_user')
+                    if (saved) {
+                        try {
+                            currentUser.value = JSON.parse(saved)
+                            await fetchAllData()
+                        } catch (e) {
+                            localStorage.removeItem('workflow_user')
+                        }
+                    }
+                })
+
+                const fetchAllData = async () => {
+                    globalLoading.value = true
+                    try {
+                        const [d, e, c, tRaw, n, s, st] = await Promise.all([
+                            api.getDepartments(),
+                            api.getEmployees(currentUser.value.role, currentUser.value.department_id),
+                            api.getCategories(),
+                            api.getTasksSafe(currentUser.value.role, currentUser.value.id, currentUser.value.department_id),
+                            api.getNotifications(currentUser.value.id),
+                            api.getSettings(),
+                            api.getDashboardStats(currentUser.value.role, currentUser.value.id, currentUser.value.department_id)
+                        ])
+
+                        // Parse tasks from JSON string if needed
+                        let parsedTasks = [];
+                        try {
+                            parsedTasks = typeof tRaw === 'string' ? JSON.parse(tRaw) : (tRaw || []);
+                        } catch (err) {
+                            console.error('Error parsing tasks:', err);
+                            parsedTasks = [];
+                        }
+
+                        console.log('Fetched data:', { departments: d, employees: e, categories: c, tasks: parsedTasks, notifications: n })
+
+                        data.departments = d || [];
+                        data.employees = e || [];
+                        data.categories = c || [];
+                        data.tasks = parsedTasks;
+                        data.notifications = n?.data || [];
+                        settings.value = s || {};
+                        stats.value = st || {};
+                    } catch (e) { console.error('FetchAllData Error:', e); alert('Lỗi tải dữ liệu: ' + e) }
+                    finally { globalLoading.value = false }
+                }
+
+                const deleteItem = async (type, id) => {
+                    if (!confirm('Bạn có chắc chắn muốn xóa?')) return
+                    globalLoading.value = true
+                    try {
+                        if (type === 'task') await api.deleteTask(id)
+                        if (type === 'employee') await api.deleteEmployee(id)
+                        if (type === 'department') await api.deleteDepartment(id)
+                        if (type === 'category') await api.deleteCategory(id)
+                        await fetchAllData()
+                    } catch (e) { alert('Lỗi: ' + e) }
+                    finally { globalLoading.value = false }
+                }
+
+                const updateTaskStatus = async (id, status) => { globalLoading.value = true; await api.updateTask(id, { status }); await fetchAllData(); globalLoading.value = false }
+                const markRead = async (n) => { if (!n.read) { await api.markNotificationRead(n.id); n.read = true } }
+                const updateProfile = async () => { globalLoading.value = true; await api.updateProfile(currentUser.value.id, { ...currentUser.value, ...profileForm }); globalLoading.value = false; alert('Đã cập nhật thông tin!') }
+                const updateCompany = async () => { globalLoading.value = true; await api.updateCompanySettings(settings.value.companyName, settings.value.description); globalLoading.value = false; alert('Đã lưu thông tin công ty!') }
+
+                const openModal = (type, d = null) => {
+                    modal.type = type
+                    Object.keys(modalErrors).forEach(k => modalErrors[k] = '')
+                    if (d) modal.data = { ...d }
+                    else if (type === 'task') modal.data = { priority: 'medium', due_date: new Date().toISOString().split('T')[0], assignee_id: '' }
+                    else if (type === 'employee') modal.data = { role: 'Member', department_id: '', password: '', email: '', phone: '' }
+                    else if (type === 'category') modal.data = { icon: 'folder', color: '#3B82F6' }
+                    else modal.data = {}
+                    modal.open = true
+                }
+                const closeModal = () => modal.open = false
+
+                const submitModal = async () => {
+                    if (!validateModal()) return
+                    globalLoading.value = true
+                    try {
+                        if (modal.type === 'task') await api.createTask(modal.data, currentUser.value.id)
+                        if (modal.type === 'employee') await api.createEmployee(modal.data)
+                        if (modal.type === 'department') await api.createDepartment(modal.data.name, modal.data.description)
+                        if (modal.type === 'category') {
+                            if (modal.data.id) await api.updateCategory(modal.data.id, modal.data.name, modal.data.icon, modal.data.color)
+                            else await api.createCategory(modal.data.name, modal.data.icon, modal.data.color)
+                        }
+                        closeModal(); await fetchAllData()
+                    } catch (e) { alert('Lỗi: ' + e) }
+                    finally { globalLoading.value = false }
+                }
+                // Detail Modal Logic
+                const detailModal = reactive({ open: false, task: null, comments: [], newComment: '', image: null, imagePreview: null });
+                const isCommentLoading = ref(false);
+
+                let commentRequestId = 0;
+                const openDetailModal = async (task) => {
+                    detailModal.task = task;
+                    detailModal.comments = [];
+                    detailModal.newComment = '';
+                    detailModal.image = null;
+                    detailModal.imagePreview = null;
+                    detailModal.open = true;
+
+                    const requestId = ++commentRequestId;
+                    isCommentLoading.value = true;
+                    try {
+                        const res = await api.getComments(task.id);
+                        if (requestId === commentRequestId) {
+                            detailModal.comments = res || [];
+                        }
+                    } catch (e) { console.error('Error fetching comments', e); }
+                    finally {
+                        if (requestId === commentRequestId) {
+                            isCommentLoading.value = false;
+                        }
+                    }
+                }
+
+                const closeDetailModal = () => detailModal.open = false;
+
+                const handleCommentImage = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    if (file.size > 2 * 1024 * 1024) { alert('Ảnh tối đa 2MB'); return; }
+
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        detailModal.image = ev.target.result; // base64
+                        detailModal.imagePreview = ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+
+                const removeCommentImage = () => {
+                    detailModal.image = null;
+                    detailModal.imagePreview = null;
+                }
+
+                const submitComment = async () => {
+                    if (!detailModal.newComment.trim() && !detailModal.image) return;
+
+                    const content = detailModal.newComment;
+                    const img = detailModal.image;
+                    const taskId = detailModal.task.id;
+
+                    // Optimistic UI
+                    const tempId = 'temp_' + Date.now();
+                    const optimComment = {
+                        id: tempId,
+                        user: { name: currentUser.value.name, avatar: currentUser.value.avatar },
+                        content: content,
+                        image: img,
+                        created_at: new Date().toISOString()
+                    };
+                    detailModal.comments.push(optimComment);
+
+                    detailModal.newComment = '';
+                    detailModal.image = null;
+                    detailModal.imagePreview = null;
+
+                    try {
+                        await api.createComment(taskId, currentUser.value.id, content, img);
+                        // Refresh to sync
+                        const res = await api.getComments(taskId);
+                        if (detailModal.task?.id === taskId) {
+                            detailModal.comments = res || [];
+                        }
+                    } catch (e) {
+                        alert('Lỗi gửi bình luận: ' + e);
+                        if (detailModal.task?.id === taskId) {
+                            detailModal.comments = detailModal.comments.filter(c => c.id !== tempId);
+                        }
+                    }
+                }
+
+                const viewTask = (t) => { openDetailModal(t) }
+
+                // Drag and Drop Logic
+                const draggedTask = ref(null);
+                const onDragStart = (e, task) => {
+                    draggedTask.value = task;
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.dropEffect = 'move';
+                    e.target.style.opacity = '0.5';
+                }
+                const onDragEnd = (e) => {
+                    e.target.style.opacity = '1';
+                    draggedTask.value = null;
+                }
+                const onDrop = async (e, newStatus) => {
+                    e.preventDefault(); // allow drop
+                    const task = draggedTask.value;
+                    if (task && task.status !== newStatus) {
+                        await updateTaskStatus(task.id, newStatus);
+                    }
+                    draggedTask.value = null;
+                }
+
+                return {
+                    currentUser, globalLoading, currentRoute, showPassword, menuLinks, data, stats, settings,
+                    loginForm, authLoading, authError, errors, searchQuery, taskFilter,
+                    modal, modalErrors, profileForm, pageTitle, navigate, formatDate, formatDateShort, isOverdue,
+                    filteredEmployees, filteredTasks, filteredCategories, kanbanColumns, unreadCount, modalTitle,
+                    handleLogin, logout, deleteItem, updateTaskStatus, markRead, updateProfile, updateCompany,
+                    openModal, closeModal, submitModal, viewTask,
+                    onDragStart, onDragEnd, onDrop,
+                    detailModal, closeDetailModal, handleCommentImage, removeCommentImage, submitComment
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
