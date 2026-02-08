@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hướng Dẫn Sử Dụng - SheetVN Quản Lý Công Việc</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#6366f1;--primary-light:#818cf8;--primary-dark:#4f46e5;--primary-bg:rgba(99,102,241,0.08);--success:#22c55e;--warning:#f59e0b;--danger:#ef4444;--info:#3b82f6;--text:#1e293b;--text-secondary:#64748b;--bg:#f8fafc;--card:#fff;--border:#e2e8f0;--sidebar-w:280px;--header-h:70px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;scroll-behavior:smooth}
+/* Sidebar */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:#fff;border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;transition:transform .3s}
+.sidebar-header{padding:24px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--primary),var(--primary-dark))}
+.sidebar-header h2{color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
+.sidebar-header h2 svg{width:28px;height:28px}
+.sidebar-header p{color:rgba(255,255,255,.8);font-size:12px;margin-top:4px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 12px}
+.sidebar-nav::-webkit-scrollbar{width:4px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+.nav-group{margin-bottom:8px}
+.nav-group-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-secondary);padding:8px 12px 4px;display:flex;align-items:center;gap:6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--text);font-size:13px;font-weight:500;transition:all .2s;cursor:pointer}
+.nav-item:hover{background:var(--primary-bg);color:var(--primary)}
+.nav-item.active{background:var(--primary);color:#fff}
+.nav-item .nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.nav-item .nav-num{font-size:10px;font-weight:700;background:rgba(0,0,0,.06);padding:2px 6px;border-radius:6px;margin-left:auto}
+.nav-item.active .nav-num{background:rgba(255,255,255,.2)}
+/* Main */
+.main-content{margin-left:var(--sidebar-w);min-height:100vh}
+.content-wrapper{max-width:900px;margin:0 auto;padding:40px 32px 80px}
+/* Hero */
+.hero{background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#a78bfa 100%);border-radius:24px;padding:48px;color:#fff;margin-bottom:48px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-20%;width:400px;height:400px;background:rgba(255,255,255,.08);border-radius:50%;pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-30%;left:-10%;width:300px;height:300px;background:rgba(255,255,255,.05);border-radius:50%;pointer-events:none}
+.hero h1{font-size:32px;font-weight:900;margin-bottom:12px;position:relative;z-index:1}
+.hero p{font-size:16px;opacity:.9;max-width:600px;position:relative;z-index:1}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;position:relative;z-index:1}
+.hero-badge{background:rgba(255,255,255,.15);backdrop-filter:blur(10px);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+/* Section */
+.section{margin-bottom:56px;scroll-margin-top:24px}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+.section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.section-icon.purple{background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff}
+.section-icon.blue{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff}
+.section-icon.green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.section-icon.orange{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+.section-icon.red{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.section-icon.teal{background:linear-gradient(135deg,#14b8a6,#0d9488);color:#fff}
+.section-icon.pink{background:linear-gradient(135deg,#ec4899,#db2777);color:#fff}
+.section-icon.indigo{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff}
+.section-icon.slate{background:linear-gradient(135deg,#64748b,#475569);color:#fff}
+.section-title{font-size:24px;font-weight:800;color:var(--text)}
+.section-subtitle{font-size:14px;color:var(--text-secondary);margin-top:2px}
+/* Card */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;transition:box-shadow .2s}
+.card:hover{box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.card-title{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title .emoji{font-size:20px}
+/* Feature list */
+.feature-list{list-style:none;padding:0}
+.feature-list li{padding:10px 0;border-bottom:1px solid #f1f5f9;display:flex;align-items:flex-start;gap:10px;font-size:14px}
+.feature-list li:last-child{border-bottom:none}
+.feature-list li::before{content:'✓';display:flex;align-items:center;justify-content:center;width:22px;height:22px;background:#dcfce7;color:#16a34a;border-radius:50%;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+/* Info box */
+.info-box{border-radius:12px;padding:16px 20px;margin:16px 0;font-size:13px;display:flex;gap:12px;align-items:flex-start}
+.info-box.tip{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}
+.info-box.warn{background:#fffbeb;border-left:4px solid #f59e0b;color:#92400e}
+.info-box.success{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}
+.info-box .info-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+/* Screenshot placeholder */
+.screenshot{background:linear-gradient(135deg,#f1f5f9,#e2e8f0);border:2px dashed #cbd5e1;border-radius:16px;padding:0;margin:20px 0;overflow:hidden;position:relative}
+.screenshot-inner{padding:0}
+.screenshot svg{width:100%;height:auto;display:block}
+/* Step */
+.step-list{counter-reset:step}
+.step-item{counter-increment:step;display:flex;gap:16px;margin-bottom:20px;padding:16px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0}
+.step-item::before{content:counter(step);display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:var(--primary);color:#fff;border-radius:50%;font-size:14px;font-weight:700;flex-shrink:0}
+.step-item .step-content h4{font-size:15px;font-weight:700;margin-bottom:4px}
+.step-item .step-content p{font-size:13px;color:var(--text-secondary)}
+/* Role badges */
+.role-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.role-owner{background:#f3e8ff;color:#7c3aed}
+.role-leader{background:#fef3c7;color:#d97706}
+.role-member{background:#dbeafe;color:#2563eb}
+/* Table */
+.guide-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:1px solid var(--border);margin:16px 0;font-size:13px}
+.guide-table th{background:#f8fafc;padding:12px 16px;text-align:left;font-weight:600;border-bottom:2px solid var(--border)}
+.guide-table td{padding:10px 16px;border-bottom:1px solid #f1f5f9}
+.guide-table tr:last-child td{border-bottom:none}
+.guide-table tr:hover td{background:#fafbfc}
+/* Mobile */
+.mobile-menu-btn{display:none;position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:24px;cursor:pointer;z-index:200;box-shadow:0 4px 20px rgba(99,102,241,.4);align-items:center;justify-content:center}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.sidebar-overlay.open{display:block}
+.main-content{margin-left:0}
+.content-wrapper{padding:20px 16px 80px}
+.hero{padding:28px 20px;border-radius:16px}
+.hero h1{font-size:22px}
+.hero p{font-size:14px}
+.mobile-menu-btn{display:flex}
+.section-title{font-size:20px}
+.card{padding:20px}
+}
+/* Highlight */
+code{background:#f1f5f9;padding:2px 8px;border-radius:6px;font-size:12px;font-family:'Fira Code',monospace;color:#6366f1}
+strong{color:var(--text)}
+/* Accordion */
+.accordion{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:16px 0}
+.accordion-header{padding:14px 20px;background:#fafbfc;cursor:pointer;font-weight:600;font-size:14px;display:flex;justify-content:space-between;align-items:center;transition:background .2s}
+.accordion-header:hover{background:#f1f5f9}
+.accordion-header .arrow{transition:transform .3s;font-size:12px}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 20px}
+.accordion-body.open{max-height:2000px;padding:16px 20px}
+</style>
+</head>
+<body>
+
+<!-- Mobile Menu Button -->
+<button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg> Hướng Dẫn Sử Dụng</h2>
+<p>SheetVN - QL Công Việc v1.0</p>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-group">
+<div class="nav-group-title">🏠 Tổng Quan</div>
+<a class="nav-item active" href="#gioi-thieu" onclick="closeSidebar()"><span class="nav-icon">📋</span>Giới thiệu<span class="nav-num">1</span></a>
+<a class="nav-item" href="#vai-tro" onclick="closeSidebar()"><span class="nav-icon">👥</span>Phân quyền<span class="nav-num">2</span></a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">🔐 Bắt Đầu</div>
+<a class="nav-item" href="#trang-chu" onclick="closeSidebar()"><span class="nav-icon">🏠</span>Trang chủ<span class="nav-num">3</span></a>
+<a class="nav-item" href="#dang-nhap" onclick="closeSidebar()"><span class="nav-icon">🔑</span>Đăng nhập<span class="nav-num">4</span></a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">📊 Quản Lý</div>
+<a class="nav-item" href="#dashboard" onclick="closeSidebar()"><span class="nav-icon">📊</span>Thống kê<span class="nav-num">5</span></a>
+<a class="nav-item" href="#phong-ban" onclick="closeSidebar()"><span class="nav-icon">🏢</span>Phòng ban<span class="nav-num">6</span></a>
+<a class="nav-item" href="#nhan-vien" onclick="closeSidebar()"><span class="nav-icon">👤</span>Nhân viên<span class="nav-num">7</span></a>
+<a class="nav-item" href="#danh-muc" onclick="closeSidebar()"><span class="nav-icon">🏷️</span>Danh mục<span class="nav-num">8</span></a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">✅ Công Việc</div>
+<a class="nav-item" href="#nhiem-vu" onclick="closeSidebar()"><span class="nav-icon">📝</span>Nhiệm vụ<span class="nav-num">9</span></a>
+<a class="nav-item" href="#tien-do" onclick="closeSidebar()"><span class="nav-icon">📌</span>Tiến độ<span class="nav-num">10</span></a>
+<a class="nav-item" href="#lich" onclick="closeSidebar()"><span class="nav-icon">📅</span>Lịch<span class="nav-num">11</span></a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">⚙️ Khác</div>
+<a class="nav-item" href="#thong-bao" onclick="closeSidebar()"><span class="nav-icon">🔔</span>Thông báo<span class="nav-num">12</span></a>
+<a class="nav-item" href="#cai-dat" onclick="closeSidebar()"><span class="nav-icon">⚙️</span>Cài đặt<span class="nav-num">13</span></a>
+<a class="nav-item" href="#faq" onclick="closeSidebar()"><span class="nav-icon">❓</span>Câu hỏi<span class="nav-num">14</span></a>
+</div>
+</nav>
+</aside>
+
+<!-- Main Content -->
+<div class="main-content">
+<div class="content-wrapper">
+
+<!-- HERO -->
+<div class="hero" id="gioi-thieu">
+<h1>📘 Hướng Dẫn Sử Dụng<br>SheetVN - Quản Lý Công Việc Nhóm</h1>
+<p>Tài liệu hướng dẫn chi tiết giúp bạn làm chủ mọi tính năng của hệ thống quản lý công việc nhóm SheetVN. Từ đăng nhập, quản lý nhân sự, phân công nhiệm vụ đến theo dõi tiến độ.</p>
+<div class="hero-badges">
+<span class="hero-badge">📱 Responsive</span>
+<span class="hero-badge">🌙 Dark/Light Mode</span>
+<span class="hero-badge">🇻🇳 Tiếng Việt</span>
+<span class="hero-badge">🔐 Phân quyền 3 cấp</span>
+<span class="hero-badge">📊 Kanban Board</span>
+</div>
+</div>
+
+<!-- SECTION 1: GIỚI THIỆU -->
+<div class="section" id="gioi-thieu-section">
+<div class="section-header">
+<div class="section-icon purple">📋</div>
+<div><div class="section-title">1. Giới Thiệu Hệ Thống</div><div class="section-subtitle">Tổng quan về ứng dụng SheetVN Quản Lý Công Việc</div></div>
+</div>
+<div class="card">
+<div class="card-title"><span class="emoji">🎯</span> Mục đích</div>
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">SheetVN - Quản Lý Công Việc Nhóm là ứng dụng web giúp doanh nghiệp quản lý công việc, nhân sự và theo dõi tiến độ một cách hiệu quả. Ứng dụng hỗ trợ đầy đủ trên cả Desktop và Mobile với giao diện hiện đại.</p>
+<div class="card-title"><span class="emoji">⭐</span> Tính năng chính</div>
+<ul class="feature-list">
+<li>Quản lý phòng ban, nhóm làm việc theo cơ cấu tổ chức</li>
+<li>Quản lý nhân viên với phân quyền Owner / Leader / Member</li>
+<li>Tạo và phân công nhiệm vụ với độ ưu tiên và danh mục</li>
+<li>Theo dõi tiến độ với bảng Kanban kéo thả trực quan</li>
+<li>Lịch công việc theo tháng với chi tiết từng ngày</li>
+<li>Dashboard thống kê tổng quan với biểu đồ phân tích</li>
+<li>Hệ thống thông báo realtime với bình luận nhiệm vụ</li>
+<li>Hỗ trợ Dark Mode / Light Mode và cài đặt PWA</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 2: VAI TRÒ -->
+<div class="section" id="vai-tro">
+<div class="section-header">
+<div class="section-icon blue">👥</div>
+<div><div class="section-title">2. Hệ Thống Phân Quyền</div><div class="section-subtitle">3 vai trò với quyền hạn khác nhau</div></div>
+</div>
+<div class="card">
+<table class="guide-table">
+<thead><tr><th>Vai trò</th><th>Mô tả</th><th>Quyền hạn chính</th></tr></thead>
+<tbody>
+<tr><td><span class="role-badge role-owner">👑 Owner</span></td><td>Chủ doanh nghiệp / Quản trị viên</td><td>Toàn quyền: quản lý phòng ban, nhân viên, danh mục, nhiệm vụ, cài đặt hệ thống, xem thống kê</td></tr>
+<tr><td><span class="role-badge role-leader">⭐ Leader</span></td><td>Trưởng phòng / Quản lý nhóm</td><td>Quản lý nhân viên trong phòng ban, tạo & phân công nhiệm vụ, xem thống kê, theo dõi tiến độ</td></tr>
+<tr><td><span class="role-badge role-member">👤 Member</span></td><td>Nhân viên / Thành viên</td><td>Xem và cập nhật trạng thái nhiệm vụ được giao, theo dõi tiến độ cá nhân, bình luận nhiệm vụ</td></tr>
+</tbody>
+</table>
+<div class="info-box tip"><span class="info-icon">💡</span><div><strong>Lưu ý:</strong> Menu sidebar sẽ tự động ẩn/hiện các mục tùy theo vai trò đăng nhập. Ví dụ, Member sẽ không thấy menu "Phòng ban" hay "Danh mục".</div></div>
+</div>
+</div>
+
+<!-- SECTION 3: TRANG CHỦ -->
+<div class="section" id="trang-chu">
+<div class="section-header">
+<div class="section-icon indigo">🏠</div>
+<div><div class="section-title">3. Trang Chủ</div><div class="section-subtitle">Màn hình giới thiệu và điểm bắt đầu</div></div>
+</div>
+<div class="card">
+<div class="card-title"><span class="emoji">🖥️</span> Giao diện Trang Chủ</div>
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">Trang chủ là màn hình đầu tiên khi truy cập ứng dụng. Tại đây bạn sẽ thấy thông tin giới thiệu về hệ thống, các tính năng nổi bật và nút bắt đầu sử dụng.</p>
+
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="400" fill="#f8fafc"/>
+<rect x="0" y="0" width="800" height="400" fill="url(#heroGrad)" rx="0"/>
+<defs><linearGradient id="heroGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+<circle cx="700" cy="80" r="120" fill="rgba(255,255,255,0.05)"/>
+<circle cx="100" cy="350" r="80" fill="rgba(255,255,255,0.05)"/>
+<rect x="700" y="16" width="40" height="40" rx="8" fill="rgba(255,255,255,0.15)"/>
+<text x="720" y="42" fill="white" font-size="16" text-anchor="middle">🌙</text>
+<text x="400" y="100" fill="white" font-size="14" font-weight="600" text-anchor="middle" opacity="0.8">SHEETVN - QUẢN LÝ CÔNG VIỆC NHÓM</text>
+<text x="400" y="150" fill="white" font-size="28" font-weight="800" text-anchor="middle">Quản lý hiệu quả</text>
+<text x="400" y="185" fill="white" font-size="28" font-weight="800" text-anchor="middle">Công việc nhóm</text>
+<text x="400" y="225" fill="white" font-size="14" text-anchor="middle" opacity="0.85">Phân công, theo dõi và hoàn thành nhiệm vụ một cách chuyên nghiệp</text>
+<rect x="290" y="260" width="220" height="48" rx="24" fill="white"/>
+<text x="400" y="290" fill="#6366f1" font-size="15" font-weight="700" text-anchor="middle">Bắt đầu ngay →</text>
+<rect x="240" y="340" width="100" height="32" rx="16" fill="rgba(255,255,255,0.15)"/>
+<text x="290" y="361" fill="white" font-size="11" font-weight="600" text-anchor="middle">📱 Mobile</text>
+<rect x="350" y="340" width="100" height="32" rx="16" fill="rgba(255,255,255,0.15)"/>
+<text x="400" y="361" fill="white" font-size="11" font-weight="600" text-anchor="middle">🌙 Dark Mode</text>
+<rect x="460" y="340" width="100" height="32" rx="16" fill="rgba(255,255,255,0.15)"/>
+<text x="510" y="361" fill="white" font-size="11" font-weight="600" text-anchor="middle">🔐 Bảo mật</text>
+</svg>
+</div></div>
+
+<ul class="feature-list">
+<li>Hiển thị tên ứng dụng và mô tả ngắn gọn về hệ thống</li>
+<li>Nút <strong>"Bắt đầu ngay"</strong> sẽ chuyển bạn đến trang đăng nhập</li>
+<li>Nút chuyển đổi <strong>Dark Mode / Light Mode</strong> ở góc trên bên phải</li>
+<li>Hiệu ứng animation nền tạo cảm giác chuyên nghiệp và hiện đại</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 4: ĐĂNG NHẬP -->
+<div class="section" id="dang-nhap">
+<div class="section-header">
+<div class="section-icon green">🔑</div>
+<div><div class="section-title">4. Đăng Nhập</div><div class="section-subtitle">Hai phương thức xác thực</div></div>
+</div>
+<div class="card">
+<div class="card-title"><span class="emoji">🔐</span> Phương thức đăng nhập</div>
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">Hệ thống hỗ trợ 2 hình thức đăng nhập tùy theo vai trò của bạn:</p>
+
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="420" fill="#f8fafc"/>
+<circle cx="80" cy="50" r="200" fill="rgba(99,102,241,0.06)"/>
+<circle cx="720" cy="370" r="180" fill="rgba(59,130,246,0.06)"/>
+<!-- Card -->
+<rect x="200" y="40" width="400" height="340" rx="20" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+<text x="400" y="85" fill="#6366f1" font-size="22" font-weight="800" text-anchor="middle">🔑 Đăng nhập</text>
+<!-- Tab buttons -->
+<rect x="230" y="105" width="165" height="36" rx="8" fill="#6366f1"/>
+<text x="312" y="128" fill="white" font-size="12" font-weight="600" text-anchor="middle">Mã giấy phép</text>
+<rect x="405" y="105" width="165" height="36" rx="8" fill="#f1f5f9" stroke="#e2e8f0"/>
+<text x="487" y="128" fill="#64748b" font-size="12" font-weight="600" text-anchor="middle">Tài khoản nhân viên</text>
+<!-- Input -->
+<rect x="230" y="160" width="340" height="44" rx="10" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="250" y="187" fill="#94a3b8" font-size="13">Nhập mã giấy phép của bạn...</text>
+<!-- Button -->
+<rect x="230" y="225" width="340" height="44" rx="10" fill="#6366f1"/>
+<text x="400" y="252" fill="white" font-size="14" font-weight="700" text-anchor="middle">Đăng nhập</text>
+<!-- Help text -->
+<text x="400" y="295" fill="#94a3b8" font-size="11" text-anchor="middle">Liên hệ quản trị viên nếu bạn quên thông tin</text>
+<!-- Dark mode toggle -->
+<rect x="700" y="16" width="36" height="36" rx="8" fill="#f1f5f9" stroke="#e2e8f0"/>
+<text x="718" y="40" fill="#64748b" font-size="14" text-anchor="middle">☀️</text>
+</svg>
+</div></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+<div class="card" style="margin-bottom:0;border:2px solid #f3e8ff">
+<div class="card-title"><span class="emoji">👑</span> Đăng nhập bằng Mã Giấy Phép</div>
+<p style="font-size:13px;color:var(--text-secondary)">Dành cho <span class="role-badge role-owner">Owner</span></p>
+<div class="step-list" style="margin-top:12px">
+<div class="step-item"><div class="step-content"><h4>Chọn tab "Mã giấy phép"</h4><p>Tab mặc định khi vào trang đăng nhập</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Nhập mã License Key</h4><p>Mã giấy phép được cấp khi đăng ký hệ thống</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Nhấn "Đăng nhập"</h4><p>Hệ thống sẽ xác thực và chuyển đến Dashboard</p></div></div>
+</div>
+</div>
+<div class="card" style="margin-bottom:0;border:2px solid #dbeafe">
+<div class="card-title"><span class="emoji">👤</span> Đăng nhập bằng Tài Khoản</div>
+<p style="font-size:13px;color:var(--text-secondary)">Dành cho <span class="role-badge role-leader">Leader</span> <span class="role-badge role-member">Member</span></p>
+<div class="step-list" style="margin-top:12px">
+<div class="step-item"><div class="step-content"><h4>Chọn tab "Tài khoản nhân viên"</h4><p>Chuyển sang form đăng nhập bằng tài khoản</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Nhập Username & Password</h4><p>Thông tin do quản trị viên (Owner) cung cấp</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Nhấn "Đăng nhập"</h4><p>Hệ thống chuyển đến trang phù hợp với vai trò</p></div></div>
+</div>
+</div>
+</div>
+<div class="info-box warn"><span class="info-icon">⚠️</span><div><strong>Lưu ý:</strong> Owner có thể tạo tài khoản Username/Password trong phần Cài đặt để đăng nhập thay vì dùng mã giấy phép. Nếu quên thông tin đăng nhập, hãy liên hệ quản trị viên hệ thống.</div></div>
+</div>
+</div>
+
+<!-- SECTION 5: DASHBOARD -->
+<div class="section" id="dashboard">
+<div class="section-header">
+<div class="section-icon blue">📊</div>
+<div><div class="section-title">5. Thống Kê (Dashboard)</div><div class="section-subtitle">Tổng quan tình hình công việc và hiệu suất</div></div>
+</div>
+<div class="card">
+<div class="card-title"><span class="emoji">📈</span> Tổng quan Dashboard</div>
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Dashboard cung cấp cái nhìn tổng quan về tình hình công việc của toàn bộ hệ thống. Chỉ <span class="role-badge role-owner">Owner</span> và <span class="role-badge role-leader">Leader</span> mới thấy menu này.</p>
+
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="380" fill="#f8fafc"/>
+<!-- Header -->
+<text x="30" y="35" fill="#1e293b" font-size="22" font-weight="800">Thống kê</text>
+<text x="30" y="55" fill="#94a3b8" font-size="12">Tổng hợp tình hình công việc và hiệu suất</text>
+<!-- Filter -->
+<rect x="620" y="15" width="160" height="36" rx="8" fill="white" stroke="#e2e8f0"/>
+<text x="700" y="38" fill="#64748b" font-size="11" text-anchor="middle">📅 7 ngày gần đây ▾</text>
+<!-- Stat Cards -->
+<rect x="20" y="75" width="180" height="90" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="105" fill="#94a3b8" font-size="11">Tổng nhiệm vụ</text>
+<text x="40" y="135" fill="#1e293b" font-size="28" font-weight="800">128</text>
+<text x="40" y="153" fill="#22c55e" font-size="11" font-weight="600">↑ 12% so với tuần trước</text>
+<rect x="215" y="75" width="180" height="90" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="235" y="105" fill="#94a3b8" font-size="11">Hoàn thành</text>
+<text x="235" y="135" fill="#22c55e" font-size="28" font-weight="800">84</text>
+<text x="235" y="153" fill="#22c55e" font-size="11" font-weight="600">65.6% tỷ lệ</text>
+<rect x="410" y="75" width="180" height="90" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="430" y="105" fill="#94a3b8" font-size="11">Đang thực hiện</text>
+<text x="430" y="135" fill="#3b82f6" font-size="28" font-weight="800">32</text>
+<text x="430" y="153" fill="#3b82f6" font-size="11" font-weight="600">25% đang xử lý</text>
+<rect x="605" y="75" width="180" height="90" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="625" y="105" fill="#94a3b8" font-size="11">Quá hạn</text>
+<text x="625" y="135" fill="#ef4444" font-size="28" font-weight="800">8</text>
+<text x="625" y="153" fill="#ef4444" font-size="11" font-weight="600">⚠ Cần xử lý</text>
+<!-- Charts area -->
+<rect x="20" y="185" width="380" height="180" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="215" fill="#1e293b" font-size="13" font-weight="700">Phân bổ trạng thái</text>
+<circle cx="180" cy="290" r="55" fill="none" stroke="#22c55e" stroke-width="18" stroke-dasharray="220 345"/>
+<circle cx="180" cy="290" r="55" fill="none" stroke="#3b82f6" stroke-width="18" stroke-dasharray="90 345" stroke-dashoffset="-220"/>
+<circle cx="180" cy="290" r="55" fill="none" stroke="#94a3b8" stroke-width="18" stroke-dasharray="35 345" stroke-dashoffset="-310"/>
+<rect x="280" y="260" width="10" height="10" rx="2" fill="#22c55e"/><text x="296" y="269" fill="#64748b" font-size="10">Hoàn thành</text>
+<rect x="280" y="280" width="10" height="10" rx="2" fill="#3b82f6"/><text x="296" y="289" fill="#64748b" font-size="10">Đang làm</text>
+<rect x="280" y="300" width="10" height="10" rx="2" fill="#94a3b8"/><text x="296" y="309" fill="#64748b" font-size="10">Chưa làm</text>
+<rect x="415" y="185" width="370" height="180" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="435" y="215" fill="#1e293b" font-size="13" font-weight="700">Xếp hạng phòng ban</text>
+<rect x="435" y="235" width="200" height="14" rx="4" fill="#dcfce7"/><rect x="435" y="235" width="180" height="14" rx="4" fill="#22c55e"/>
+<text x="435" y="265" fill="#64748b" font-size="10">Phòng Kinh doanh - 92%</text>
+<rect x="435" y="280" width="200" height="14" rx="4" fill="#dbeafe"/><rect x="435" y="280" width="150" height="14" rx="4" fill="#3b82f6"/>
+<text x="435" y="310" fill="#64748b" font-size="10">Phòng Marketing - 78%</text>
+<rect x="435" y="325" width="200" height="14" rx="4" fill="#fef3c7"/><rect x="435" y="325" width="120" height="14" rx="4" fill="#f59e0b"/>
+<text x="435" y="353" fill="#64748b" font-size="10">Phòng Kỹ thuật - 65%</text>
+</svg>
+</div></div>
+
+<div class="card-title" style="margin-top:16px"><span class="emoji">📊</span> Thành phần Dashboard</div>
+<ul class="feature-list">
+<li><strong>4 Thẻ thống kê:</strong> Tổng nhiệm vụ, Hoàn thành, Đang thực hiện, Quá hạn - cập nhật realtime</li>
+<li><strong>Bộ lọc thời gian:</strong> Chọn khoảng thời gian 7/14/30 ngày hoặc tất cả để xem báo cáo</li>
+<li><strong>Biểu đồ phân bổ trạng thái:</strong> Tỷ lệ % nhiệm vụ theo từng trạng thái (Donut chart)</li>
+<li><strong>Xếp hạng phòng ban:</strong> So sánh hiệu suất hoàn thành giữa các phòng ban</li>
+<li><strong>Xếp hạng nhân viên:</strong> Top nhân viên có hiệu suất cao nhất</li>
+<li><strong>Biểu đồ nhiệm vụ theo thời gian:</strong> Xu hướng công việc theo ngày/tuần</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 6: PHÒNG BAN -->
+<div class="section" id="phong-ban">
+<div class="section-header">
+<div class="section-icon orange">🏢</div>
+<div><div class="section-title">6. Quản Lý Phòng Ban</div><div class="section-subtitle">Tổ chức cơ cấu nhân sự theo phòng ban, nhóm</div></div>
+</div>
+<div class="card">
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Chỉ <span class="role-badge role-owner">Owner</span> mới có quyền truy cập trang này. Đây là bước đầu tiên để thiết lập cơ cấu tổ chức.</p>
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="340" fill="#f8fafc"/>
+<text x="30" y="35" fill="#1e293b" font-size="22" font-weight="800">Quản lý Phòng Ban/Nhóm</text>
+<text x="30" y="55" fill="#94a3b8" font-size="12">Tổ chức cơ cấu nhân sự theo phòng ban, bộ phận hoặc nhóm làm việc</text>
+<!-- Create form -->
+<rect x="20" y="75" width="760" height="80" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="100" fill="#6366f1" font-size="13" font-weight="700">➕ Tạo Phòng Ban / Nhóm Mới</text>
+<rect x="40" y="112" width="300" height="32" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="55" y="133" fill="#94a3b8" font-size="11">Ví dụ: Phòng Kinh doanh, Team Marketing...</text>
+<rect x="355" y="112" width="260" height="32" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="370" y="133" fill="#94a3b8" font-size="11">Mô tả chức năng, nhiệm vụ...</text>
+<rect x="630" y="112" width="130" height="32" rx="8" fill="#6366f1"/>
+<text x="695" y="133" fill="white" font-size="12" font-weight="600" text-anchor="middle">Thêm mới</text>
+<!-- Table -->
+<rect x="20" y="170" width="760" height="155" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="198" fill="#1e293b" font-size="14" font-weight="700">Danh sách Phòng Ban (4)</text>
+<rect x="540" y="182" width="220" height="28" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="555" y="200" fill="#94a3b8" font-size="10">🔍 Tìm kiếm...</text>
+<line x1="40" y1="215" x2="760" y2="215" stroke="#f1f5f9" stroke-width="1"/>
+<text x="40" y="233" fill="#94a3b8" font-size="10" font-weight="600">TÊN PHÒNG BAN</text>
+<text x="350" y="233" fill="#94a3b8" font-size="10" font-weight="600">THÀNH VIÊN</text>
+<text x="700" y="233" fill="#94a3b8" font-size="10" font-weight="600">THAO TÁC</text>
+<line x1="40" y1="242" x2="760" y2="242" stroke="#f1f5f9" stroke-width="1"/>
+<rect x="40" y="250" width="28" height="28" rx="8" fill="#eff6ff"/>
+<text x="54" y="269" fill="#6366f1" font-size="12" text-anchor="middle">👥</text>
+<text x="80" y="264" fill="#1e293b" font-size="12" font-weight="600">Phòng Kinh doanh</text>
+<text x="80" y="278" fill="#94a3b8" font-size="9">Bán hàng và chăm sóc khách hàng</text>
+<rect x="350" y="255" width="70" height="20" rx="10" fill="#6366f1"/><text x="385" y="269" fill="white" font-size="9" font-weight="600" text-anchor="middle">Nguyễn A ⭐</text>
+<rect x="425" y="255" width="55" height="20" rx="10" fill="#f1f5f9"/><text x="452" y="269" fill="#64748b" font-size="9" text-anchor="middle">Trần B</text>
+<rect x="485" y="255" width="55" height="20" rx="10" fill="#f1f5f9"/><text x="512" y="269" fill="#64748b" font-size="9" text-anchor="middle">Lê C</text>
+<text x="548" y="269" fill="#94a3b8" font-size="9">+2</text>
+<rect x="690" y="254" width="28" height="24" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="704" y="270" fill="#64748b" font-size="11" text-anchor="middle">✏️</text>
+<line x1="40" y1="290" x2="760" y2="290" stroke="#f1f5f9" stroke-width="1"/>
+<rect x="40" y="298" width="28" height="28" rx="8" fill="#eff6ff"/>
+<text x="54" y="317" fill="#6366f1" font-size="12" text-anchor="middle">👥</text>
+<text x="80" y="312" fill="#1e293b" font-size="12" font-weight="600">Phòng Marketing</text>
+<text x="80" y="325" fill="#94a3b8" font-size="9">Quảng cáo và truyền thông</text>
+</svg>
+</div></div>
+
+<div class="card-title"><span class="emoji">📝</span> Hướng dẫn sử dụng</div>
+<div class="step-list">
+<div class="step-item"><div class="step-content"><h4>Tạo phòng ban mới</h4><p>Nhập <strong>Tên phòng ban</strong> (bắt buộc) và <strong>Mô tả</strong> (tùy chọn), sau đó nhấn <strong>"Thêm mới"</strong></p></div></div>
+<div class="step-item"><div class="step-content"><h4>Xem danh sách</h4><p>Bảng hiển thị tên, mô tả, danh sách thành viên (Leader có badge ⭐), và số lượng thành viên còn lại</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Chỉnh sửa</h4><p>Nhấn nút <strong>✏️</strong> để mở popup chỉnh sửa tên và mô tả phòng ban</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Tìm kiếm</h4><p>Sử dụng ô tìm kiếm để lọc nhanh theo tên hoặc mô tả phòng ban</p></div></div>
+</div>
+<div class="info-box tip"><span class="info-icon">💡</span><div><strong>Mẹo:</strong> Hãy tạo phòng ban <strong>trước</strong> khi thêm nhân viên, vì mỗi nhân viên cần được gán vào một phòng ban.</div></div>
+</div>
+</div>
+
+<!-- SECTION 7: NHÂN VIÊN -->
+<div class="section" id="nhan-vien">
+<div class="section-header">
+<div class="section-icon teal">👤</div>
+<div><div class="section-title">7. Quản Lý Nhân Viên</div><div class="section-subtitle">Thêm mới và quản lý thông tin nhân viên</div></div>
+</div>
+<div class="card">
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Chỉ <span class="role-badge role-owner">Owner</span> và <span class="role-badge role-leader">Leader</span> mới có quyền truy cập.</p>
+
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="400" fill="#f8fafc"/>
+<text x="30" y="35" fill="#1e293b" font-size="22" font-weight="800">Quản lý Nhân sự</text>
+<text x="30" y="55" fill="#94a3b8" font-size="12">Thêm mới và quản lý thông tin nhân viên trong hệ thống</text>
+<!-- Form card -->
+<rect x="20" y="70" width="760" height="180" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="100" fill="#6366f1" font-size="14" font-weight="700">➕ Thêm Nhân Viên Mới</text>
+<!-- Inputs row -->
+<rect x="40" y="115" width="220" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="55" y="135" fill="#94a3b8" font-size="10">👤 Họ và tên *</text>
+<rect x="275" y="115" width="150" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="290" y="135" fill="#94a3b8" font-size="10">@ Tên đăng nhập *</text>
+<rect x="440" y="115" width="150" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="455" y="135" fill="#94a3b8" font-size="10">🔒 Mật khẩu *</text>
+<rect x="605" y="115" width="155" height="30" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="620" y="135" fill="#94a3b8" font-size="10">📧 Email</text>
+<!-- Role selector -->
+<text x="40" y="170" fill="#1e293b" font-size="11" font-weight="600">Vai trò:</text>
+<rect x="40" y="178" width="110" height="30" rx="8" fill="#eff6ff" stroke="#6366f1" stroke-width="2"/>
+<text x="95" y="198" fill="#6366f1" font-size="10" font-weight="600" text-anchor="middle">👤 Nhân viên</text>
+<rect x="160" y="178" width="120" height="30" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="220" y="198" fill="#64748b" font-size="10" text-anchor="middle">⭐ Trưởng phòng</text>
+<rect x="290" y="178" width="130" height="30" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="355" y="198" fill="#64748b" font-size="10" text-anchor="middle">🛡️ Quản lý toàn bộ</text>
+<!-- Department blocks -->
+<text x="40" y="230" fill="#1e293b" font-size="11" font-weight="600">Chọn Phòng ban *:</text>
+<rect x="40" y="235" width="170" height="28" rx="6" fill="#eff6ff" stroke="#6366f1" stroke-width="2"/>
+<text x="125" y="254" fill="#6366f1" font-size="10" font-weight="600" text-anchor="middle">🏢 Phòng Kinh doanh ✓</text>
+<rect x="220" y="235" width="140" height="28" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="290" y="254" fill="#64748b" font-size="10" text-anchor="middle">🏢 Phòng Marketing</text>
+<!-- Table -->
+<rect x="20" y="275" width="760" height="115" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="305" fill="#1e293b" font-size="14" font-weight="700">Danh sách Nhân viên (12)</text>
+<line x1="40" y1="318" x2="760" y2="318" stroke="#f1f5f9"/>
+<text x="40" y="335" fill="#94a3b8" font-size="10" font-weight="600">NHÂN VIÊN</text>
+<text x="300" y="335" fill="#94a3b8" font-size="10" font-weight="600">TÀI KHOẢN & LIÊN HỆ</text>
+<text x="530" y="335" fill="#94a3b8" font-size="10" font-weight="600">PHÒNG BAN</text>
+<text x="700" y="335" fill="#94a3b8" font-size="10" font-weight="600">THAO TÁC</text>
+<line x1="40" y1="345" x2="760" y2="345" stroke="#f1f5f9"/>
+<circle cx="55" cy="368" r="14" fill="#e2e8f0"/>
+<text x="55" y="372" fill="#94a3b8" font-size="10" text-anchor="middle">NA</text>
+<text x="80" y="364" fill="#1e293b" font-size="12" font-weight="600">Nguyễn Văn A</text>
+<text x="138" y="364" fill="#eab308" font-size="10">⭐</text>
+<text x="80" y="378" fill="#94a3b8" font-size="9">@nguyenvana</text>
+<text x="300" y="364" fill="#64748b" font-size="10">🔑 ••••••  📋</text>
+<text x="300" y="378" fill="#64748b" font-size="10">📧 a@email.com</text>
+<text x="530" y="370" fill="#64748b" font-size="11">Phòng Kinh doanh</text>
+<rect x="690" y="358" width="28" height="22" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="704" y="373" fill="#64748b" font-size="10" text-anchor="middle">✏️</text>
+</svg>
+</div></div>
+
+<div class="card-title"><span class="emoji">📝</span> Các bước thêm nhân viên</div>
+<div class="step-list">
+<div class="step-item"><div class="step-content"><h4>Điền thông tin cơ bản</h4><p>Nhập <strong>Họ tên</strong>, <strong>Tên đăng nhập</strong> (tự sinh từ tên), <strong>Mật khẩu</strong>. Email và SĐT là tùy chọn.</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Chọn vai trò</h4><p><strong>Nhân viên</strong> (thực hiện công việc), <strong>Trưởng phòng</strong> (quản lý nhóm), hoặc <strong>Quản lý toàn bộ</strong> (Owner).</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Chọn phòng ban</h4><p>Nhấn vào card phòng ban để gán nhân viên. Phải tạo phòng ban trước nếu chưa có.</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Nhấn "Thêm nhân viên"</h4><p>Hệ thống sẽ tạo tài khoản và gán vào phòng ban. Nhân viên dùng username/password để đăng nhập.</p></div></div>
+</div>
+<div class="info-box success"><span class="info-icon">✅</span><div><strong>Tiện ích:</strong> Bạn có thể <strong>sao chép</strong> tên đăng nhập và mật khẩu nhanh bằng cách hover vào dòng nhân viên trong bảng và nhấn biểu tượng 📋.</div></div>
+</div>
+</div>
+
+<!-- SECTION 8: DANH MỤC -->
+<div class="section" id="danh-muc">
+<div class="section-header">
+<div class="section-icon pink">🏷️</div>
+<div><div class="section-title">8. Quản Lý Danh Mục</div><div class="section-subtitle">Tạo và quản lý các danh mục công việc</div></div>
+</div>
+<div class="card">
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Chỉ <span class="role-badge role-owner">Owner</span> mới có quyền tạo/sửa/xóa danh mục. Danh mục dùng để phân loại nhiệm vụ.</p>
+
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="300" fill="#f8fafc"/>
+<text x="30" y="35" fill="#1e293b" font-size="22" font-weight="800">Quản lý Danh mục</text>
+<text x="30" y="55" fill="#94a3b8" font-size="12">Tạo và quản lý các danh mục công việc cho doanh nghiệp</text>
+<rect x="620" y="18" width="160" height="36" rx="10" fill="#6366f1"/>
+<text x="700" y="41" fill="white" font-size="12" font-weight="600" text-anchor="middle">➕ Thêm danh mục</text>
+<!-- List -->
+<rect x="20" y="70" width="760" height="220" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="100" fill="#1e293b" font-size="14" font-weight="700">🏷️ Danh sách danh mục (9)</text>
+<line x1="40" y1="115" x2="760" y2="115" stroke="#f1f5f9"/>
+<!-- Items -->
+<rect x="40" y="125" width="36" height="36" rx="10" fill="rgba(239,68,68,0.1)"/>
+<text x="58" y="149" fill="#ef4444" font-size="14" text-anchor="middle">📹</text>
+<text x="90" y="143" fill="#1e293b" font-size="13" font-weight="600">Video</text>
+<text x="90" y="157" fill="#94a3b8" font-size="9">i-heroicons-video-camera · #EF4444</text>
+<rect x="40" y="175" width="36" height="36" rx="10" fill="rgba(34,197,94,0.1)"/>
+<text x="58" y="199" fill="#22c55e" font-size="14" text-anchor="middle">💼</text>
+<text x="90" y="193" fill="#1e293b" font-size="13" font-weight="600">Kinh doanh</text>
+<text x="90" y="207" fill="#94a3b8" font-size="9">i-heroicons-briefcase · #22C55E</text>
+<rect x="40" y="225" width="36" height="36" rx="10" fill="rgba(59,130,246,0.1)"/>
+<text x="58" y="249" fill="#3b82f6" font-size="14" text-anchor="middle">💻</text>
+<text x="90" y="243" fill="#1e293b" font-size="13" font-weight="600">Lập trình</text>
+<text x="90" y="257" fill="#94a3b8" font-size="9">i-heroicons-code-bracket · #3B82F6</text>
+<!-- Action buttons -->
+<rect x="690" y="132" width="24" height="22" rx="5" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="702" y="147" fill="#64748b" font-size="10" text-anchor="middle">✏️</text>
+<rect x="720" y="132" width="24" height="22" rx="5" fill="#fef2f2" stroke="#fecaca"/>
+<text x="732" y="147" fill="#ef4444" font-size="10" text-anchor="middle">🗑️</text>
+</svg>
+</div></div>
+
+<ul class="feature-list">
+<li><strong>Thêm danh mục:</strong> Nhấn nút "Thêm danh mục" → Nhập tên, chọn biểu tượng (15 icon), chọn màu (12 màu + tùy chỉnh) → Xem trước → Tạo</li>
+<li><strong>Chỉnh sửa:</strong> Nhấn ✏️ để sửa tên, icon, màu sắc của danh mục</li>
+<li><strong>Xóa:</strong> Nhấn 🗑️ để xóa (không thể xóa danh mục mặc định hoặc đang được sử dụng)</li>
+<li><strong>Tìm kiếm:</strong> Lọc nhanh danh mục theo tên</li>
+</ul>
+<div class="info-box warn"><span class="info-icon">⚠️</span><div><strong>Lưu ý:</strong> Các danh mục <strong>mặc định</strong> (có badge "Mặc định") không thể xóa. Không thể xóa danh mục đang được sử dụng bởi nhiệm vụ.</div></div>
+</div>
+</div>
+
+<!-- SECTIONS 9-14 PLACEHOLDER -->
+<div id="sections-9-14"></div>
+
+</div><!-- /content-wrapper -->
+</div><!-- /main-content -->
+
+<script>
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+// Active nav highlight
+const navItems=document.querySelectorAll('.nav-item');
+const sections=document.querySelectorAll('.section');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-100)current=s.id});
+  navItems.forEach(n=>{
+    n.classList.remove('active');
+    if(n.getAttribute('href')==='#'+current)n.classList.add('active');
+  });
+});
+// Accordion
+document.querySelectorAll('.accordion-header').forEach(h=>{
+  h.addEventListener('click',()=>{
+    const body=h.nextElementSibling;
+    body.classList.toggle('open');
+    h.querySelector('.arrow').style.transform=body.classList.contains('open')?'rotate(180deg)':'';
+  });
+});
+</script>
+</body>
+</html>
