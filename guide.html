@@ -578,8 +578,292 @@ strong{color:var(--text)}
 </div>
 </div>
 
-<!-- SECTIONS 9-14 PLACEHOLDER -->
-<div id="sections-9-14"></div>
+<!-- SECTION 9: NHIỆM VỤ -->
+<div class="section" id="nhiem-vu">
+<div class="section-header">
+<div class="section-icon indigo">📝</div>
+<div><div class="section-title">9. Quản Lý Nhiệm Vụ</div><div class="section-subtitle">Tạo mới và phân công nhiệm vụ cho nhân viên</div></div>
+</div>
+<div class="card">
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Tất cả vai trò đều thấy trang này. <span class="role-badge role-owner">Owner</span> và <span class="role-badge role-leader">Leader</span> tạo/sửa nhiệm vụ. <span class="role-badge role-member">Member</span> chỉ xem và cập nhật trạng thái.</p>
+
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="360" fill="#f8fafc"/>
+<text x="30" y="35" fill="#1e293b" font-size="22" font-weight="800">Quản lý Nhiệm vụ</text>
+<text x="30" y="55" fill="#94a3b8" font-size="12">Tạo mới và phân công nhiệm vụ cho nhân viên</text>
+<!-- Form -->
+<rect x="20" y="70" width="760" height="130" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="100" fill="#6366f1" font-size="14" font-weight="700">📝 Tạo nhiệm vụ mới</text>
+<rect x="40" y="110" width="350" height="28" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="55" y="129" fill="#94a3b8" font-size="10">Tên nhiệm vụ *</text>
+<rect x="400" y="110" width="360" height="28" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="415" y="129" fill="#94a3b8" font-size="10">Mô tả chi tiết</text>
+<rect x="40" y="148" width="180" height="28" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="55" y="167" fill="#94a3b8" font-size="10">👤 Người thực hiện *</text>
+<rect x="230" y="148" width="60" height="28" rx="6" fill="#fee2e2" stroke="#fecaca"/><text x="260" y="167" fill="#ef4444" font-size="9" font-weight="700" text-anchor="middle">Cao</text>
+<rect x="295" y="148" width="75" height="28" rx="6" fill="#fef3c7" stroke="#fde68a"/><text x="332" y="167" fill="#d97706" font-size="9" font-weight="700" text-anchor="middle">Trung bình</text>
+<rect x="375" y="148" width="60" height="28" rx="6" fill="#f1f5f9" stroke="#e2e8f0"/><text x="405" y="167" fill="#64748b" font-size="9" font-weight="700" text-anchor="middle">Thấp</text>
+<rect x="445" y="148" width="130" height="28" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="460" y="167" fill="#94a3b8" font-size="10">📅 Hạn hoàn thành *</text>
+<rect x="585" y="148" width="120" height="28" rx="6" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="600" y="167" fill="#94a3b8" font-size="10">🏷️ Danh mục</text>
+<rect x="715" y="148" width="45" height="28" rx="6" fill="#6366f1"/>
+<text x="737" y="167" fill="white" font-size="10" font-weight="600" text-anchor="middle">Giao</text>
+<!-- Table -->
+<rect x="20" y="215" width="760" height="135" rx="14" fill="white" stroke="#e2e8f0"/>
+<text x="40" y="243" fill="#1e293b" font-size="14" font-weight="700">Danh sách Nhiệm vụ (45)</text>
+<line x1="40" y1="258" x2="760" y2="258" stroke="#f1f5f9"/>
+<text x="40" y="273" fill="#94a3b8" font-size="9" font-weight="600">NHIỆM VỤ</text>
+<text x="230" y="273" fill="#94a3b8" font-size="9" font-weight="600">DANH MỤC</text>
+<text x="340" y="273" fill="#94a3b8" font-size="9" font-weight="600">NGƯỜI THỰC HIỆN</text>
+<text x="480" y="273" fill="#94a3b8" font-size="9" font-weight="600">HẠN CHÓT</text>
+<text x="570" y="273" fill="#94a3b8" font-size="9" font-weight="600">TRẠNG THÁI</text>
+<text x="660" y="273" fill="#94a3b8" font-size="9" font-weight="600">ƯU TIÊN</text>
+<text x="740" y="273" fill="#94a3b8" font-size="9" font-weight="600">THAO TÁC</text>
+<line x1="40" y1="282" x2="760" y2="282" stroke="#f1f5f9"/>
+<text x="40" y="300" fill="#1e293b" font-size="11" font-weight="600">Thiết kế landing page</text>
+<text x="40" y="313" fill="#94a3b8" font-size="9">Thiết kế giao diện trang chủ</text>
+<text x="230" y="305" fill="#ec4899" font-size="9">🎨 Design</text>
+<circle cx="345" cy="303" r="8" fill="#e2e8f0"/><text x="360" y="307" fill="#64748b" font-size="10">Trần B</text>
+<text x="480" y="305" fill="#64748b" font-size="10">15/02/2026</text>
+<rect x="570" y="293" width="65" height="20" rx="10" fill="#dbeafe"/><text x="602" y="307" fill="#2563eb" font-size="9" font-weight="600" text-anchor="middle">Đang làm</text>
+<rect x="660" y="293" width="45" height="20" rx="10" fill="#fee2e2"/><text x="682" y="307" fill="#ef4444" font-size="9" font-weight="600" text-anchor="middle">Cao</text>
+<rect x="730" y="295" width="22" height="18" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
+<text x="741" y="308" fill="#64748b" font-size="9" text-anchor="middle">✏️</text>
+<line x1="40" y1="322" x2="760" y2="322" stroke="#f1f5f9"/>
+<text x="40" y="340" fill="#1e293b" font-size="11" font-weight="600">Viết content Facebook</text>
+<text x="230" y="340" fill="#f59e0b" font-size="9">📢 Marketing</text>
+<rect x="570" y="328" width="70" height="20" rx="10" fill="#dcfce7"/><text x="605" y="342" fill="#16a34a" font-size="9" font-weight="600" text-anchor="middle">Hoàn thành</text>
+</svg>
+</div></div>
+
+<div class="card-title"><span class="emoji">📝</span> Hướng dẫn tạo nhiệm vụ</div>
+<div class="step-list">
+<div class="step-item"><div class="step-content"><h4>Nhập tên và mô tả nhiệm vụ</h4><p>Tên nhiệm vụ là bắt buộc. Mô tả chi tiết giúp người thực hiện hiểu rõ yêu cầu.</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Chọn người thực hiện</h4><p>Dropdown với ô tìm kiếm và bộ lọc theo phòng ban. Hiển thị avatar và tên nhân viên.</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Thiết lập độ ưu tiên và hạn chót</h4><p>3 mức: <strong style="color:#ef4444">Cao</strong>, <strong style="color:#d97706">Trung bình</strong>, <strong style="color:#64748b">Thấp</strong>. Chọn ngày hạn hoàn thành.</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Chọn danh mục (tùy chọn)</h4><p>Phân loại nhiệm vụ theo danh mục đã tạo (Video, Design, Marketing...)</p></div></div>
+<div class="step-item"><div class="step-content"><h4>Nhấn "Giao nhiệm vụ"</h4><p>Nhiệm vụ sẽ được tạo với trạng thái "Cần làm" và hiển thị trong bảng danh sách.</p></div></div>
+</div>
+<div class="info-box tip"><span class="info-icon">💡</span><div>Nhiệm vụ <strong>quá hạn</strong> sẽ được đánh dấu đỏ trong cột "Hạn chót" để dễ dàng nhận biết.</div></div>
+</div>
+</div>
+
+<!-- SECTION 10: TIẾN ĐỘ -->
+<div class="section" id="tien-do">
+<div class="section-header">
+<div class="section-icon green">📌</div>
+<div><div class="section-title">10. Tiến Độ Công Việc (Kanban)</div><div class="section-subtitle">Quản lý và theo dõi trạng thái nhiệm vụ với bảng Kanban</div></div>
+</div>
+<div class="card">
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Tất cả vai trò đều có thể truy cập. Đây là tính năng trực quan nhất để theo dõi tiến độ công việc.</p>
+
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="340" fill="#f8fafc"/>
+<text x="30" y="35" fill="#1e293b" font-size="22" font-weight="800">Tiến Độ Công Việc</text>
+<text x="30" y="55" fill="#94a3b8" font-size="12">Kéo thả thẻ nhiệm vụ giữa các cột để cập nhật tiến độ</text>
+<!-- 3 Columns -->
+<rect x="20" y="70" width="250" height="260" rx="14" fill="#f1f5f9" stroke="#e2e8f0"/>
+<rect x="30" y="80" width="230" height="32" rx="8" fill="white"/>
+<text x="145" y="101" fill="#64748b" font-size="12" font-weight="700" text-anchor="middle">📋 Chưa làm (12)</text>
+<rect x="30" y="120" width="230" height="65" rx="10" fill="white" stroke="#e2e8f0"/>
+<text x="45" y="140" fill="#1e293b" font-size="11" font-weight="600">Thiết kế banner</text>
+<rect x="45" y="148" width="45" height="16" rx="8" fill="#fee2e2"/><text x="67" y="160" fill="#ef4444" font-size="8" font-weight="600" text-anchor="middle">Cao</text>
+<text x="100" y="160" fill="#94a3b8" font-size="8">🎨 Design</text>
+<circle cx="50" cy="175" r="7" fill="#e2e8f0"/><text x="62" y="179" fill="#94a3b8" font-size="8">Trần B · 20/02</text>
+<rect x="30" y="195" width="230" height="65" rx="10" fill="white" stroke="#e2e8f0"/>
+<text x="45" y="215" fill="#1e293b" font-size="11" font-weight="600">Viết báo cáo Q1</text>
+<rect x="45" y="223" width="60" height="16" rx="8" fill="#fef3c7"/><text x="75" y="235" fill="#d97706" font-size="8" font-weight="600" text-anchor="middle">Trung bình</text>
+<!-- Column 2 -->
+<rect x="280" y="70" width="250" height="260" rx="14" fill="#eff6ff" stroke="#bfdbfe"/>
+<rect x="290" y="80" width="230" height="32" rx="8" fill="white"/>
+<text x="405" y="101" fill="#3b82f6" font-size="12" font-weight="700" text-anchor="middle">🔄 Đang làm (8)</text>
+<rect x="290" y="120" width="230" height="65" rx="10" fill="white" stroke="#e2e8f0"/>
+<text x="305" y="140" fill="#1e293b" font-size="11" font-weight="600">Landing page mới</text>
+<rect x="305" y="148" width="45" height="16" rx="8" fill="#fee2e2"/><text x="327" y="160" fill="#ef4444" font-size="8" font-weight="600" text-anchor="middle">Cao</text>
+<text x="360" y="160" fill="#94a3b8" font-size="8">💻 Code</text>
+<!-- Column 3 -->
+<rect x="540" y="70" width="250" height="260" rx="14" fill="#f0fdf4" stroke="#bbf7d0"/>
+<rect x="550" y="80" width="230" height="32" rx="8" fill="white"/>
+<text x="665" y="101" fill="#22c55e" font-size="12" font-weight="700" text-anchor="middle">✅ Hoàn thành (25)</text>
+<rect x="550" y="120" width="230" height="65" rx="10" fill="white" stroke="#e2e8f0"/>
+<text x="565" y="140" fill="#1e293b" font-size="11" font-weight="600">Setup server</text>
+<rect x="565" y="148" width="60" height="16" rx="8" fill="#dcfce7"/><text x="595" y="160" fill="#16a34a" font-size="8" font-weight="600" text-anchor="middle">Hoàn thành</text>
+<!-- Drag indicator -->
+<text x="400" y="200" fill="#3b82f6" font-size="24" text-anchor="middle" opacity="0.3">⟷</text>
+</svg>
+</div></div>
+
+<ul class="feature-list">
+<li><strong>3 cột Kanban:</strong> Chưa làm (xám), Đang làm (xanh dương), Hoàn thành (xanh lá) - hiển thị số lượng task mỗi cột</li>
+<li><strong>Kéo thả (Desktop):</strong> Drag & Drop thẻ nhiệm vụ giữa các cột để cập nhật trạng thái tự động</li>
+<li><strong>Tab chuyển đổi (Mobile):</strong> 3 tab cho 3 trạng thái, touch-friendly với hiệu ứng scale</li>
+<li><strong>Thẻ nhiệm vụ:</strong> Hiển thị tên, mô tả, độ ưu tiên, danh mục, người thực hiện, hạn chót</li>
+<li><strong>Chi tiết nhiệm vụ:</strong> Nhấn vào thẻ để mở popup xem chi tiết, cập nhật trạng thái, xem/thêm bình luận với ảnh đính kèm</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 11: LỊCH -->
+<div class="section" id="lich">
+<div class="section-header">
+<div class="section-icon orange">📅</div>
+<div><div class="section-title">11. Lịch Công Việc</div><div class="section-subtitle">Xem lịch công việc theo tháng</div></div>
+</div>
+<div class="card">
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Tất cả vai trò đều có quyền truy cập. Lịch hiển thị các nhiệm vụ theo ngày hạn chót.</p>
+
+<div class="screenshot"><div class="screenshot-inner">
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="300" fill="#f8fafc"/>
+<rect x="0" y="0" width="800" height="50" fill="white" stroke-width="0"/>
+<text x="30" y="33" fill="#1e293b" font-size="18" font-weight="800">tháng 2, 2026</text>
+<rect x="220" y="15" width="28" height="28" rx="6" fill="#f1f5f9"/><text x="234" y="34" fill="#64748b" font-size="12" text-anchor="middle">◀</text>
+<rect x="255" y="15" width="28" height="28" rx="6" fill="#f1f5f9"/><text x="269" y="34" fill="#64748b" font-size="12" text-anchor="middle">▶</text>
+<rect x="680" y="15" width="100" height="28" rx="6" fill="#6366f1"/><text x="730" y="34" fill="white" font-size="11" font-weight="600" text-anchor="middle">Hôm nay</text>
+<!-- Days header -->
+<text x="60" y="73" fill="#94a3b8" font-size="11" font-weight="600" text-anchor="middle">CN</text>
+<text x="170" y="73" fill="#94a3b8" font-size="11" font-weight="600" text-anchor="middle">T2</text>
+<text x="285" y="73" fill="#94a3b8" font-size="11" font-weight="600" text-anchor="middle">T3</text>
+<text x="400" y="73" fill="#94a3b8" font-size="11" font-weight="600" text-anchor="middle">T4</text>
+<text x="515" y="73" fill="#94a3b8" font-size="11" font-weight="600" text-anchor="middle">T5</text>
+<text x="625" y="73" fill="#94a3b8" font-size="11" font-weight="600" text-anchor="middle">T6</text>
+<text x="740" y="73" fill="#94a3b8" font-size="11" font-weight="600" text-anchor="middle">T7</text>
+<!-- Grid -->
+<rect x="5" y="82" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/>
+<text x="15" y="100" fill="#94a3b8" font-size="11">1</text>
+<rect x="118" y="82" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/>
+<text x="128" y="100" fill="#1e293b" font-size="11" font-weight="600">2</text>
+<rect x="128" y="106" width="85" height="16" rx="4" fill="#dbeafe"/><text x="170" y="118" fill="#2563eb" font-size="8" font-weight="600" text-anchor="middle">Landing page</text>
+<rect x="128" y="126" width="85" height="16" rx="4" fill="#fee2e2"/><text x="170" y="138" fill="#ef4444" font-size="8" font-weight="600" text-anchor="middle">Banner ads</text>
+<rect x="231" y="82" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/>
+<text x="241" y="100" fill="#1e293b" font-size="11">3</text>
+<rect x="344" y="82" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/>
+<text x="354" y="100" fill="#1e293b" font-size="11">4</text>
+<rect x="354" y="106" width="85" height="16" rx="4" fill="#dcfce7"/><text x="396" y="118" fill="#16a34a" font-size="8" font-weight="600" text-anchor="middle">Setup server</text>
+<!-- Today highlight -->
+<rect x="457" y="82" width="108" height="70" fill="#eff6ff" stroke="#6366f1" stroke-width="2" rx="4"/>
+<text x="467" y="100" fill="#6366f1" font-size="11" font-weight="700">5</text>
+<rect x="467" y="106" width="85" height="16" rx="4" fill="#fef3c7"/><text x="509" y="118" fill="#d97706" font-size="8" font-weight="600" text-anchor="middle">Content FB</text>
+<rect x="570" y="82" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/>
+<text x="580" y="100" fill="#1e293b" font-size="11">6</text>
+<rect x="683" y="82" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/>
+<text x="693" y="100" fill="#1e293b" font-size="11">7</text>
+<!-- Row 2 -->
+<rect x="5" y="157" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/><text x="15" y="175" fill="#1e293b" font-size="11">8</text>
+<rect x="15" y="181" width="85" height="16" rx="4" fill="#fee2e2"/><text x="57" y="193" fill="#ef4444" font-size="8" font-weight="600" text-anchor="middle">Báo cáo Q1</text>
+<rect x="118" y="157" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/><text x="128" y="175" fill="#1e293b" font-size="11">9</text>
+<rect x="231" y="157" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/><text x="241" y="175" fill="#1e293b" font-size="11">10</text>
+<rect x="344" y="157" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/><text x="354" y="175" fill="#1e293b" font-size="11">11</text>
+<rect x="457" y="157" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/><text x="467" y="175" fill="#1e293b" font-size="11">12</text>
+<rect x="570" y="157" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/><text x="580" y="175" fill="#1e293b" font-size="11">13</text>
+<rect x="683" y="157" width="108" height="70" fill="white" stroke="#e2e8f0" rx="4"/><text x="693" y="175" fill="#1e293b" font-size="11">14</text>
+</svg>
+</div></div>
+
+<ul class="feature-list">
+<li><strong>Lưới lịch theo tháng:</strong> 7 cột (CN-T7) hiển thị nhiệm vụ theo ngày hạn chót</li>
+<li><strong>Điều hướng:</strong> Nút ◀ ▶ để chuyển tháng, nút "Hôm nay" để quay về ngày hiện tại</li>
+<li><strong>Ngày hôm nay:</strong> Được highlight bằng viền xanh để dễ nhận biết</li>
+<li><strong>Màu sắc task:</strong> Mã màu theo trạng thái (xanh dương = đang làm, xanh lá = hoàn thành, đỏ = quá hạn)</li>
+<li><strong>Chi tiết ngày:</strong> Nhấn vào ngày có nhiệm vụ để xem danh sách chi tiết trong popup bên cạnh</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 12: THÔNG BÁO -->
+<div class="section" id="thong-bao">
+<div class="section-header">
+<div class="section-icon red">🔔</div>
+<div><div class="section-title">12. Thông Báo</div><div class="section-subtitle">Cập nhật tin tức và hoạt động mới nhất</div></div>
+</div>
+<div class="card">
+<ul class="feature-list">
+<li><strong>Danh sách thông báo:</strong> Hiển thị tiêu đề, mô tả chi tiết, thời gian (dạng "x phút/giờ/ngày trước")</li>
+<li><strong>Trạng thái đọc:</strong> Chấm tròn xanh = chưa đọc, trống = đã đọc. Nền highlight nhạt cho thông báo chưa đọc</li>
+<li><strong>Tương tác:</strong> Click vào thông báo → tự động đánh dấu đã đọc → chuyển đến link liên quan (nếu có)</li>
+<li><strong>Header dropdown:</strong> Biểu tượng 🔔 trên thanh header hiển thị 10 thông báo gần nhất + badge số mới</li>
+<li><strong>Đọc tất cả:</strong> Nút "Đã đọc hết" trong dropdown để đánh dấu tất cả đã đọc cùng lúc</li>
+<li><strong>Phân trang:</strong> 10 thông báo/trang, có pagination để xem lịch sử</li>
+</ul>
+</div>
+</div>
+
+<!-- SECTION 13: CÀI ĐẶT -->
+<div class="section" id="cai-dat">
+<div class="section-header">
+<div class="section-icon slate">⚙️</div>
+<div><div class="section-title">13. Cài Đặt</div><div class="section-subtitle">Quản lý thông tin công ty và cá nhân</div></div>
+</div>
+<div class="card">
+<p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px">Tất cả vai trò đều có thể truy cập. Trang chia làm 2 phần riêng biệt:</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="card" style="margin-bottom:0;border:2px solid #f3e8ff">
+<div class="card-title"><span class="emoji">🏢</span> Cài đặt Công ty</div>
+<p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">Chỉ <span class="role-badge role-owner">Owner</span> mới thấy</p>
+<ul class="feature-list">
+<li>Cập nhật <strong>Tên công ty</strong> hiển thị trên header</li>
+<li>Nhập <strong>Mô tả / Giới thiệu</strong> công ty</li>
+<li>Nhấn "Lưu thông tin công ty" để cập nhật</li>
+</ul>
+</div>
+<div class="card" style="margin-bottom:0;border:2px solid #dbeafe">
+<div class="card-title"><span class="emoji">👤</span> Thông tin Cá nhân</div>
+<p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">Tất cả vai trò</p>
+<ul class="feature-list">
+<li>Cập nhật <strong>Avatar</strong> (nhập URL ảnh)</li>
+<li>Thay đổi <strong>Họ tên, SĐT, Email</strong></li>
+<li>Đổi <strong>Tên đăng nhập</strong> và <strong>Mật khẩu</strong></li>
+</ul>
+</div>
+</div>
+<div class="info-box tip" style="margin-top:16px"><span class="info-icon">💡</span><div><strong>Mẹo cho Owner:</strong> Bạn có thể tạo Username/Password trong phần này để đăng nhập bằng tài khoản thay vì phải dùng mã giấy phép mỗi lần.</div></div>
+</div>
+</div>
+
+<!-- SECTION 14: FAQ -->
+<div class="section" id="faq">
+<div class="section-header">
+<div class="section-icon purple">❓</div>
+<div><div class="section-title">14. Câu Hỏi Thường Gặp</div><div class="section-subtitle">Giải đáp thắc mắc khi sử dụng</div></div>
+</div>
+<div class="card">
+<div class="accordion">
+<div class="accordion-header">Tôi quên mật khẩu đăng nhập, phải làm sao? <span class="arrow">▼</span></div>
+<div class="accordion-body">Liên hệ người quản trị (Owner) để được cấp lại mật khẩu. Owner có thể vào <strong>Quản lý Nhân viên → Chỉnh sửa → Đổi mật khẩu</strong> cho bạn.</div>
+</div>
+<div class="accordion">
+<div class="accordion-header">Tôi là Member, tại sao không thấy menu Phòng ban? <span class="arrow">▼</span></div>
+<div class="accordion-body">Hệ thống phân quyền tự động ẩn các menu không thuộc quyền hạn của bạn. Member chỉ thấy: Tiến độ, Nhiệm vụ, Lịch, Cài đặt. Liên hệ Owner nếu cần nâng quyền.</div>
+</div>
+<div class="accordion">
+<div class="accordion-header">Làm sao để cài đặt ứng dụng trên điện thoại? <span class="arrow">▼</span></div>
+<div class="accordion-body">Ứng dụng hỗ trợ PWA. Khi truy cập trên trình duyệt di động, bạn sẽ thấy popup <strong>"Cài đặt ứng dụng"</strong> xuất hiện. Nhấn cài đặt để thêm vào màn hình chính, sử dụng như ứng dụng native.</div>
+</div>
+<div class="accordion">
+<div class="accordion-header">Tôi có thể thay đổi giao diện Dark Mode không? <span class="arrow">▼</span></div>
+<div class="accordion-body">Có! Nhấn biểu tượng <strong>☀️/🌙</strong> ở góc trên bên phải (trên header) để chuyển đổi giữa Light Mode và Dark Mode. Hệ thống sẽ ghi nhớ lựa chọn của bạn.</div>
+</div>
+<div class="accordion">
+<div class="accordion-header">Bình luận nhiệm vụ có hỗ trợ gửi ảnh không? <span class="arrow">▼</span></div>
+<div class="accordion-body">Có! Trong popup chi tiết nhiệm vụ (trang Tiến độ), bạn có thể đính kèm ảnh trong bình luận. Ảnh sẽ được upload lên server và hiển thị ngay trong phần bình luận.</div>
+</div>
+<div class="accordion">
+<div class="accordion-header">Thứ tự thiết lập hệ thống nên như thế nào? <span class="arrow">▼</span></div>
+<div class="accordion-body">Thứ tự khuyến nghị: <strong>1.</strong> Cài đặt thông tin công ty → <strong>2.</strong> Tạo phòng ban → <strong>3.</strong> Thêm nhân viên → <strong>4.</strong> Tạo danh mục công việc → <strong>5.</strong> Bắt đầu giao nhiệm vụ.</div>
+</div>
+</div>
+
+<!-- Footer -->
+<div style="text-align:center;padding:40px 0;color:var(--text-secondary);font-size:13px;border-top:1px solid var(--border);margin-top:40px">
+<p style="font-weight:700;color:var(--primary);margin-bottom:8px">SheetVN - Quản Lý Công Việc Nhóm v1.0</p>
+<p>Tài liệu hướng dẫn được cập nhật lần cuối: 08/02/2026</p>
+<p style="margin-top:4px">© 2026 SheetVN. All rights reserved.</p>
+</div>
+</div>
 
 </div><!-- /content-wrapper -->
 </div><!-- /main-content -->
